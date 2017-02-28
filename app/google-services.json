@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "514646034117",
+    "firebase_url": "https://rada3-30775.firebaseio.com",
+    "project_id": "rada3-30775",
+    "storage_bucket": "rada3-30775.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:514646034117:android:b8a63a9e82794d3b",
+        "android_client_info": {
+          "package_name": "com.springcamp.rostykboiko.rada3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "514646034117-so1re427aa13pv44gi1mt514map08f2i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.springcamp.rostykboiko.rada3",
+            "certificate_hash": "5f693291fbbea04edcdcc4350e5681b63ab92b3c"
+          }
+        },
+        {
+          "client_id": "514646034117-okh9lq03pcerg10j9922dibo0cbm3um5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtt6yvp9lBUB0SMYGdbrde3HGrE8DX5U8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "514646034117-okh9lq03pcerg10j9922dibo0cbm3um5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
