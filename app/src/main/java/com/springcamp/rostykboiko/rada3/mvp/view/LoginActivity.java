@@ -1,10 +1,11 @@
-package com.springcamp.rostykboiko.rada3;
+package com.springcamp.rostykboiko.rada3.mvp.view;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -28,6 +29,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.mvp.LoginContract;
+import com.springcamp.rostykboiko.rada3.mvp.presenter.LoginPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +43,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, LoginContract.View {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -62,10 +68,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    @Nullable
+    LoginContract.Presenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        presenter = new LoginPresenter(this);
+        presenter.logIn();
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -277,6 +289,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
+    }
+
+    @Override
+    public String getEmail() {
+        return "Vasa";
+    }
+
+    @Override
+    public String getPassword() {
+        return "123456";
+    }
+
+    @Override
+    public void loginSuccess() {
+        Toast.makeText(this, "SUCCESS", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showProgress() {
+
     }
 
 
