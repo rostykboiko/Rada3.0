@@ -32,10 +32,10 @@
             android:label="@string/title_activity_login" />
         <activity
             android:name=".view.EditorActivity"
-            android:label="@string/action_settings" />
+            android:label="@string/title_activity_editor" />
         <activity
             android:name=".view.SettingsActivity"
-            android:label="@string/action_settings"/>
+            android:label="@string/title_activity_settings"/>
     </application>
 
 </manifest>

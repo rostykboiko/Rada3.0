@@ -7,10 +7,6 @@ import com.springcamp.rostykboiko.rada3.LoginContract;
 import com.springcamp.rostykboiko.rada3.data.LoginInteractor;
 import com.springcamp.rostykboiko.rada3.data.LoginUseCase;
 
-/**
- * Created by rostykboiko on 28.02.2017.
- */
-
 public class LoginPresenter implements LoginContract.Presenter{
 
     @Nullable
