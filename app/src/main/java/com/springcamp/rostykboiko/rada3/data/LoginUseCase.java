@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.mvp.data;
+package com.springcamp.rostykboiko.rada3.data;
 
 import android.support.annotation.NonNull;
 

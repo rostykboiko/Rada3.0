@@ -1,7 +1,8 @@
-package com.springcamp.rostykboiko.rada3.adapters;
+package com.springcamp.rostykboiko.rada3.data;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 public class GoogleAccountAdapter {
 

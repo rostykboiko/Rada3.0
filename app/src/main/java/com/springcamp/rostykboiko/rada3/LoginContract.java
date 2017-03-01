@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.mvp;
+package com.springcamp.rostykboiko.rada3;
 
 /**
  * Created by rostykboiko on 28.02.2017.

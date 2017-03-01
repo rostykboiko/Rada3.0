@@ -18,7 +18,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.springcamp.rostykboiko.rada3.BaseActivity;
 import com.springcamp.rostykboiko.rada3.R;
-import com.springcamp.rostykboiko.rada3.adapters.GoogleAccountAdapter;
+import com.springcamp.rostykboiko.rada3.data.GoogleAccountAdapter;
 
 public class GoogleAuth extends BaseActivity implements
         GoogleApiClient.OnConnectionFailedListener {

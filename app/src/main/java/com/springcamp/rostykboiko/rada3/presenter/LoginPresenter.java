@@ -1,11 +1,11 @@
-package com.springcamp.rostykboiko.rada3.mvp.presenter;
+package com.springcamp.rostykboiko.rada3.presenter;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.springcamp.rostykboiko.rada3.mvp.LoginContract;
-import com.springcamp.rostykboiko.rada3.mvp.data.LoginInteractor;
-import com.springcamp.rostykboiko.rada3.mvp.data.LoginUseCase;
+import com.springcamp.rostykboiko.rada3.LoginContract;
+import com.springcamp.rostykboiko.rada3.data.LoginInteractor;
+import com.springcamp.rostykboiko.rada3.data.LoginUseCase;
 
 /**
  * Created by rostykboiko on 28.02.2017.
