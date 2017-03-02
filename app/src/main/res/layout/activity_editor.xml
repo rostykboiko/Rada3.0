@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_editor"
@@ -41,22 +42,31 @@
                     android:maxLength="150"
                     android:textColor="@color/black"
                     android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <ImageView
                     android:id="@+id/backBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/desc_backBtn"
-                    android:src="@drawable/ic_arrow_left"
-                    android:paddingStart="@dimen/margin_zero"
                     android:paddingEnd="@dimen/margin_large"
-                    android:paddingTop="@dimen/margin_large" />
+                    android:paddingStart="@dimen/margin_zero"
+                    android:paddingTop="@dimen/margin_large"
+                    android:src="@drawable/ic_arrow_left"/>
 
             </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </RelativeLayout>

@@ -28,7 +28,7 @@
             android:name=".view.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name=".providers.GoogleAuth"
+            android:name=".provider.GoogleAuth"
             android:label="@string/title_activity_login" />
         <activity
             android:name=".view.EditorActivity"

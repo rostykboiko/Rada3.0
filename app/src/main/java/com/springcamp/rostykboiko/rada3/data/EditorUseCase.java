@@ -1,11 +1,17 @@
 package com.springcamp.rostykboiko.rada3.data;
 
-public class EditorUseCase {
+import android.support.annotation.NonNull;
+import java.util.ArrayList;
 
-    interface EditorCallback{
-        void editedSurvey();
+public interface EditorUseCase {
 
-        void newSurvey();
+    void getSurvey(@NonNull String title,
+                   @NonNull ArrayList<String> ptionsList,
+                   @NonNull EditorUseCase.EditorCallback callback);
+
+    interface EditorCallback {
+
+        void success();
 
         void error();
     }

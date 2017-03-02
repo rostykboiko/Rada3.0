@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.providers;
+package com.springcamp.rostykboiko.rada3.provider;
 
 import android.content.Intent;
 import android.os.Bundle;
