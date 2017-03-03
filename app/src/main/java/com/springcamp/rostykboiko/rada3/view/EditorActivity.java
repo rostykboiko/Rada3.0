@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -15,15 +17,20 @@ import android.widget.ImageView;
 import com.springcamp.rostykboiko.rada3.EditorContract;
 import com.springcamp.rostykboiko.rada3.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.adapter.OptionListAdapter;
+import com.springcamp.rostykboiko.rada3.adapter.Survey;
+import com.springcamp.rostykboiko.rada3.adapter.SurveyListAdapter;
 import com.springcamp.rostykboiko.rada3.presenter.EditorPresenter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
 
     private EditText editTitle;
-    private ImageView backButton;
-    private RecyclerView recycler;
+    private ArrayList<String> optionsList = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private OptionListAdapter optionsAdapter;
 
     @Nullable
     EditorContract.Presenter presenter;
@@ -34,13 +41,21 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         setContentView(R.layout.activity_editor);
 
         presenter = new EditorPresenter(this);
-        //presenter.set();
 
         ImageView backButton = (ImageView) findViewById(R.id.backBtn);
         editTitle = (EditText) findViewById(R.id.txtTitle);
         backButton.setOnClickListener(Global_OnClickListener);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        recyclerView = (RecyclerView) findViewById(R.id.option_recycler_view);
+
+        optionsAdapter = new OptionListAdapter(optionsList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(optionsAdapter);
+        prepareMovieData();
     }
 
     @Override
@@ -50,6 +65,15 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         finish();
 
         super.onBackPressed();
+    }
+
+
+    private void prepareMovieData() {
+        optionsList.add("option1");
+        optionsList.add("option2");
+        optionsList.add("option3");
+
+       optionsAdapter.notifyDataSetChanged();
     }
 
     @Override

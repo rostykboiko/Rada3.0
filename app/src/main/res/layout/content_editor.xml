@@ -13,22 +13,18 @@
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/options_card_view"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/margin_medium"
-
+        android:layout_marginBottom="@dimen/margin_medium"
         card_view:cardElevation="@dimen/card_elevation">
 
-        <TextView
-            android:layout_width="400dp"
-            android:layout_height="400dp"
-            android:text="Hello World!" />
-
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
+            android:id="@+id/option_recycler_view"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical" />
+            android:layout_height="wrap_content"/>
+
 
     </android.support.v7.widget.CardView>
 
@@ -41,8 +37,7 @@
         android:layout_marginTop="@dimen/margin_medium"
         card_view:cardElevation="@dimen/card_elevation">
 
-        <RelativeLayout
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="8dp"
@@ -59,10 +54,10 @@
                 android:id="@+id/close_survey_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_switch"
-                android:layout_marginBottom="@dimen/margin_switch"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="16dp" />
+                android:layout_marginBottom="@dimen/margin_switch"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_switch" />
 
             <TextView
                 android:id="@+id/Tv_one_option"
@@ -77,10 +72,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="@dimen/margin_switch"
-                android:layout_marginBottom="@dimen/margin_switch"
                 android:layout_below="@+id/close_survey_switch"
-                android:layout_marginEnd="16dp" />
+                android:layout_marginBottom="@dimen/margin_switch"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="@dimen/margin_switch" />
 
             <TextView
                 android:id="@+id/Tv_duration"

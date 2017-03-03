@@ -7,6 +7,12 @@ public class Survey {
     private ArrayList<String> surveyOptionList;
     private boolean surveyPublic;
     private boolean surveySingleOption;
+    private int duration;
+    private ArrayList<String> partiosipantsEmailList;
+
+    public Survey(String syrveyTitle) {
+        this.syrveyTitle = syrveyTitle;
+    }
 
     public Survey(String syrveyTitle,
                   ArrayList<String> surveyOptionList,
@@ -22,8 +28,6 @@ public class Survey {
         this.partiosipantsEmailList = partiosipantsEmailList;
     }
 
-    private int duration;
-    private ArrayList<String> partiosipantsEmailList;
 
 
     public String getSyrveyTitle() {
