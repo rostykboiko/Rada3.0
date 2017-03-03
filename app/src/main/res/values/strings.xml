@@ -25,6 +25,7 @@
     <string name="desc_group">ImageView</string>
     <string name="desc_backBtn">toolbarBackBtn</string>
     <string name="group">Group</string>
+    <string name="tv_add_new_option">Додати елемент</string>
     <string name="tv_open_survey">Закрите голосування</string>
     <string name="tv_one_option">Один варіант відповіді</string>
     <string name="tv_duration">Тривалість</string>

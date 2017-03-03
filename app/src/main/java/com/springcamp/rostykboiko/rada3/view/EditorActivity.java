@@ -73,7 +73,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         optionsList.add("option2");
         optionsList.add("option3");
 
-       optionsAdapter.notifyDataSetChanged();
+        optionsAdapter.notifyDataSetChanged();
     }
 
     @Override
