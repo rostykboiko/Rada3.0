@@ -41,7 +41,6 @@
                     android:hint="@string/title_activity_editor"
                     android:inputType="textAutoCorrect|textMultiLine"
                     android:maxLength="150"
-                    android:textColor="@color/black"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
