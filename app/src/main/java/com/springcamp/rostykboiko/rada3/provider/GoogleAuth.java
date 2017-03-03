@@ -16,11 +16,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.springcamp.rostykboiko.rada3.BaseActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.data.GoogleAccountAdapter;
+import com.springcamp.rostykboiko.rada3.view.LoginActivity;
 
-public class GoogleAuth extends BaseActivity implements
+public class GoogleAuth extends LoginActivity implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "GoogleActivity";
@@ -65,12 +65,12 @@ public class GoogleAuth extends BaseActivity implements
             GoogleSignInResult result = opr.get();
             handleSignInResult(result);
         } else {
-            showProgressDialog();
+            //showProgressDialog();
             opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Nullable
                 @Override
                 public void onResult(GoogleSignInResult googleSignInResult) {
-                    hideProgressDialog();
+              //      hideProgressDialog();
                     handleSignInResult(googleSignInResult);
                 }
             });
