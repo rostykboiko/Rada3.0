@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.springcamp.rostykboiko.rada3"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -29,9 +29,9 @@ dependencies {
         transitive = true
     }
     compile 'com.mikepenz:google-material-typeface:2.2.0.1@aar'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
 // Glide
     compile 'com.github.bumptech.glide:glide:3.7.0'
+
 // Google Support
     compile 'com.android.support:design:25.2.0'
     compile 'com.android.support:customtabs:25.2.0'
@@ -40,10 +40,12 @@ dependencies {
 // FireBase
     compile 'com.google.firebase:firebase-core:10.2.0'
     compile 'com.google.firebase:firebase-auth:10.2.0'
+    compile 'com.google.firebase:firebase-messaging:10.2.0'
 // Auth
     compile 'com.google.android.gms:play-services-auth:10.2.0'
     compile 'com.facebook.android:facebook-android-sdk:4.1.2'
-
+    compile 'com.google.firebase:firebase-database:10.0.1'
+// Test
     testCompile 'junit:junit:4.12'
 }
 apply plugin: 'com.google.gms.google-services'
