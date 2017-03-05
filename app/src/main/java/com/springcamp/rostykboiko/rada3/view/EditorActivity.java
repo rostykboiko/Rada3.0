@@ -15,21 +15,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.springcamp.rostykboiko.rada3.EditorContract;
-import com.springcamp.rostykboiko.rada3.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.adapter.OptionListAdapter;
-import com.springcamp.rostykboiko.rada3.adapter.Survey;
-import com.springcamp.rostykboiko.rada3.adapter.SurveyListAdapter;
 import com.springcamp.rostykboiko.rada3.presenter.EditorPresenter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
 
     private EditText editTitle;
     private ArrayList<String> optionsList = new ArrayList<>();
-    private RecyclerView recyclerView;
+    private RecyclerView optionsRecycler;
     private OptionListAdapter optionsAdapter;
 
     @Nullable
@@ -48,13 +44,13 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        recyclerView = (RecyclerView) findViewById(R.id.option_recycler_view);
+        optionsRecycler = (RecyclerView) findViewById(R.id.option_recycler_view);
 
         optionsAdapter = new OptionListAdapter(optionsList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(optionsAdapter);
+        optionsRecycler.setLayoutManager(mLayoutManager);
+        optionsRecycler.setItemAnimator(new DefaultItemAnimator());
+        optionsRecycler.setAdapter(optionsAdapter);
         prepareMovieData();
     }
 

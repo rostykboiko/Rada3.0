@@ -2,46 +2,72 @@ package com.springcamp.rostykboiko.rada3.data;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 
 public class GoogleAccountAdapter {
 
-    private static String userName = null;
-    private static String userEmail = null;
-    private static String userID = null;
-    private static Uri userProfileIcon;
+    private String personId = null;
+    private String userName = null;
+    private String userEmail = null;
+    private String userID = null;
+    private Uri userProfileIcon;
     public static Bitmap bm = null;
 
-    public static String getUserName(){
+
+    public GoogleAccountAdapter(
+            String personId,
+            String userName,
+            String userEmail,
+            String userID,
+            Uri userProfileIcon) {
+        this.personId = personId;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.userID = userID;
+        this.userProfileIcon = userProfileIcon;
+    }
+
+    public String getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(String personId) {
+        this.personId = personId;
+    }
+
+    public String getUserName() {
         return userName;
     }
-    public static void setUserName(String userAuthName) {
+
+    public void setUserName(String userAuthName) {
         userName = userAuthName;
     }
 
-    public static String getUserEmail(){
+    public String getUserEmail() {
         return userEmail;
     }
-    public static void setUserEmail(String userAuthEmail){
+
+    public void setUserEmail(String userAuthEmail) {
         userEmail = userAuthEmail;
     }
 
-    public static String getUserID(){
+    public String getUserID() {
         return userID;
     }
-    public static void setUserID(String userAuthID){
+
+    public void setUserID(String userAuthID) {
         userID = userAuthID;
     }
 
-    public static void setProfileIcon(Uri userAuthIcon){
-        userProfileIcon = userAuthIcon;
+    public void setProfileIcon(Uri userAuthIcon) {
+        this.userProfileIcon = userAuthIcon;
     }
 
-    public static Uri getProfileIcon(){
+    public Uri getProfileIcon() {
         return userProfileIcon;
     }
 
-    public static void logOut(){
+    public void logOut() {
+        personId = null;
         userName = null;
         userEmail = null;
         userID = null;

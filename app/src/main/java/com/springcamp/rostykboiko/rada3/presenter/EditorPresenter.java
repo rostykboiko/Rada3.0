@@ -1,10 +1,10 @@
 package com.springcamp.rostykboiko.rada3.presenter;
 
 import android.support.annotation.Nullable;
-
 import com.springcamp.rostykboiko.rada3.EditorContract;
 import com.springcamp.rostykboiko.rada3.data.EditorInteractor;
 import com.springcamp.rostykboiko.rada3.data.EditorUseCase;
+
 
 public class EditorPresenter implements EditorContract.Presenter {
 
@@ -39,6 +39,7 @@ public class EditorPresenter implements EditorContract.Presenter {
     @Override
     public void onStart() {
     }
+
 
     @Override
     public void onStop() {
