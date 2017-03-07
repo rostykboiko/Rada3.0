@@ -12,6 +12,7 @@ public class GoogleAccountAdapter {
     private Uri userProfileIcon;
     public static Bitmap bm = null;
 
+    public GoogleAccountAdapter(){}
 
     public GoogleAccountAdapter(
             String personId,

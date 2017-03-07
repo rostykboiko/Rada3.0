@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         cardsAdaptor.notifyDataSetChanged();
     }
 
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+    private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 
         private int spanCount;
         private int spacing;
@@ -139,5 +139,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
