@@ -30,8 +30,6 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
             title = (TextView) view.findViewById(R.id.title);
             optionsRecycler = (RecyclerView) view.findViewById(R.id.card_option_recycler);
             optionListAdapter = new OptionListAdapter(optionsList);
-
-
         }
     }
 

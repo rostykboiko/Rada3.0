@@ -54,20 +54,15 @@ public class LoginActivity extends AppCompatActivity implements
 
         mProgressView = findViewById(R.id.login_progress);
 
-        mProgressView.isShown();
-
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-        signInButton.setOnClickListener(Global_OnClickListener);
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (presenter != null) {
+                    presenter.logIn();
+                }
+            }
+        });
 
         updateUI(googleAccountAdapter);
     }
@@ -88,44 +83,29 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void showProgress() {
+    public void tryLogin(Intent signInIntent) {
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+        updateUI(googleAccountAdapter);
     }
 
-    private final View.OnClickListener Global_OnClickListener = new View.OnClickListener() {
-        public void onClick(final View v) {
-            switch (v.getId()) {
-                case R.id.sign_in_button:
-                    signIn();
-                    Log.d(TAG, "Signed as: " + googleAccountAdapter.getUserName());
-                    break;
-            }
-        }
-    };
-
-    /**
-     * Google SignIn Start
-     **/
     @Override
-    public void onStart() {
-        super.onStart();
-        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (opr.isDone()) {
-            GoogleSignInResult result = opr.get();
-            handleSignInResult(result);
-        } else {
-            showProgressDialog();
-            opr.setResultCallback(new ResultCallback<GoogleSignInResult>() {
-                @Nullable
-                @Override
-                public void onResult(GoogleSignInResult googleSignInResult) {
-                    hideProgressDialog();
-                    handleSignInResult(googleSignInResult);
-                }
-            });
-        }
+    public GoogleApiClient getGoogleApiClient() {
+        return new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, getGoogleSignInOptions())
+                .build();
     }
 
-    private void showProgressDialog() {
+    @Override
+    public GoogleSignInOptions getGoogleSignInOptions() {
+        return new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+    }
+
+    @Override
+    public void showProgress() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage(getString(R.string.loading));
@@ -135,22 +115,22 @@ public class LoginActivity extends AppCompatActivity implements
         mProgressDialog.show();
     }
 
-    private void hideProgressDialog() {
+    @Override
+    public void onViewStart() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.hide();
         }
     }
 
+    /**
+     * Google SignIn Start
+     **/
     @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    public void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-
-        updateUI(googleAccountAdapter);
+    public void onStart() {
+        super.onStart();
+        if (presenter != null) {
+            presenter.onStart();
+        }
     }
 
     private void signOut() {
@@ -188,7 +168,6 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
-
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
@@ -199,7 +178,6 @@ public class LoginActivity extends AppCompatActivity implements
      **/
 
     private void updateUI(GoogleAccountAdapter googleAccountAdapter) {
-        hideProgressDialog();
         if (googleAccountAdapter.getPersonId() != null) {
             TextView profileNameView = (TextView) findViewById(R.id.profile_name_tv);
             TextView profileEmailView = (TextView) findViewById(R.id.profile_email_tv);
@@ -222,7 +200,6 @@ public class LoginActivity extends AppCompatActivity implements
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
-
         super.onBackPressed();
     }
 }

@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private CardsAdaptor cardsAdaptor;
     private RecyclerView cardRecyclerView;
     ArrayList<String> list = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         cardRecyclerView.setItemAnimator(new DefaultItemAnimator());
         cardRecyclerView.setAdapter(cardsAdaptor);
 
+        int i = 0;
+
         prepareAlbums();
     }
 
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         list.add("option1");
         list.add("option2");
         list.add("option3");
-        Survey survey = new Survey("True Romance",list);
+        Survey survey = new Survey("True Romance", list);
         surveyList.add(survey);
 
         survey = new Survey("True Romance");
