@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.data;
+package com.springcamp.rostykboiko.rada3.shared.utlils;
 
 import android.graphics.Bitmap;
 import android.net.Uri;

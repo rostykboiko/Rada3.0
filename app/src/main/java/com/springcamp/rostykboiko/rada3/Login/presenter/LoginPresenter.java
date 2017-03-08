@@ -1,12 +1,12 @@
-package com.springcamp.rostykboiko.rada3.presenter;
+package com.springcamp.rostykboiko.rada3.Login.presenter;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.auth.api.Auth;
 import com.springcamp.rostykboiko.rada3.LoginContract;
-import com.springcamp.rostykboiko.rada3.data.LoginInteractor;
-import com.springcamp.rostykboiko.rada3.data.LoginUseCase;
+import com.springcamp.rostykboiko.rada3.Login.data.LoginInteractor;
+import com.springcamp.rostykboiko.rada3.Login.data.LoginUseCase;
 
 public class LoginPresenter implements LoginContract.Presenter {
 

@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.adapter;
+package com.springcamp.rostykboiko.rada3.shared.utlils;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

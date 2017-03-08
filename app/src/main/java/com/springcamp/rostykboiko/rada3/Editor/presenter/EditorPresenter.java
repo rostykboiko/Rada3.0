@@ -1,9 +1,9 @@
-package com.springcamp.rostykboiko.rada3.presenter;
+package com.springcamp.rostykboiko.rada3.Editor.presenter;
 
 import android.support.annotation.Nullable;
 import com.springcamp.rostykboiko.rada3.EditorContract;
-import com.springcamp.rostykboiko.rada3.data.EditorInteractor;
-import com.springcamp.rostykboiko.rada3.data.EditorUseCase;
+import com.springcamp.rostykboiko.rada3.Editor.data.EditorInteractor;
+import com.springcamp.rostykboiko.rada3.Editor.data.EditorUseCase;
 
 
 public class EditorPresenter implements EditorContract.Presenter {

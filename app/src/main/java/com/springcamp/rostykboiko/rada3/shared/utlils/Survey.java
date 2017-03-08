@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.adapter;
+package com.springcamp.rostykboiko.rada3.shared.utlils;
 
 import java.util.ArrayList;
 

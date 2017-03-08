@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.view;
+package com.springcamp.rostykboiko.rada3.Settings.view;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

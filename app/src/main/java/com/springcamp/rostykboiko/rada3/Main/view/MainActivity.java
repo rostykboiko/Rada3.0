@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.view;
+package com.springcamp.rostykboiko.rada3.Main.view;
 
 import android.content.Intent;
 import android.content.res.Resources;
@@ -16,8 +16,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.springcamp.rostykboiko.rada3.R;
-import com.springcamp.rostykboiko.rada3.adapter.CardsAdaptor;
-import com.springcamp.rostykboiko.rada3.adapter.Survey;
+import com.springcamp.rostykboiko.rada3.shared.utlils.CardsAdaptor;
+import com.springcamp.rostykboiko.rada3.shared.utlils.Survey;
+import com.springcamp.rostykboiko.rada3.Editor.view.EditorActivity;
+import com.springcamp.rostykboiko.rada3.Login.view.LoginActivity;
+import com.springcamp.rostykboiko.rada3.Settings.view.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
