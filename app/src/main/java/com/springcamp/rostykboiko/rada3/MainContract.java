@@ -22,7 +22,7 @@ public interface MainContract {
     interface Presenter {
         RecyclerView cardViewInit(Context mContext, MainContract.View view, CardsAdaptor cardsAdaptor);
 
-        CardsAdaptor initCardAdaptor(Context mContext, List<Survey> surveyList, ArrayList<String> optionsList);
+        CardsAdaptor initCardAdaptor(List<Survey> surveyList, OptionListAdapter optionListAdapter);
 
         RecyclerView optionsViewInit(Context mContext, View view, OptionListAdapter optionListAdapter);
 

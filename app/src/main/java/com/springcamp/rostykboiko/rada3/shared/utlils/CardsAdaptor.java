@@ -1,6 +1,5 @@
 package com.springcamp.rostykboiko.rada3.shared.utlils;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHolder> {
-    private Context mContext;
     private ArrayList<String> optionsList = new ArrayList<>();
     private List<Survey> surveyList;
     private RecyclerView optionsRecycler;
@@ -31,10 +29,9 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
         }
     }
 
-    public CardsAdaptor(Context mContext, List<Survey> surveyList, ArrayList<String> optionsList) {
-        this.mContext = mContext;
+    public CardsAdaptor(List<Survey> surveyList, OptionListAdapter optionListAdapter) {
         this.surveyList = surveyList;
-        this.optionsList = optionsList;
+        this.optionListAdapter = optionListAdapter;
     }
 
     @Override

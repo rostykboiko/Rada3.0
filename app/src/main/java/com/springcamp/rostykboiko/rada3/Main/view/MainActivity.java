@@ -1,17 +1,12 @@
 package com.springcamp.rostykboiko.rada3.Main.view;
 
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +23,7 @@ import com.springcamp.rostykboiko.rada3.Settings.view.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
     private List<Survey> surveyList;
@@ -62,12 +58,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         presenter = new MainPresenter(this);
 
         surveyList = new ArrayList<>();
+            /** Nullpointer view */
+//        optionListAdapter = presenter.initOptionListAdapter(list);
+//        optionsView = presenter.optionsViewInit(this, this, optionListAdapter);
 
-        cardsAdaptor = presenter.initCardAdaptor(this, surveyList, list);
+        cardsAdaptor = presenter.initCardAdaptor(surveyList, optionListAdapter);
         cardRecyclerView = presenter.cardViewInit(this, this, cardsAdaptor);
 
-       // optionListAdapter = presenter.initOptionListAdapter(list);
-       // optionsView = presenter.optionsViewInit(this, this, optionListAdapter);
+
 
         initOptions();
     }

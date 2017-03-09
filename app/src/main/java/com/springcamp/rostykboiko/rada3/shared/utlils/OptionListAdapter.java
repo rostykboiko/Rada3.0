@@ -15,11 +15,11 @@ public class OptionListAdapter extends RecyclerView.Adapter<OptionListAdapter.Vi
     private ArrayList<String> optionsList;
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView title;
+        private TextView optionItem;
 
         ViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title);
+            optionItem = (TextView) view.findViewById(R.id.optionItem);
         }
     }
 
@@ -38,7 +38,7 @@ public class OptionListAdapter extends RecyclerView.Adapter<OptionListAdapter.Vi
     @Override
     public void onBindViewHolder(OptionListAdapter.ViewHolder holder, int position) {
         String option = optionsList.get(position);
-        holder.title.setText(option);
+        holder.optionItem.setText(option);
     }
 
     @Override

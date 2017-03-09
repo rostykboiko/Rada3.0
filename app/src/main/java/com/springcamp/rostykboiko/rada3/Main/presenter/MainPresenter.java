@@ -58,8 +58,8 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public CardsAdaptor initCardAdaptor(Context mContext, List<Survey> surveyList, ArrayList<String> optionsList) {
-        cardsAdaptor = new CardsAdaptor(mContext, surveyList, optionsList);
+    public CardsAdaptor initCardAdaptor(List<Survey> surveyList, OptionListAdapter optionListAdapter) {
+        cardsAdaptor = new CardsAdaptor(surveyList, optionListAdapter);
 
         return cardsAdaptor;
     }
