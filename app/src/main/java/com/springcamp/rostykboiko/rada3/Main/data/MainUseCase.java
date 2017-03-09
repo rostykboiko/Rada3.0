@@ -6,7 +6,7 @@ import com.springcamp.rostykboiko.rada3.Editor.data.EditorUseCase;
 
 import java.util.ArrayList;
 
-interface MainUseCase {
+public interface MainUseCase {
     void getSurvey(@NonNull String title,
                    @NonNull ArrayList<String> ptionsList,
                    @NonNull EditorUseCase.EditorCallback callback);

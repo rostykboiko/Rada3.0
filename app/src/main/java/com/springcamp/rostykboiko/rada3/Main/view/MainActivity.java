@@ -59,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
         cardRecyclerView.setItemAnimator(new DefaultItemAnimator());
         cardRecyclerView.setAdapter(cardsAdaptor);
 
-        int i = 0;
-
         prepareAlbums();
     }
 
