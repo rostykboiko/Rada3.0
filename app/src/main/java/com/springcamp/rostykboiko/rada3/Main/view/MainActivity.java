@@ -20,6 +20,7 @@ import com.springcamp.rostykboiko.rada3.Main.presenter.MainPresenter;
 import com.springcamp.rostykboiko.rada3.MainContract;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.CardsAdaptor;
+import com.springcamp.rostykboiko.rada3.shared.utlils.OptionListAdapter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.Survey;
 import com.springcamp.rostykboiko.rada3.Editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.Login.view.LoginActivity;
@@ -30,14 +31,16 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
     private List<Survey> surveyList;
+
     private CardsAdaptor cardsAdaptor;
+    private OptionListAdapter optionListAdapter;
+
     private RecyclerView cardRecyclerView;
+    private RecyclerView optionsView;
     ArrayList<String> list = new ArrayList<>();
 
     @Nullable
     MainContract.Presenter presenter;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +63,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         surveyList = new ArrayList<>();
 
-        cardsAdaptor = new CardsAdaptor(this, surveyList, list);
-
+        cardsAdaptor = presenter.initCardAdaptor(this, surveyList, list);
         cardRecyclerView = presenter.cardViewInit(this, this, cardsAdaptor);
+
+       // optionListAdapter = presenter.initOptionListAdapter(list);
+       // optionsView = presenter.optionsViewInit(this, this, optionListAdapter);
 
         initOptions();
     }
@@ -71,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         list.add("option1");
         list.add("option2");
         list.add("option3");
+
         Survey survey = new Survey("True Romance", list);
         surveyList.add(survey);
 

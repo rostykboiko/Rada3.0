@@ -114,6 +114,7 @@ public class MainPresenter implements MainContract.Presenter {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext.getApplicationContext());
         optionsView.setLayoutManager(mLayoutManager);
         optionsView.setItemAnimator(new DefaultItemAnimator());
+        optionsView.setAdapter(optionListAdapter);
 
         return optionsView;
     }
