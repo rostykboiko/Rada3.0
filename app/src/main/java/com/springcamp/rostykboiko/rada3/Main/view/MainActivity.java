@@ -58,9 +58,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         presenter = new MainPresenter(this);
 
         surveyList = new ArrayList<>();
-            /** Nullpointer view */
-//        optionListAdapter = presenter.initOptionListAdapter(list);
-//        optionsView = presenter.optionsViewInit(this, this, optionListAdapter);
+
+            /** Nullpointer on view */
+        optionListAdapter = presenter.initOptionListAdapter(list);
+        optionsView = presenter.optionsViewInit(this, this, optionListAdapter);
 
         cardsAdaptor = presenter.initCardAdaptor(surveyList, optionListAdapter);
         cardRecyclerView = presenter.cardViewInit(this, this, cardsAdaptor);
