@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.Main.presenter;
+package com.springcamp.rostykboiko.rada3.main.presenter;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -11,9 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
 
-import com.springcamp.rostykboiko.rada3.Main.data.MainUseCase;
-import com.springcamp.rostykboiko.rada3.Main.data.MainInteractor;
-import com.springcamp.rostykboiko.rada3.Main.view.MainActivity;
+import com.springcamp.rostykboiko.rada3.main.data.MainUseCase;
+import com.springcamp.rostykboiko.rada3.main.data.MainInteractor;
 import com.springcamp.rostykboiko.rada3.MainContract;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.CardsAdaptor;
@@ -23,12 +22,13 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.Survey;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
 public class MainPresenter implements MainContract.Presenter {
     @Nullable
     private CardsAdaptor cardsAdaptor;
     @Nullable
     private OptionListAdapter optionsAdapter;
-
 
     @Nullable
     private MainContract.View view;
@@ -36,18 +36,19 @@ public class MainPresenter implements MainContract.Presenter {
     @Nullable
     private MainUseCase mainUseCase;
 
+    @BindView(R.id.card_recycler)
+    RecyclerView recyclerView;
+
     public MainPresenter(@Nullable MainContract.View view) {
         this.view = view;
         this.mainUseCase = new MainInteractor();
     }
 
-
-    /** List of Cards Start */
+    /**
+     * List of Cards Start
+     */
     @Override
-    public RecyclerView cardViewInit(Context mContext, MainContract.View view, CardsAdaptor cardsAdaptor){
-
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.card_recycler);
-
+    public RecyclerView cardViewInit(Context mContext, MainContract.View view, CardsAdaptor cardsAdaptor) {
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(mContext, 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10, mContext), true));
@@ -60,7 +61,6 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public CardsAdaptor initCardAdaptor(List<Survey> surveyList, OptionListAdapter optionListAdapter) {
         cardsAdaptor = new CardsAdaptor(surveyList, optionListAdapter);
-
         return cardsAdaptor;
     }
 
@@ -105,7 +105,9 @@ public class MainPresenter implements MainContract.Presenter {
     }
     /** List of Cards Ends */
 
-    /** List of Options Starts */
+    /**
+     * List of Options Starts
+     */
 
     @Override
     public RecyclerView optionsViewInit(Context mContext, MainContract.View view, OptionListAdapter optionListAdapter) {
@@ -125,15 +127,15 @@ public class MainPresenter implements MainContract.Presenter {
         return optionsAdapter;
     }
 
-    /** List of Options Ends*/
+    /**
+     * List of Options Ends
+     */
 
     @Override
     public void onStart() {
-
     }
 
     @Override
     public void onStop() {
-
     }
 }

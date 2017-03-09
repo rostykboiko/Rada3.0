@@ -5,20 +5,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.springcamp.rostykboiko.rada3.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHolder> {
     private ArrayList<String> optionsList = new ArrayList<>();
     private List<Survey> surveyList;
-    private RecyclerView optionsRecycler;
+
     private OptionListAdapter optionListAdapter;
 
     class CardViewHolder extends RecyclerView.ViewHolder {
         private TextView title;
+        private RecyclerView optionsRecycler;
 
         CardViewHolder(View view) {
             super(view);
@@ -46,19 +45,10 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
     public void onBindViewHolder(final CardViewHolder holder, int position) {
         Survey survey = surveyList.get(position);
 
-        prepareMovieData();
-
         holder.title.setText(survey.getSyrveyTitle());
-        optionsRecycler.setAdapter(optionListAdapter);
+        holder.optionsRecycler.setAdapter(optionListAdapter);
     }
 
-    private void prepareMovieData() {
-        optionsList.add("option1");
-        optionsList.add("option2");
-        optionsList.add("option3");
-
-        optionListAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public int getItemCount() {

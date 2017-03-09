@@ -24,9 +24,9 @@ public interface EditorContract {
     }
 
     interface Presenter {
-        OptionListAdapter initOptionListAdapter (ArrayList<String> optionsList);
+        OptionListAdapter initOptionListAdapter(ArrayList<String> optionsList);
 
-        RecyclerView initOptionsListView (Context mContext, View view, OptionListAdapter optionListAdapter);
+        RecyclerView initOptionsListView(Context mContext, View view, OptionListAdapter optionListAdapter);
 
         void getSurvey();
 

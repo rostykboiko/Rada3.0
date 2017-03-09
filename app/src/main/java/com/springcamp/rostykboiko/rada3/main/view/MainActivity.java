@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.Main.view;
+package com.springcamp.rostykboiko.rada3.main.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,20 +10,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.springcamp.rostykboiko.rada3.Main.presenter.MainPresenter;
+import com.springcamp.rostykboiko.rada3.main.presenter.MainPresenter;
 import com.springcamp.rostykboiko.rada3.MainContract;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.CardsAdaptor;
 import com.springcamp.rostykboiko.rada3.shared.utlils.OptionListAdapter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.Survey;
-import com.springcamp.rostykboiko.rada3.Editor.view.EditorActivity;
-import com.springcamp.rostykboiko.rada3.Login.view.LoginActivity;
-import com.springcamp.rostykboiko.rada3.Settings.view.SettingsActivity;
-
+import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
+import com.springcamp.rostykboiko.rada3.login.view.LoginActivity;
+import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
     private List<Survey> surveyList;
@@ -33,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private RecyclerView cardRecyclerView;
     private RecyclerView optionsView;
+
+    @BindView(R.id.toolbar)Toolbar toolbar;
     ArrayList<String> list = new ArrayList<>();
 
     @Nullable
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -59,16 +60,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         surveyList = new ArrayList<>();
 
-            /** Nullpointer on view */
-        optionListAdapter = presenter.initOptionListAdapter(list);
-        optionsView = presenter.optionsViewInit(this, this, optionListAdapter);
+        /** Nullpointer on view */
+//        optionListAdapter = presenter.initOptionListAdapter(list);
+//        optionsView = presenter.optionsViewInit(this, this, optionListAdapter);
 
-        cardsAdaptor = presenter.initCardAdaptor(surveyList, optionListAdapter);
-        cardRecyclerView = presenter.cardViewInit(this, this, cardsAdaptor);
+ //       cardsAdaptor = presenter.initCardAdaptor(surveyList, optionListAdapter);
+//        cardRecyclerView = presenter.cardViewInit(this, this, cardsAdaptor);
 
-
-
-        initOptions();
+ //       initOptions();
     }
 
     private void initOptions() {
@@ -101,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

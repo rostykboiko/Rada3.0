@@ -1,19 +1,16 @@
-package com.springcamp.rostykboiko.rada3.Editor.presenter;
+package com.springcamp.rostykboiko.rada3.editor.presenter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
 import com.springcamp.rostykboiko.rada3.EditorContract;
-import com.springcamp.rostykboiko.rada3.Editor.data.EditorInteractor;
-import com.springcamp.rostykboiko.rada3.Editor.data.EditorUseCase;
+import com.springcamp.rostykboiko.rada3.editor.data.EditorInteractor;
+import com.springcamp.rostykboiko.rada3.editor.data.EditorUseCase;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.OptionListAdapter;
-
 import java.util.ArrayList;
-
 
 public class EditorPresenter implements EditorContract.Presenter {
 
@@ -27,7 +24,6 @@ public class EditorPresenter implements EditorContract.Presenter {
         this.view = view;
         this.editorUseCase = new EditorInteractor();
     }
-
 
     @Override
     public void getSurvey() {
@@ -67,7 +63,6 @@ public class EditorPresenter implements EditorContract.Presenter {
     @Override
     public void onStart() {
     }
-
 
     @Override
     public void onStop() {

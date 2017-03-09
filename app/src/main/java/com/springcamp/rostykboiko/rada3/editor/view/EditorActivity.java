@@ -1,11 +1,9 @@
-package com.springcamp.rostykboiko.rada3.Editor.view;
+package com.springcamp.rostykboiko.rada3.editor.view;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -15,11 +13,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.springcamp.rostykboiko.rada3.EditorContract;
-import com.springcamp.rostykboiko.rada3.Main.view.MainActivity;
+import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.OptionListAdapter;
-import com.springcamp.rostykboiko.rada3.Editor.presenter.EditorPresenter;
-import com.springcamp.rostykboiko.rada3.Settings.view.SettingsActivity;
+import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
+import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
 
 import java.util.ArrayList;
 

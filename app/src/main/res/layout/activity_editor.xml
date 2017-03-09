@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     app:theme="@style/AppTheme.NoActionBar"
-    tools:context="com.springcamp.rostykboiko.rada3.Editor.view.EditorActivity">
+    tools:context="com.springcamp.rostykboiko.rada3.editor.view.EditorActivity">
 
     <include layout="@layout/content_editor" />
 

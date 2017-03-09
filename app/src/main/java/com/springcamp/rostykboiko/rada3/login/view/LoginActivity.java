@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.Login.view;
+package com.springcamp.rostykboiko.rada3.login.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -21,10 +21,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.springcamp.rostykboiko.rada3.LoginContract;
-import com.springcamp.rostykboiko.rada3.Main.view.MainActivity;
+import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
-import com.springcamp.rostykboiko.rada3.Login.presenter.LoginPresenter;
+import com.springcamp.rostykboiko.rada3.login.presenter.LoginPresenter;
 
 public class LoginActivity extends AppCompatActivity implements
         LoginContract.View,

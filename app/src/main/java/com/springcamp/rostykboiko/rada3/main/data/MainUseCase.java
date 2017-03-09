@@ -1,8 +1,8 @@
-package com.springcamp.rostykboiko.rada3.Main.data;
+package com.springcamp.rostykboiko.rada3.main.data;
 
 import android.support.annotation.NonNull;
 
-import com.springcamp.rostykboiko.rada3.Editor.data.EditorUseCase;
+import com.springcamp.rostykboiko.rada3.editor.data.EditorUseCase;
 
 import java.util.ArrayList;
 

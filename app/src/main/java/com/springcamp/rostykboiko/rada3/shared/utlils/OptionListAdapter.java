@@ -5,12 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.springcamp.rostykboiko.rada3.R;
-
 import java.util.ArrayList;
 
-public class OptionListAdapter extends RecyclerView.Adapter<OptionListAdapter.ViewHolder>{
+public class OptionListAdapter extends RecyclerView.Adapter<OptionListAdapter.ViewHolder> {
 
     private ArrayList<String> optionsList;
 

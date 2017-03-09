@@ -1,12 +1,10 @@
-package com.springcamp.rostykboiko.rada3.Main.data;
+package com.springcamp.rostykboiko.rada3.editor.data;
 
 import android.support.annotation.NonNull;
 
-import com.springcamp.rostykboiko.rada3.Editor.data.EditorUseCase;
-
 import java.util.ArrayList;
 
-public class MainInteractor implements MainUseCase{
+public class EditorInteractor implements EditorUseCase{
 
     @Override
     public void getSurvey(@NonNull String title,

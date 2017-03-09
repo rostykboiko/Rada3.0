@@ -14,7 +14,7 @@ public class Survey {
         this.syrveyTitle = syrveyTitle;
     }
 
-    public Survey(String syrveyTitle,ArrayList<String> surveyOptionList) {
+    public Survey(String syrveyTitle, ArrayList<String> surveyOptionList) {
         this.syrveyTitle = syrveyTitle;
         this.surveyOptionList = surveyOptionList;
     }
@@ -32,7 +32,6 @@ public class Survey {
         this.duration = duration;
         this.partiosipantsEmailList = partiosipantsEmailList;
     }
-
 
 
     public String getSyrveyTitle() {
