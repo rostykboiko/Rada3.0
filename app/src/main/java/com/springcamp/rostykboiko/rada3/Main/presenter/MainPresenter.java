@@ -28,6 +28,8 @@ public class MainPresenter implements MainContract.Presenter {
     private CardsAdaptor cardsAdaptor;
     @Nullable
     private OptionListAdapter optionsAdapter;
+
+
     @Nullable
     private MainContract.View view;
 
@@ -42,7 +44,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     /** List of Cards Start */
     @Override
-    public RecyclerView cardViewInit(Context mContext, MainContract.View view){
+    public RecyclerView cardViewInit(Context mContext, MainContract.View view, CardsAdaptor cardsAdaptor){
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.card_recycler);
 
@@ -50,6 +52,7 @@ public class MainPresenter implements MainContract.Presenter {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10, mContext), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(cardsAdaptor);
 
         return recyclerView;
     }
@@ -67,7 +70,7 @@ public class MainPresenter implements MainContract.Presenter {
         private int spacing;
         private boolean includeEdge;
 
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+        GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
             this.spanCount = spanCount;
             this.spacing = spacing;
             this.includeEdge = includeEdge;
@@ -105,12 +108,13 @@ public class MainPresenter implements MainContract.Presenter {
     /** List of Options Starts */
 
     @Override
-    public RecyclerView optionsViewInit(Context mContext, MainContract.View view) {
+    public RecyclerView optionsViewInit(Context mContext, MainContract.View view, OptionListAdapter optionListAdapter) {
         RecyclerView optionsView = (RecyclerView) view.findViewById(R.id.option_recycler_view);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext.getApplicationContext());
         optionsView.setLayoutManager(mLayoutManager);
         optionsView.setItemAnimator(new DefaultItemAnimator());
+
         return optionsView;
     }
 
@@ -121,11 +125,6 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     /** List of Options Ends*/
-
-    @Override
-    public void getSurvey() {
-
-    }
 
     @Override
     public void onStart() {

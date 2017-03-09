@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.springcamp.rostykboiko.rada3.Main.presenter.MainPresenter;
+import com.springcamp.rostykboiko.rada3.MainContract;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.CardsAdaptor;
 import com.springcamp.rostykboiko.rada3.shared.utlils.Survey;
@@ -25,11 +28,16 @@ import com.springcamp.rostykboiko.rada3.Settings.view.SettingsActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainContract.View {
     private List<Survey> surveyList;
     private CardsAdaptor cardsAdaptor;
     private RecyclerView cardRecyclerView;
     ArrayList<String> list = new ArrayList<>();
+
+    @Nullable
+    MainContract.Presenter presenter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,21 +56,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
+        presenter = new MainPresenter(this);
 
         surveyList = new ArrayList<>();
+
         cardsAdaptor = new CardsAdaptor(this, surveyList, list);
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
-        cardRecyclerView.setLayoutManager(mLayoutManager);
-        cardRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-        cardRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        cardRecyclerView.setAdapter(cardsAdaptor);
+        cardRecyclerView = presenter.cardViewInit(this, this, cardsAdaptor);
 
-        prepareAlbums();
+        initOptions();
     }
 
-    private void prepareAlbums() {
+    private void initOptions() {
         list.add("option1");
         list.add("option2");
         list.add("option3");
@@ -81,47 +86,9 @@ public class MainActivity extends AppCompatActivity {
         cardsAdaptor.notifyDataSetChanged();
     }
 
-    private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+    @Override
+    public void showProgress() {
 
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
-    }
-
-    /**
-     * Converting dp to pixel
-     */
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 
     @Override
@@ -129,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
