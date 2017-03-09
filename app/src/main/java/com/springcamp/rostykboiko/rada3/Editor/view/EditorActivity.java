@@ -25,9 +25,7 @@ import java.util.ArrayList;
 
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
 
-    private EditText editTitle;
     private ArrayList<String> optionsList = new ArrayList<>();
-    private RecyclerView optionsRecycler;
     private OptionListAdapter optionsAdapter;
 
     @Nullable
@@ -41,18 +39,14 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         presenter = new EditorPresenter(this);
 
         ImageView backButton = (ImageView) findViewById(R.id.backBtn);
-        editTitle = (EditText) findViewById(R.id.txtTitle);
+        EditText editTitle = (EditText) findViewById(R.id.txtTitle);
         backButton.setOnClickListener(Global_OnClickListener);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        optionsRecycler = (RecyclerView) findViewById(R.id.option_recycler_view);
+        optionsAdapter = presenter.initOptionListAdapter(optionsList);
+        RecyclerView optionsRecycler = presenter.initOptionsListView(this, this, optionsAdapter);
 
-        optionsAdapter = new OptionListAdapter(optionsList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        optionsRecycler.setLayoutManager(mLayoutManager);
-        optionsRecycler.setItemAnimator(new DefaultItemAnimator());
-        optionsRecycler.setAdapter(optionsAdapter);
         prepareMovieData();
     }
 
@@ -64,7 +58,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
         super.onBackPressed();
     }
-
 
     private void prepareMovieData() {
         optionsList.add("option1");
