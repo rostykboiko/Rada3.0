@@ -18,13 +18,6 @@ public interface MainContract {
     }
 
     interface Presenter {
-        RecyclerView cardViewInit(Context mContext, MainContract.View view, CardsAdaptor cardsAdaptor);
-
-        CardsAdaptor initCardAdaptor(List<Survey> surveyList, OptionListAdapter optionListAdapter);
-
-        RecyclerView optionsViewInit(Context mContext, View view, OptionListAdapter optionListAdapter);
-
-        OptionListAdapter initOptionListAdapter(ArrayList<String> optionList);
 
         void onStart();
 

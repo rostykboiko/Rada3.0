@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -21,10 +23,14 @@ import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
 
     private ArrayList<String> optionsList = new ArrayList<>();
     private OptionListAdapter optionsAdapter;
+
+    @BindView(R.id.option_recycler_view) RecyclerView optionslistView;
 
     @Nullable
     EditorContract.Presenter presenter;
@@ -42,10 +48,17 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        optionsAdapter = presenter.initOptionListAdapter(optionsList);
-        RecyclerView optionsRecycler = presenter.initOptionsListView(this, this, optionsAdapter);
-
+        optionsListViewInit();
         prepareMovieData();
+    }
+
+    private void optionsListViewInit(){
+        optionslistView = (RecyclerView) findViewById(R.id.option_recycler_view);
+        optionsAdapter = new OptionListAdapter(optionsList);
+        RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
+        optionslistView.setLayoutManager(mListManager);
+        optionslistView.setItemAnimator(new DefaultItemAnimator());
+        optionslistView.setAdapter(optionsAdapter);
     }
 
     @Override
@@ -83,7 +96,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     @Override
     public void showProgress() {
-
     }
 
     private final View.OnClickListener Global_OnClickListener = new View.OnClickListener() {
@@ -101,7 +113,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
