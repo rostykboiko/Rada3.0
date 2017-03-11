@@ -11,8 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.springcamp.rostykboiko.rada3.EditorContract;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
@@ -20,7 +20,6 @@ import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.OptionListAdapter;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
 import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
-
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -31,6 +30,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     private OptionListAdapter optionsAdapter;
 
     @BindView(R.id.option_recycler_view) RecyclerView optionslistView;
+    @BindView(R.id.rv_add_option)RelativeLayout addNewOption;
+    @BindView(R.id.backBtn)ImageView backButton;
 
     @Nullable
     EditorContract.Presenter presenter;
@@ -42,18 +43,39 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
         presenter = new EditorPresenter(this);
 
-        ImageView backButton = (ImageView) findViewById(R.id.backBtn);
-        EditText editTitle = (EditText) findViewById(R.id.txtTitle);
-        backButton.setOnClickListener(Global_OnClickListener);
+        initViewItems();
+        initClickListeners();
+        initOptionsListView();
+        addOptionRow();
+    }
+
+    private void initViewItems(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        optionsListViewInit();
-        prepareMovieData();
+        backButton = (ImageView) findViewById(R.id.backBtn);
+        addNewOption = (RelativeLayout) findViewById(R.id.rv_add_option);
     }
 
-    private void optionsListViewInit(){
+    private void initClickListeners(){
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        addNewOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addOptionRow();
+            }
+        });
+    }
+
+    private void initOptionsListView(){
         optionslistView = (RecyclerView) findViewById(R.id.option_recycler_view);
+        // TO DO: Without findViewById() butterKnife return null on View
+
         optionsAdapter = new OptionListAdapter(optionsList);
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         optionslistView.setLayoutManager(mListManager);
@@ -70,10 +92,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         super.onBackPressed();
     }
 
-    private void prepareMovieData() {
-        optionsList.add("option1");
-        optionsList.add("option2");
-        optionsList.add("option3");
+    private void addOptionRow() {
+        optionsList.add(getText(R.string.ed_option).toString());
 
         optionsAdapter.notifyDataSetChanged();
     }
@@ -88,25 +108,10 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         return null;
     }
 
-
     @Override
     public ArrayList<String> getOptionsList() {
         return null;
     }
-
-    @Override
-    public void showProgress() {
-    }
-
-    private final View.OnClickListener Global_OnClickListener = new View.OnClickListener() {
-        public void onClick(final View v) {
-            switch (v.getId()) {
-                case R.id.backBtn:
-                    onBackPressed();
-                    break;
-            }
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -1,6 +1,8 @@
 package com.springcamp.rostykboiko.rada3.shared.utlils;
 
 import android.content.Context;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,12 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
             title = (TextView) view.findViewById(R.id.title);
             optionsRecycler = (RecyclerView) view.findViewById(R.id.card_option_recycler);
             optionListAdapter = new OptionListAdapter(optionsList);
+
+            RecyclerView.LayoutManager mListManager = new LinearLayoutManager(mContext.getApplicationContext());
+            optionsRecycler.setLayoutManager(mListManager);
+            optionsRecycler.setItemAnimator(new DefaultItemAnimator());
+            optionsRecycler.setAdapter(optionListAdapter);
+
         }
     }
 
@@ -51,7 +59,6 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
         holder.title.setText(survey.getSyrveyTitle());
         holder.optionsRecycler.setAdapter(optionListAdapter);
     }
-
 
     @Override
     public int getItemCount() {

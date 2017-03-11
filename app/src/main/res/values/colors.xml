@@ -7,6 +7,7 @@
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#727272</color>
     <color name="colorDivider">#B6B6B6</color>
+    <color name="colorActiveSwitch">#2196f3</color>
 
     <color name="black">#000000</color>
     <color name="jet">#222222</color>

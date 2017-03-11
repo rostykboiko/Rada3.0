@@ -16,6 +16,9 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.springcamp.rostykboiko.rada3.intro.view.MainIntroActivity;
 import com.springcamp.rostykboiko.rada3.main.presenter.MainPresenter;
 import com.springcamp.rostykboiko.rada3.MainContract;
@@ -26,6 +29,7 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.Survey;
 import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.login.view.LoginActivity;
 import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -57,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         presenter = new MainPresenter(this);
 
+        surveyList = new ArrayList<>();
         cardViewInit();
         initOptions();
     }
@@ -64,8 +69,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     /**
      * List of Cards Start
      */
-
-    private void optionsListViewInit(){
+    private void optionsListViewInit() {
         optionsAdapter = new OptionListAdapter(optionslist);
         RecyclerView optionslistView = (RecyclerView) findViewById(R.id.option_recycler_view);
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
@@ -74,9 +78,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         optionslistView.setAdapter(cardsAdaptor);
     }
 
-    private void cardViewInit(){
+    private void cardViewInit() {
         cardsAdaptor = new CardsAdaptor(this, surveyList, optionslist);
-        RecyclerView cardRecyclerView = (RecyclerView)findViewById(R.id.card_recycler);
+        RecyclerView cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
         RecyclerView.LayoutManager mCardManager = new GridLayoutManager(this, 2);
         cardRecyclerView.setLayoutManager(mCardManager);
         cardRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
@@ -129,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
      */
 
     private void initOptions() {
-        surveyList = new ArrayList<>();
         optionslist.add("option1");
         optionslist.add("option2");
         optionslist.add("option3");
@@ -164,17 +167,22 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intent);
-        }
-        if (id == R.id.action_share) {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
-        }
-        if (id == R.id.action_delete){
-            Intent intent = new Intent(MainActivity.this, MainIntroActivity.class);
-            startActivity(intent);
+        switch (id) {
+            case R.id.action_share:
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("message");
+
+                myRef.setValue("Hello, World!");
+                break;
+            case R.id.action_settings:
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                break;
+            case R.id.action_delete:
+                startActivity(new Intent(MainActivity.this, MainIntroActivity.class));
+                break;
+            case R.id.action_profile:
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

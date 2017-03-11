@@ -31,6 +31,7 @@
                 android:scrollbars="vertical" />
 
             <RelativeLayout
+                android:id="@+id/rv_add_option"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/option_recycler_view">
@@ -39,15 +40,17 @@
                     android:id="@+id/btn_add_option"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="@dimen/margin_large"
+                    android:padding="@dimen/margin_small"
                     android:src="@drawable/ic_material_plus" />
 
                 <TextView
                     android:id="@+id/Tv_add_new_option"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_large"
+                    android:layout_marginBottom="@dimen/margin_normal"
                     android:layout_marginStart="@dimen/margin_tab"
+                    android:padding="@dimen/margin_small"
                     android:text="@string/tv_add_new_option"
                     android:textSize="16sp" />
             </RelativeLayout>
@@ -82,8 +85,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:layout_marginStart="@dimen/margin_small"
                 android:layout_marginBottom="@dimen/margin_switch"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="@dimen/margin_large"
                 android:layout_marginTop="@dimen/margin_switch" />
 
             <TextView
@@ -102,6 +106,7 @@
                 android:layout_below="@+id/close_survey_switch"
                 android:layout_marginBottom="@dimen/margin_switch"
                 android:layout_marginEnd="16dp"
+                android:layout_marginStart="@dimen/margin_small"
                 android:layout_marginTop="@dimen/margin_switch" />
 
             <TextView

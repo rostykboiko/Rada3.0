@@ -47,6 +47,7 @@
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:layout_marginStart">@dimen/margin_tab</item>
         <item name="android:textColor">@color/jet</item>
+        <item name="colorControlActivated">@color/colorActiveSwitch</item>
     </style>
 
     <style name="AppTheme.TitleText" parent="AppTheme">

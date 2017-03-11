@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Rada3.0</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Log In</string>
     <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
     <string name="title_activity_login">Sign in</string>
@@ -34,6 +34,7 @@
     <string name="tv_one_option">Один варіант відповіді</string>
     <string name="tv_duration">Тривалість</string>
     <string name="tv_participants">Учасники</string>
+    <string name="ed_option">Варіант відповіді</string>
     <!--Editor Activity End-->
 
     <!-- Intro Res Start-->

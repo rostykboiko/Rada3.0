@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import com.springcamp.rostykboiko.rada3.R;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class OptionListAdapter extends RecyclerView.Adapter<OptionListAdapter.Vi
 
         ViewHolder(View view) {
             super(view);
-            optionItem = (TextView) view.findViewById(R.id.optionItem);
+            optionItem = (EditText) view.findViewById(R.id.optionItem);
         }
     }
 
@@ -36,7 +37,7 @@ public class OptionListAdapter extends RecyclerView.Adapter<OptionListAdapter.Vi
     @Override
     public void onBindViewHolder(OptionListAdapter.ViewHolder holder, int position) {
         String option = optionsList.get(position);
-        holder.optionItem.setText(option);
+        holder.optionItem.setHint(option);
     }
 
     @Override
