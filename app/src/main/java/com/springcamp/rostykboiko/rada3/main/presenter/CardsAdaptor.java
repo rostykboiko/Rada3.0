@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.shared.utlils;
+package com.springcamp.rostykboiko.rada3.main.presenter;
 
 import android.content.Context;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.shared.utlils.Survey;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,7 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
     private List<Survey> surveyList;
     private Context mContext;
 
-    private OptionListAdapter optionListAdapter;
+    private OptionCardAdapter optionCardAdapter;
 
     class CardViewHolder extends RecyclerView.ViewHolder {
         private TextView title;
@@ -28,12 +30,12 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
 
             title = (TextView) view.findViewById(R.id.title);
             optionsRecycler = (RecyclerView) view.findViewById(R.id.card_option_recycler);
-            optionListAdapter = new OptionListAdapter(optionsList);
+            optionCardAdapter = new OptionCardAdapter(optionsList);
 
             RecyclerView.LayoutManager mListManager = new LinearLayoutManager(mContext.getApplicationContext());
             optionsRecycler.setLayoutManager(mListManager);
             optionsRecycler.setItemAnimator(new DefaultItemAnimator());
-            optionsRecycler.setAdapter(optionListAdapter);
+            optionsRecycler.setAdapter(optionCardAdapter);
 
         }
     }
@@ -57,7 +59,7 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
         Survey survey = surveyList.get(position);
 
         holder.title.setText(survey.getSyrveyTitle());
-        holder.optionsRecycler.setAdapter(optionListAdapter);
+        holder.optionsRecycler.setAdapter(optionCardAdapter);
     }
 
     @Override

@@ -36,10 +36,10 @@
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="card_margin">2dp</dimen>
     <dimen name="card_album_radius">0dp</dimen>
+    <dimen name="card_row_text_height">28dp</dimen>
     <!-- Item Dimens -->
     <dimen name="row_height">72dp</dimen>
     <dimen name="row_text_height">32dp</dimen>
-
     <dimen name="row_small">48dp</dimen>
     <dimen name="row_large">72dp</dimen>
 

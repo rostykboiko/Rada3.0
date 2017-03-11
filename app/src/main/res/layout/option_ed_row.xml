@@ -19,7 +19,7 @@
         android:background="@android:color/transparent"
         android:inputType="textAutoCorrect|textMultiLine"
         android:hint="@string/title_activity_editor"
-        android:maxLength="75"
+        android:maxLength="25"
         android:layout_height="@dimen/row_text_height"
         android:layout_marginStart="@dimen/margin_tab"
         android:layout_marginTop="@dimen/margin_normal"

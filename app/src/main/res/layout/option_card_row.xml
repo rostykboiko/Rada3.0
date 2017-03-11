@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/row_small"
+    android:orientation="vertical">
+
+    <RadioButton
+        android:id="@+id/radioBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginStart="@dimen/margin_normal"
+        android:clickable="false"/>
+
+    <TextView
+        android:id="@+id/optionItem"
+        android:layout_width="wrap_content"
+        android:text="@string/title_activity_editor"
+        android:maxLength="25"
+        android:layout_height="@dimen/row_text_height"
+        android:layout_marginStart="@dimen/desc_padding"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:padding="@dimen/margin_small"
+        android:textSize="@dimen/text_size_standard" />
+</RelativeLayout>

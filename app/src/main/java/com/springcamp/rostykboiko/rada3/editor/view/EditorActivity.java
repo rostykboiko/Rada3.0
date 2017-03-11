@@ -15,9 +15,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.springcamp.rostykboiko.rada3.EditorContract;
+import com.springcamp.rostykboiko.rada3.editor.presenter.OptionEditorAdapter;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
-import com.springcamp.rostykboiko.rada3.shared.utlils.OptionListAdapter;
+import com.springcamp.rostykboiko.rada3.main.presenter.OptionCardAdapter;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
 import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import butterknife.BindView;
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
 
     private ArrayList<String> optionsList = new ArrayList<>();
-    private OptionListAdapter optionsAdapter;
+    private OptionEditorAdapter optionsAdapter;
 
     @BindView(R.id.option_recycler_view) RecyclerView optionslistView;
     @BindView(R.id.rv_add_option)RelativeLayout addNewOption;
@@ -76,7 +77,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         optionslistView = (RecyclerView) findViewById(R.id.option_recycler_view);
         // TO DO: Without findViewById() butterKnife return null on View
 
-        optionsAdapter = new OptionListAdapter(optionsList);
+        optionsAdapter = new OptionEditorAdapter(optionsList);
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         optionslistView.setLayoutManager(mListManager);
         optionslistView.setItemAnimator(new DefaultItemAnimator());

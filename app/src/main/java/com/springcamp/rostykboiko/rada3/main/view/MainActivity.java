@@ -23,8 +23,8 @@ import com.springcamp.rostykboiko.rada3.intro.view.MainIntroActivity;
 import com.springcamp.rostykboiko.rada3.main.presenter.MainPresenter;
 import com.springcamp.rostykboiko.rada3.MainContract;
 import com.springcamp.rostykboiko.rada3.R;
-import com.springcamp.rostykboiko.rada3.shared.utlils.CardsAdaptor;
-import com.springcamp.rostykboiko.rada3.shared.utlils.OptionListAdapter;
+import com.springcamp.rostykboiko.rada3.main.presenter.CardsAdaptor;
+import com.springcamp.rostykboiko.rada3.main.presenter.OptionCardAdapter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.Survey;
 import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.login.view.LoginActivity;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private List<Survey> surveyList;
     private ArrayList<String> optionslist = new ArrayList<>();
     private CardsAdaptor cardsAdaptor;
-    private OptionListAdapter optionsAdapter;
+    private OptionCardAdapter optionsAdapter;
 
     @Nullable
     MainContract.Presenter presenter;
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
      * List of Cards Start
      */
     private void optionsListViewInit() {
-        optionsAdapter = new OptionListAdapter(optionslist);
+        optionsAdapter = new OptionCardAdapter(optionslist);
         RecyclerView optionslistView = (RecyclerView) findViewById(R.id.option_recycler_view);
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         optionslistView.setLayoutManager(mListManager);
