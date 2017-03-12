@@ -1,8 +1,11 @@
 package com.springcamp.rostykboiko.rada3.settings.view;
 
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+
 import com.springcamp.rostykboiko.rada3.R;
 
 public class SettingsActivity extends AppCompatActivity {

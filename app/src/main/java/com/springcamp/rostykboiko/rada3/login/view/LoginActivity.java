@@ -2,6 +2,7 @@ package com.springcamp.rostykboiko.rada3.login.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.Nullable;
 
 import android.support.v7.app.AppCompatActivity;
@@ -37,17 +38,12 @@ public class LoginActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
 
     @Nullable
-    private GoogleAccountAdapter googleAccountAdapter;
-
-    @Nullable
     LoginContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        googleAccountAdapter = new GoogleAccountAdapter();
 
         presenter = new LoginPresenter(this);
 
@@ -62,8 +58,6 @@ public class LoginActivity extends AppCompatActivity implements
                 }
             }
         });
-
-        updateUI(googleAccountAdapter);
     }
 
     @Override
@@ -84,7 +78,6 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void tryLogin(Intent signInIntent) {
         startActivityForResult(signInIntent, RC_SIGN_IN);
-        updateUI(googleAccountAdapter);
     }
 
     @Override
@@ -139,21 +132,19 @@ public class LoginActivity extends AppCompatActivity implements
                     public void onResult(Status status) {
                     }
                 });
-
-        updateUI(googleAccountAdapter);
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            googleAccountAdapter = new GoogleAccountAdapter(
-                    acct.getId(),
-                    acct.getDisplayName(),
-                    acct.getEmail(),
-                    acct.getId(),
-                    acct.getPhotoUrl());
-            Log.d(TAG, "User name: " + googleAccountAdapter.getUserName());
+
+            GoogleAccountAdapter.setUserName(acct.getDisplayName());
+            GoogleAccountAdapter.setUserEmail(acct.getEmail());
+            GoogleAccountAdapter.setUserID(acct.getId());
+            GoogleAccountAdapter.setProfileIcon(acct.getPhotoUrl());
+
+            Log.d(TAG, "User name: " + GoogleAccountAdapter.getUserName());
         }
     }
 

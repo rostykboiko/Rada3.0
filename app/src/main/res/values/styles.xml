@@ -6,7 +6,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowLightStatusBar">true</item>
-
+        <item name="material_drawer_selected_text">@color/colorPrimaryText</item>
+        <item name="material_drawer_primary_text">@color/monsoon</item>
+        <item name="material_drawer_primary_icon">@color/monsoon</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -17,14 +19,14 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
     <!-- Light EditTexts -->
     <style name="ThemeOverlay.FirebaseIcon" parent="AppTheme">
         <item name="android:layout_marginTop">@dimen/icon_top_margin</item>
         <item name="android:layout_marginBottom">@dimen/icon_bottom_margin</item>
     </style>
 
-    <style name="ThemeOverlay.MyTextDetail" parent="AppTheme">
+    <!--Text Styles-->
+    <style name="ThemeOverlay.TextDetail" parent="AppTheme">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fadeScrollbars">true</item>
@@ -35,17 +37,12 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="ThemeOverlay.MyTitleText" parent="AppTheme">
+    <style name="ThemeOverlay.TitleText" parent="AppTheme">
         <item name="android:gravity">center</item>
         <item name="android:textSize">36sp</item>
-
     </style>
 
     <style name="AppTheme.TextItem" parent="AppTheme">
-        <item name="android:layout_marginTop">@dimen/margin_large</item>
-        <item name="android:layout_marginEnd">@dimen/margin_large</item>
-        <item name="android:layout_marginBottom">@dimen/margin_large</item>
-        <item name="android:layout_marginStart">@dimen/margin_tab</item>
         <item name="android:textColor">@color/jet</item>
         <item name="colorControlActivated">@color/colorActiveSwitch</item>
     </style>

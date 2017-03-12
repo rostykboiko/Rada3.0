@@ -1,7 +1,10 @@
 package com.springcamp.rostykboiko.rada3.editor.view;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,26 +16,39 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.springcamp.rostykboiko.rada3.EditorContract;
 import com.springcamp.rostykboiko.rada3.editor.presenter.OptionEditorAdapter;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
-import com.springcamp.rostykboiko.rada3.main.presenter.OptionCardAdapter;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
 import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
+import com.springcamp.rostykboiko.rada3.shared.utlils.ItemListDialogFragment;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
+
+import android.widget.Toast;
 
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
 
     private ArrayList<String> optionsList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
 
-    @BindView(R.id.option_recycler_view) RecyclerView optionslistView;
-    @BindView(R.id.rv_add_option)RelativeLayout addNewOption;
-    @BindView(R.id.backBtn)ImageView backButton;
+    @BindView(R.id.option_recycler_view)
+    RecyclerView optionslistView;
+    @BindView(R.id.rv_add_option)
+    RelativeLayout addNewOption;
+    @BindView(R.id.backBtn)
+    ImageView backButton;
+    @BindView(R.id.participants_row)
+    RelativeLayout participantsBtn;
+    @BindView(R.id.duration_row)
+    RelativeLayout durationBtn;
+    @BindView(R.id.tv_duration_time)
+    TextView durationTime;
 
     @Nullable
     EditorContract.Presenter presenter;
@@ -50,15 +66,18 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         addOptionRow();
     }
 
-    private void initViewItems(){
+    private void initViewItems() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        durationTime = (TextView) findViewById(R.id.tv_duration_time);
+        durationBtn = (RelativeLayout) findViewById(R.id.duration_row);
+        participantsBtn = (RelativeLayout) findViewById(R.id.participants_row);
         backButton = (ImageView) findViewById(R.id.backBtn);
         addNewOption = (RelativeLayout) findViewById(R.id.rv_add_option);
     }
 
-    private void initClickListeners(){
+    private void initClickListeners() {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,9 +90,23 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 addOptionRow();
             }
         });
+        durationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                durationPicker();
+            }
+        });
+        participantsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO Error!!! :  java.lang.ClassCastException:(ItemListDialogFragment.java:61)
+                BottomSheetDialogFragment bottomSheetDialogFragment = new ItemListDialogFragment();
+                bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+            }
+        });
     }
 
-    private void initOptionsListView(){
+    private void initOptionsListView() {
         optionslistView = (RecyclerView) findViewById(R.id.option_recycler_view);
         // TO DO: Without findViewById() butterKnife return null on View
 
@@ -82,6 +115,28 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         optionslistView.setLayoutManager(mListManager);
         optionslistView.setItemAnimator(new DefaultItemAnimator());
         optionslistView.setAdapter(optionsAdapter);
+    }
+
+    private void durationPicker() {
+        final String[] mDurationOptions = {
+                "2 хвилини",
+                "10 хвилин",
+                "30 хвилин",
+                "1 година",
+                "Налаштування"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditorActivity.this);
+
+        builder.setItems(mDurationOptions, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                Toast.makeText(getApplicationContext(),
+                        "Тривалість: " + mDurationOptions[item],
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
