@@ -92,7 +92,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         participantsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //TODO Error!!! :  java.lang.ClassCastException:(ItemListDialogFragment.java:61)
+                BottomSheetDialogFragment bottomSheetDialogFragment = new ItemListDialogFragment();
+                bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
             }
         });
     }
