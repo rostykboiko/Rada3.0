@@ -157,12 +157,12 @@ public class LoginActivity extends AppCompatActivity implements
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-
-            GoogleAccountAdapter.setUserName(acct.getDisplayName());
-            GoogleAccountAdapter.setUserEmail(acct.getEmail());
-            GoogleAccountAdapter.setUserID(acct.getId());
-            GoogleAccountAdapter.setProfileIcon(acct.getPhotoUrl());
-
+            if (acct != null) {
+                GoogleAccountAdapter.setUserName(acct.getDisplayName());
+                GoogleAccountAdapter.setUserEmail(acct.getEmail());
+                GoogleAccountAdapter.setUserID(acct.getId());
+                GoogleAccountAdapter.setProfileIcon(acct.getPhotoUrl());
+            }
             Log.d(TAG, "User name: " + GoogleAccountAdapter.getUserName());
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
@@ -213,7 +213,7 @@ public class LoginActivity extends AppCompatActivity implements
     // [END auth_with_google]
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
     }
 
