@@ -17,24 +17,28 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.login.view.LoginActivity;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.shared.utlils.PrefManager;
 
 public class MainIntroActivity extends AppCompatActivity {
     private ViewPager viewPager;
-    private MyViewPagerAdapter myViewPagerAdapter;
     private LinearLayout dotsLayout;
-    private TextView[] dots;
     private int[] layouts;
     private Button btnSkip, btnNext;
     private PrefManager prefManager;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
+        utils();
+        initViewItems();
+        initClickListeners();
+    }
+
+    private void utils() {
         // Making notification bar transparent
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
@@ -45,7 +49,9 @@ public class MainIntroActivity extends AppCompatActivity {
             launchHomeScreen();
             finish();
         }
+    }
 
+    private void initViewItems() {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         btnSkip = (Button) findViewById(R.id.btn_skip);
@@ -63,35 +69,35 @@ public class MainIntroActivity extends AppCompatActivity {
         // adding bottom dots
         addBottomDots(0);
 
-        myViewPagerAdapter = new MyViewPagerAdapter();
-        viewPager.setAdapter(myViewPagerAdapter);
+        ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter();
+        viewPager.setAdapter(mViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
+    }
+
+    private void initClickListeners() {
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchHomeScreen();
+                startActivity(new Intent(MainIntroActivity.this, LoginActivity.class));
             }
         });
 
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // checking for last page
-                // if last page home screen will be launched
                 int current = getItem(+1);
                 if (current < layouts.length) {
-                    // move to next screen
                     viewPager.setCurrentItem(current);
                 } else {
-                    launchHomeScreen();
+                    startActivity(new Intent(MainIntroActivity.this, LoginActivity.class));
                 }
             }
         });
     }
 
     private void addBottomDots(int currentPage) {
-        dots = new TextView[layouts.length];
+        TextView[] dots = new TextView[layouts.length];
 
         int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
         int[] colorsInactive = getResources().getIntArray(R.array.array_dot_inactive);
@@ -119,7 +125,6 @@ public class MainIntroActivity extends AppCompatActivity {
         finish();
     }
 
-    //  viewpager change listener
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
 
         @Override
@@ -149,13 +154,10 @@ public class MainIntroActivity extends AppCompatActivity {
         }
     };
 
-    /**
-     * View pager adapter
-     */
-    public class MyViewPagerAdapter extends PagerAdapter {
+    private class ViewPagerAdapter extends PagerAdapter {
         private LayoutInflater layoutInflater;
 
-        public MyViewPagerAdapter() {
+        ViewPagerAdapter() {
         }
 
         @Override

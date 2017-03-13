@@ -29,6 +29,7 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.ItemListDialogFragment;
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import android.widget.Toast;
 
@@ -49,6 +50,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     RelativeLayout durationBtn;
     @BindView(R.id.tv_duration_time)
     TextView durationTime;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Nullable
     EditorContract.Presenter presenter;
@@ -58,23 +61,13 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
+        ButterKnife.bind(this);
         presenter = new EditorPresenter(this);
+        setSupportActionBar(toolbar);
 
-        initViewItems();
         initClickListeners();
         initOptionsListView();
         addOptionRow();
-    }
-
-    private void initViewItems() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        durationTime = (TextView) findViewById(R.id.tv_duration_time);
-        durationBtn = (RelativeLayout) findViewById(R.id.duration_row);
-        participantsBtn = (RelativeLayout) findViewById(R.id.participants_row);
-        backButton = (ImageView) findViewById(R.id.backBtn);
-        addNewOption = (RelativeLayout) findViewById(R.id.rv_add_option);
     }
 
     private void initClickListeners() {
@@ -100,7 +93,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             @Override
             public void onClick(View view) {
                 //TODO Error!!! :  java.lang.ClassCastException:(ItemListDialogFragment.java:61)
-
                 BottomSheetDialogFragment bottomSheetDialogFragment = new ItemListDialogFragment();
                 bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
             }
