@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.springcamp.rostykboiko.rada3.EditorContract;
 import com.springcamp.rostykboiko.rada3.editor.presenter.OptionEditorAdapter;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
@@ -25,6 +26,7 @@ import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
 import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
 import com.springcamp.rostykboiko.rada3.shared.utlils.ItemListDialogFragment;
+import com.springcamp.rostykboiko.rada3.shared.utlils.firebaseMessaging.FCMMessagingService;
 
 import java.util.ArrayList;
 
@@ -64,6 +66,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         ButterKnife.bind(this);
         presenter = new EditorPresenter(this);
         setSupportActionBar(toolbar);
+
+        System.out.println("Token: " + FirebaseInstanceId.getInstance().getToken());
 
         initClickListeners();
         initOptionsListView();

@@ -36,7 +36,18 @@
         <activity
             android:name=".settings.view.SettingsActivity"
             android:label="@string/title_activity_settings"/>
-
+        <service
+            android:name=".shared.utlils.firebaseMessaging.FCMMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".shared.utlils.firebaseMessaging.FCMiDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
