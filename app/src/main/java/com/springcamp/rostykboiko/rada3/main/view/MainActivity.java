@@ -19,8 +19,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -45,16 +46,8 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.Survey;
 import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.login.view.LoginActivity;
 import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
     private List<Survey> surveyList;
@@ -337,36 +330,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
      * List of Cards End
      */
 
-    public void sendMessage()
-            throws IOException, JSONException {
-        URL url = new URL("https://fcm.googleapis.com/fcm/send");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setDoOutput(true);
-
-        // HTTP request header
-        con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Authorization", "key=AIzaSyCoKx1rrWKUcCf6QMIyB2viYed_l0RnxtQ");
-        con.setRequestMethod("POST");
-
-        con.connect();
-
-        // HTTP request
-        JSONObject data = new JSONObject();
-        JSONObject notificationFCM = new JSONObject();
-
-        String tokenID = "dIJTu8sedJc:APA91bHxnRgglC8oTYd2jRywmW88bnUtz31xOLZ4VaFAgNSiKl-M_ahnOohN0kbcwSh9ScRiiqR9359I7ERwKhRYNhJqIn1rknrp8QIB7k2k0LVU6rbeXB2B2QYnC4VnFouq1uywy-rf";
-        notificationFCM.put("body", "Message sent from device");
-        notificationFCM.put("Title", "Survey");
-        notificationFCM.put("sound", "default");
-        data.put("notification",notificationFCM);
-        data.put("to", tokenID);
-        OutputStream os = con.getOutputStream();
-        os.write(data.toString().getBytes());
-        os.close();
-        System.out.println("Response Code: " + con.getResponseCode());
-
-    }
-
     @Override
     public void showProgress() {
 
@@ -383,18 +346,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         int id = item.getItemId();
         switch (id) {
             case R.id.action_share:
-                Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                try {
-                    sendMessage();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                }});
-                thread.start();
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("message");
+
+                myRef.setValue("Hello, World!");
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
