@@ -19,9 +19,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private ArrayList<String> optionslist = new ArrayList<>();
     private CardsAdaptor cardsAdaptor;
     private FloatingActionButton fab;
+    private String token;
     private Drawer mDrawer = null;
     private Toolbar toolbar;
 
@@ -74,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         setContentView(R.layout.activity_main);
 
         presenter = new MainPresenter(this);
+        token = FirebaseInstanceId.getInstance().getToken();
+        System.out.println("Token: " + FirebaseInstanceId.getInstance().getToken());
 
         surveyList = new ArrayList<>();
         initNavDrawer();
@@ -364,16 +367,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         JSONObject data = new JSONObject();
         JSONObject notificationFCM = new JSONObject();
 
-        String tokenID1 = "dIJTu8sedJc:APA91bHxnRgglC8oTYd2jRywmW88bnUtz31xOLZ4VaFAgNSiKl-M_ahnOo" +
-                "hN0kbcwSh9ScRiiqR9359I7ERwKhRYNhJqIn1rknrp8QIB7k2k0LVU6rbeXB2B2QYnC4VnFouq1uywy-rf";
-        String tokenID2 = "eCbJ0TJhV8U:APA91bGS3oyS54W5qvtUztoy68J4WJns0ew8CgzlLO11UWa0SqCTYKqTkn-" +
-                "PABHbe4pmAhJT3XfieDU_tNGXzhKWRafNV001FYr6obaqeIzuFdUctaKzmu63rVgFoiaHO62d8s9iPzUs";
+        String tokenID = "fM_jRk_3QgE:APA91bG5iZfEZFgDIsQzhUwgj5qJwdOS9_9q3Z-0nfzSX6Q-IzCHZHeN_" +
+                "mndFr1TGM2Auk45VxZCGmGU1gQjtqAKlYXVF36YZDOfs2wXpsAcWbjmlouCGFIcZGygyJjLdNSfZREoc1Yg";
         notificationFCM.put("body", "Message sent from device");
-        notificationFCM.put("Title", "Survey");
+        notificationFCM.put("title", "Survey");
         notificationFCM.put("sound", "default");
-        data.put("notification",notificationFCM);
-        data.put("to", tokenID1);
-        data.put("to", tokenID2);
+        notificationFCM.put("priority", "high");
+        data.put("notification", notificationFCM);
+        data.put("to", tokenID);
         OutputStream os = con.getOutputStream();
         os.write(data.toString().getBytes());
         os.close();
@@ -396,7 +397,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                    }});
+                    }
+                });
                 thread.start();
                 break;
             case R.id.action_settings:
