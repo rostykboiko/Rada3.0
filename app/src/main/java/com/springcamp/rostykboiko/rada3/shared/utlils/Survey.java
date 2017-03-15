@@ -9,6 +9,7 @@ public class Survey {
     private boolean surveySingleOption;
     private int duration;
     private ArrayList<String> partiosipantsEmailList;
+    private int color;
 
     public Survey(String syrveyTitle) {
         this.syrveyTitle = syrveyTitle;
@@ -24,13 +25,15 @@ public class Survey {
                   boolean surveyPublic,
                   boolean surveySingleOption,
                   int duration,
-                  ArrayList<String> partiosipantsEmailList) {
+                  ArrayList<String> partiosipantsEmailList,
+                  int color) {
         this.syrveyTitle = syrveyTitle;
         this.surveyOptionList = surveyOptionList;
         this.surveyPublic = surveyPublic;
         this.surveySingleOption = surveySingleOption;
         this.duration = duration;
         this.partiosipantsEmailList = partiosipantsEmailList;
+        this.color = color;
     }
 
 

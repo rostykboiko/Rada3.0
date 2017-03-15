@@ -74,46 +74,25 @@
             app:theme="@style/AppTheme.TextItem">
 
             <RelativeLayout
-                android:id="@+id/closed_syrvey_row"
+                android:id="@+id/one_option_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/item_rl_row">
 
-                <TextView
-                    android:id="@+id/Tv_close_survey"
+                <ImageView
+                    android:id="@+id/img_radioBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/item_name_start"
-                    android:paddingEnd="@dimen/item_name_end"
-                    android:padding="@dimen/item_name_padding"
-                    android:text="@string/tv_open_survey"
-                    android:textSize="@dimen/text_size_standard" />
-
-                <Switch
-                    android:id="@+id/close_survey_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="@dimen/margin_switch"
-                    android:layout_marginEnd="@dimen/margin_large"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:layout_marginTop="@dimen/margin_switch" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/one_option_row"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/item_rl_row"
-                android:layout_below="@+id/closed_syrvey_row">
+                    android:padding="@dimen/item_icon_padding"
+                    android:src="@drawable/ic_material_list" />
 
                 <TextView
                     android:id="@+id/Tv_one_option"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/item_name_padding"
-                    android:paddingStart="@dimen/item_name_start"
                     android:paddingEnd="@dimen/item_name_end"
+                    android:paddingStart="@dimen/item_name_start"
                     android:text="@string/tv_one_option"
                     android:textSize="16sp" />
 
@@ -146,8 +125,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/item_name_padding"
-                    android:paddingStart="@dimen/item_name_start"
                     android:paddingEnd="@dimen/item_name_end"
+                    android:paddingStart="@dimen/item_name_start"
                     android:text="@string/tv_duration"
                     android:textSize="16sp" />
 
@@ -157,8 +136,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:padding="@dimen/margin_large"
-                    android:paddingStart="@dimen/item_duration_time"
                     android:paddingEnd="@dimen/item_duration_time"
+                    android:paddingStart="@dimen/item_duration_time"
                     android:text="@string/tv_duration_time" />
             </RelativeLayout>
 
@@ -180,8 +159,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/item_name_padding"
-                    android:paddingStart="@dimen/item_name_start"
                     android:paddingEnd="@dimen/item_name_end"
+                    android:paddingStart="@dimen/item_name_start"
                     android:text="@string/tv_participants"
                     android:textSize="16sp" />
             </RelativeLayout>

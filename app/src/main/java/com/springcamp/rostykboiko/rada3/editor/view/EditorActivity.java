@@ -35,7 +35,8 @@ import butterknife.ButterKnife;
 
 import android.widget.Toast;
 
-public class EditorActivity extends AppCompatActivity implements EditorContract.View {
+public class EditorActivity extends AppCompatActivity implements EditorContract.View,
+        ItemListDialogFragment.Listener {
 
     private ArrayList<String> optionsList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
@@ -55,6 +56,11 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @Override
+    public void onItemClicked(int position) {
+
+    }
+
     @Nullable
     EditorContract.Presenter presenter;
 
@@ -68,7 +74,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         setSupportActionBar(toolbar);
 
         System.out.println("Token: " + FirebaseInstanceId.getInstance().getToken());
-
         initClickListeners();
         initOptionsListView();
         addOptionRow();
@@ -96,9 +101,10 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         participantsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 //TODO Error!!! :  java.lang.ClassCastException:(ItemListDialogFragment.java:61)
-                BottomSheetDialogFragment bottomSheetDialogFragment = new ItemListDialogFragment();
-                bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+               // ItemListDialogFragment bottomSheetDialogFragment = new ItemListDialogFragment();
+                ItemListDialogFragment.newInstance(30).show(getSupportFragmentManager(), "dialog");
             }
         });
     }
