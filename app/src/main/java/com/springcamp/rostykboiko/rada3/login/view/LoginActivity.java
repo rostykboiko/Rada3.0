@@ -57,8 +57,8 @@ public class LoginActivity extends AppCompatActivity implements
 
         presenter = new LoginPresenter(this);
 
-        initFireBaseListener();
         ButterKnife.bind(this);
+        initFireBaseListener();
         initClickListeners();
     }
 
@@ -133,6 +133,7 @@ public class LoginActivity extends AppCompatActivity implements
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage(getString(R.string.loading));
             mProgressDialog.setIndeterminate(true);
+            mProgressDialog.show();
         }
     }
 
@@ -156,7 +157,6 @@ public class LoginActivity extends AppCompatActivity implements
 
     private void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
-            // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             if (acct != null) {
                 GoogleAccountAdapter.setUserName(acct.getDisplayName());
@@ -186,13 +186,9 @@ public class LoginActivity extends AppCompatActivity implements
 
     }
 
-    // [START auth_with_google]
+
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        // [START_EXCLUDE silent]
-        mProgressDialog.show();
-        // [END_EXCLUDE]
-
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -205,13 +201,9 @@ public class LoginActivity extends AppCompatActivity implements
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
-                        // [START_EXCLUDE]
-                        mProgressDialog.hide();
-                        // [END_EXCLUDE]
                     }
                 });
     }
-    // [END auth_with_google]
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {

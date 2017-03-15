@@ -46,15 +46,15 @@ import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.login.view.LoginActivity;
 import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
     private List<Survey> surveyList;
@@ -337,55 +337,34 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
      * List of Cards End
      */
 
-    private void messageToFirebase() {
-        System.out.println("Thread Start");
+    public void sendMessage()
+            throws IOException, JSONException {
+        URL url = new URL("https://fcm.googleapis.com/fcm/send");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setDoOutput(true);
 
-        Thread thread = new Thread(new Runnable() {
+        // HTTP request header
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Authorization", "key=AIzaSyCoKx1rrWKUcCf6QMIyB2viYed_l0RnxtQ");
+        con.setRequestMethod("POST");
 
-            HttpURLConnection urlConnection;
-            String urlFCM = "https://fcm.googleapis.com/fcm/send";
+        con.connect();
 
-            String postMessageFCM = "{\n" +
-                    "  \"notification\": {\n" +
-                    "    \"body\": \"Test\"\n" +
-                    "    \"title\": \"App\"\n" +
-                    "    \"sound\": \"default\"\n" +
-                    "    \"prioryty\": \"high\"\n" +
-                    "  }, \n" +
-                    "    \"data\": {\n" +
-                    "      \"id\": 2\n" +
-                    "    },\n" +
-                    "      \"to\": \"dIJTu8sedJc:APA91bHxnRgglC8oTYd2jRywmW88bnUtz31xOLZ4VaFAgNSiKl-M_ahnOohN0kbcwSh9ScRiiqR9359I7ERwKhRYNhJqIn1rknrp8QIB7k2k0LVU6rbeXB2B2QYnC4VnFouq1uywy-rf\"\n" +
-                    "}\n";
+        // HTTP request
+        JSONObject data = new JSONObject();
+        JSONObject notificationFCM = new JSONObject();
 
-            @Override
-            public void run() {
-                try {
-                    //Connect
-                    urlConnection = (HttpURLConnection) ((new URL(urlFCM).openConnection()));
-                    urlConnection.setDoOutput(true);
-                    urlConnection.setRequestProperty("Content-Type", "application/json");
-                    urlConnection.setRequestProperty("Authorization", "key=AIzaSyCoKx1rrWKUcCf6QMIyB2viYed_l0RnxtQ");
-                    urlConnection.setRequestMethod("POST");
-                    urlConnection.connect();
+        String tokenID = "dIJTu8sedJc:APA91bHxnRgglC8oTYd2jRywmW88bnUtz31xOLZ4VaFAgNSiKl-M_ahnOohN0kbcwSh9ScRiiqR9359I7ERwKhRYNhJqIn1rknrp8QIB7k2k0LVU6rbeXB2B2QYnC4VnFouq1uywy-rf";
+        notificationFCM.put("body", "Message sent from device");
+        notificationFCM.put("Title", "Survey");
+        notificationFCM.put("sound", "default");
+        data.put("notification",notificationFCM);
+        data.put("to", tokenID);
+        OutputStream os = con.getOutputStream();
+        os.write(data.toString().getBytes());
+        os.close();
+        System.out.println("Response Code: " + con.getResponseCode());
 
-                    //Write
-                    OutputStream outputStream = urlConnection.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-                    writer.write(postMessageFCM);
-                    writer.close();
-                    outputStream.close();
-
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        System.out.println("Thread End");
-
-        thread.start();
     }
 
     @Override
@@ -404,7 +383,18 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         int id = item.getItemId();
         switch (id) {
             case R.id.action_share:
-                messageToFirebase();
+                Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                try {
+                    sendMessage();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                }});
+                thread.start();
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
