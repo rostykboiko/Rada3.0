@@ -46,6 +46,14 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.Survey;
 import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.login.view.LoginActivity;
 import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -332,7 +340,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void showProgress() {
-
     }
 
     @Override
@@ -341,15 +348,56 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         return true;
     }
 
+    public void sendMessage()
+            throws IOException, JSONException {
+        URL url = new URL("https://fcm.googleapis.com/fcm/send");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setDoOutput(true);
+
+        // HTTP request header
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setRequestProperty("Authorization", "key=AIzaSyCoKx1rrWKUcCf6QMIyB2viYed_l0RnxtQ");
+        con.setRequestMethod("POST");
+        con.connect();
+
+        // HTTP request
+        JSONObject data = new JSONObject();
+        JSONObject notificationFCM = new JSONObject();
+
+        String tokenID1 = "dIJTu8sedJc:APA91bHxnRgglC8oTYd2jRywmW88bnUtz31xOLZ4VaFAgNSiKl-M_ahnOo" +
+                "hN0kbcwSh9ScRiiqR9359I7ERwKhRYNhJqIn1rknrp8QIB7k2k0LVU6rbeXB2B2QYnC4VnFouq1uywy-rf";
+        String tokenID2 = "eCbJ0TJhV8U:APA91bGS3oyS54W5qvtUztoy68J4WJns0ew8CgzlLO11UWa0SqCTYKqTkn-" +
+                "PABHbe4pmAhJT3XfieDU_tNGXzhKWRafNV001FYr6obaqeIzuFdUctaKzmu63rVgFoiaHO62d8s9iPzUs";
+        notificationFCM.put("body", "Message sent from device");
+        notificationFCM.put("Title", "Survey");
+        notificationFCM.put("sound", "default");
+        data.put("notification",notificationFCM);
+        data.put("to", tokenID1);
+        data.put("to", tokenID2);
+        OutputStream os = con.getOutputStream();
+        os.write(data.toString().getBytes());
+        os.close();
+        System.out.println("Response Code: " + con.getResponseCode());
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_share:
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("message");
-
-                myRef.setValue("Hello, World!");
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendMessage();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }});
+                thread.start();
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));

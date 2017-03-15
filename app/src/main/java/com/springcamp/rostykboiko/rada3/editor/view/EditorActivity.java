@@ -73,7 +73,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         presenter = new EditorPresenter(this);
         setSupportActionBar(toolbar);
 
-        System.out.println("Token: " + FirebaseInstanceId.getInstance().getToken());
         initClickListeners();
         initOptionsListView();
         addOptionRow();
