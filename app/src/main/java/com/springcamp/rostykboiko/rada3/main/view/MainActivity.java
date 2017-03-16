@@ -21,6 +21,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -78,6 +80,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         token = FirebaseInstanceId.getInstance().getToken();
         System.out.println("Token: " + FirebaseInstanceId.getInstance().getToken());
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
+        myRef.setValue("Hello, World!");
+
         surveyList = new ArrayList<>();
         initNavDrawer();
         initViewItems();
@@ -126,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                     } else if (DrawerImageLoader.Tags.ACCOUNT_HEADER.name().equals(tag)) {
                         return new IconicsDrawable(ctx).iconText(" ").backgroundColorRes(R.color.primary).sizeDp(56);
                     } else if ("customUrlItem".equals(tag)) {
-                        return new IconicsDrawable(ctx).iconText(" ").backgroundColorRes(R.color.md_red_500).sizeDp(56);
+                        return new IconicsDrawable(ctx).iconText(" ").backgroundColorRes(R.color.colorActiveSwitch).sizeDp(56);
                     }
                     return super.placeholder(ctx, tag);
                 }
