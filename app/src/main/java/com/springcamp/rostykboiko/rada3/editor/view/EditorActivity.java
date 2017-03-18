@@ -25,8 +25,10 @@ import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.ItemListDialogFragment;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.security.SecureRandom;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +40,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     private List<String> optionsList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
+    private SecureRandom random = new SecureRandom();
+
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -169,14 +173,16 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     "Додайте варіант відповіді",
                     Toast.LENGTH_SHORT).show();
         } else {
+            String generatedString = generatedId();
+
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference userList = database.getReference("Survey");
             System.out.println("Title" + editTextTitle.getText());
-            userList.child("here will be generated ID")
+            userList.child(generatedString)
                     .child("Title")
                     .setValue(editTextTitle.getText().toString());
             for (String option : optionsList) {
-                userList.child("here will be generated ID")
+                userList.child(generatedString)
                         .child("Options")
                         .child("option" + (optionsList.indexOf(option) + 1))
                         .setValue(option);
@@ -184,6 +190,10 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             startActivity(new Intent(EditorActivity.this, MainActivity.class));
             finish();
         }
+    }
+
+    public String generatedId() {
+        return new BigInteger(130, random).toString(32);
     }
 
     @Override

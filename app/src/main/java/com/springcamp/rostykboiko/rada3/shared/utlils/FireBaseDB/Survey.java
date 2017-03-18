@@ -11,6 +11,7 @@ public class Survey {
     private List<User> participantsEmailList;
     private int color;
 
+    public Survey(){}
     public Survey(String surveyTitle) {
         this.surveyTitle = surveyTitle;
     }

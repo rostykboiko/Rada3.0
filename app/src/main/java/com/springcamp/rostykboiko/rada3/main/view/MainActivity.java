@@ -269,59 +269,31 @@ public class MainActivity extends AppCompatActivity
      */
 
     private void initFireBase() {
-        Firebase surveyRef = new Firebase("https://rada3-30775.firebaseio.com/Survey");
-
+        final Firebase surveyRef = new Firebase("https://rada3-30775.firebaseio.com/Survey");
+        optionslist = new ArrayList<>();
         surveyRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String surveyKey = dataSnapshot.getKey();
+                survey = new Survey();
                 String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
                 System.out.println("Survey title " + surveyTitle);
+                survey.setSurveyTitle(surveyTitle);
+                optionslist = new ArrayList<>();
 
-                getSurveyOptions(surveyKey);
-
-                survey = new Survey(surveyTitle, optionslist);
+                int i = 0;
+                for (DataSnapshot child : dataSnapshot.child("Options").getChildren()) {
+                    optionslist.add(child.getValue().toString());
+                    survey.setSurveyOptionList(optionslist);
+                    System.out.println("Survey option list: " + optionslist.get(i));
+                    i++;
+                }
                 surveyList.add(survey);
                 cardsAdaptor.notifyDataSetChanged();
-
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-    }
-
-    private void getSurveyOptions(final String surveyKey){
-        Firebase optionRef =
-                new Firebase("https://rada3-30775.firebaseio.com/Survey/" + surveyKey + "/Options");
-        optionRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String surveyOption = dataSnapshot.getValue(String.class);
-                System.out.println("Survey option " + surveyOption);
-                optionslist.add(surveyOption);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                cardsAdaptor.notifyDataSetChanged();
             }
 
             @Override
