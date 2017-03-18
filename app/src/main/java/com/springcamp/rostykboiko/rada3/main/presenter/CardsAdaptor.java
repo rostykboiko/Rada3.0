@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHolder> {
-    private ArrayList<String> optionsList = new ArrayList<>();
+    private List<String> optionsList = new ArrayList<>();
     private List<Survey> surveyList;
     private Context mContext;
 
@@ -39,7 +39,7 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
         }
     }
 
-    public CardsAdaptor(Context mContext, List<Survey> surveyList, ArrayList<String> optionsList) {
+    public CardsAdaptor(Context mContext, List<Survey> surveyList, List<String> optionsList) {
         this.mContext = mContext;
         this.surveyList = surveyList;
         this.optionsList = optionsList;
@@ -57,7 +57,7 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
     public void onBindViewHolder(final CardViewHolder holder, int position) {
         Survey survey = surveyList.get(position);
 
-        holder.title.setText(survey.getSyrveyTitle());
+        holder.title.setText(survey.getSurveyTitle());
         holder.optionsRecycler.setAdapter(optionCardAdapter);
     }
 

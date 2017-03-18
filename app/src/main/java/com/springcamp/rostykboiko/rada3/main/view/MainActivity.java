@@ -21,13 +21,10 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -66,11 +63,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
     private Survey survey;
-    private List<Survey> surveyList = new ArrayList<>();;
-    private ArrayList<String> optionslist = new ArrayList<>();
+    private List<Survey> surveyList = new ArrayList<>();
+    private List<String> optionslist = new ArrayList<>();
     private CardsAdaptor cardsAdaptor;
     private FloatingActionButton fab;
-    private String token;
     private Drawer mDrawer = null;
     private Toolbar toolbar;
 
@@ -84,35 +80,11 @@ public class MainActivity extends AppCompatActivity
 
         presenter = new MainPresenter(this);
 
-        Firebase surveyRef = new Firebase("https://rada3-30775.firebaseio.com");
-
-        surveyRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                DataSnapshot surveyRef = dataSnapshot
-                        .child("Survey")
-                        .child("here will be generated ID");
-                String surveyTitle = surveyRef.child("Title").getValue().toString();
-                optionslist.add(surveyRef.child("Options").child("option").getValue().toString());
-                optionslist.add(surveyRef.child("Options").child("option0").getValue().toString());
-                System.out.println("Value from DB: " + surveyRef);
-
-                survey = new Survey(surveyTitle, optionslist);
-                surveyList.add(survey);
-                cardsAdaptor.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                System.out.println("The read failed: " + firebaseError.getMessage());
-            }
-        });
-
+        initFireBase();
         initNavDrawer();
         initViewItems();
         initClickListeners();
-        cardViewInit();
-      //  initOptions();
+        initCardView();
     }
 
     private void initViewItems() {
@@ -296,7 +268,80 @@ public class MainActivity extends AppCompatActivity
      * List of Cards Start
      */
 
-    private void cardViewInit() {
+    private void initFireBase() {
+        Firebase surveyRef = new Firebase("https://rada3-30775.firebaseio.com/Survey");
+
+        surveyRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String surveyKey = dataSnapshot.getKey();
+                String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
+                System.out.println("Survey title " + surveyTitle);
+
+                getSurveyOptions(surveyKey);
+
+                survey = new Survey(surveyTitle, optionslist);
+                surveyList.add(survey);
+                cardsAdaptor.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    private void getSurveyOptions(final String surveyKey){
+        Firebase optionRef =
+                new Firebase("https://rada3-30775.firebaseio.com/Survey/" + surveyKey + "/Options");
+        optionRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String surveyOption = dataSnapshot.getValue(String.class);
+                System.out.println("Survey option " + surveyOption);
+                optionslist.add(surveyOption);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
+    private void initCardView() {
         cardsAdaptor = new CardsAdaptor(this, surveyList, optionslist);
         RecyclerView cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
         RecyclerView.LayoutManager mCardManager = new GridLayoutManager(this, 2);
@@ -344,26 +389,6 @@ public class MainActivity extends AppCompatActivity
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
-
-    private void initOptions() {
-        optionslist.add("option1");
-        optionslist.add("option2");
-        optionslist.add("option3");
-
-        Survey survey = new Survey("True Romance", optionslist);
-        surveyList.add(survey);
-
-        survey = new Survey("True Romance");
-        surveyList.add(survey);
-
-        survey = new Survey("True Romance");
-        surveyList.add(survey);
-
-        survey = new Survey("True Romance");
-        surveyList.add(survey);
-
-        cardsAdaptor.notifyDataSetChanged();
     }
 
     /**

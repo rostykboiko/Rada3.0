@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.springcamp.rostykboiko.rada3.R;
-import java.util.ArrayList;
+import java.util.List;
 
 public class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolder> {
 
-    private ArrayList<String> optionsList;
+    private List<String> optionsList;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView optionItem;
@@ -22,7 +22,7 @@ public class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.Vi
         }
     }
 
-    public OptionCardAdapter(ArrayList<String> optionsList) {
+    public OptionCardAdapter(List<String> optionsList) {
         this.optionsList = optionsList;
     }
 

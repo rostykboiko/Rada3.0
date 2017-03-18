@@ -1,6 +1,8 @@
 package com.springcamp.rostykboiko.rada3.editor.presenter;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +38,26 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
     }
 
     @Override
-    public void onBindViewHolder(OptionEditorAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final OptionEditorAdapter.ViewHolder holder, final int position) {
         String option = optionsList.get(position);
         holder.optionItem.setHint(option);
+
+        holder.optionItem.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                optionsList.set(position, holder.optionItem.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
 

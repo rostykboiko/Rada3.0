@@ -1,33 +1,33 @@
 package com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Survey {
     private String surveyID;
-    private String syrveyTitle;
-    private ArrayList<String> surveyOptionList;
+    private String surveyTitle;
+    private List<String> surveyOptionList;
     private boolean surveySingleOption;
     private int duration;
-    private ArrayList<User> participantsEmailList;
+    private List<User> participantsEmailList;
     private int color;
 
-    public Survey(String syrveyTitle) {
-        this.syrveyTitle = syrveyTitle;
+    public Survey(String surveyTitle) {
+        this.surveyTitle = surveyTitle;
     }
 
-    public Survey(String syrveyTitle, ArrayList<String> surveyOptionList) {
-        this.syrveyTitle = syrveyTitle;
+    public Survey(String surveyTitle, List<String> surveyOptionList) {
+        this.surveyTitle = surveyTitle;
         this.surveyOptionList = surveyOptionList;
     }
 
-    public Survey(String surveyID, String syrveyTitle,
-                  ArrayList<String> surveyOptionList,
+    public Survey(String surveyID, String surveyTitle,
+                  List<String> surveyOptionList,
                   boolean surveySingleOption,
                   int duration,
-                  ArrayList<User> participantsEmailList,
+                  List<User> participantsEmailList,
                   int color) {
         this.surveyID = surveyID;
-        this.syrveyTitle = syrveyTitle;
+        this.surveyTitle = surveyTitle;
         this.surveyOptionList = surveyOptionList;
         this.surveySingleOption = surveySingleOption;
         this.duration = duration;
@@ -36,19 +36,19 @@ public class Survey {
     }
 
 
-    public String getSyrveyTitle() {
-        return syrveyTitle;
+    public String getSurveyTitle() {
+        return surveyTitle;
     }
 
-    public void setSyrveyTitle(String syrveyTitle) {
-        this.syrveyTitle = syrveyTitle;
+    public void setSurveyTitle(String surveyTitle) {
+        this.surveyTitle = surveyTitle;
     }
 
-    public ArrayList<String> getSurveyOptionList() {
+    public List<String> getSurveyOptionList() {
         return surveyOptionList;
     }
 
-    public void setSurveyOptionList(ArrayList<String> surveyOptionList) {
+    public void setSurveyOptionList(List<String> surveyOptionList) {
         this.surveyOptionList = surveyOptionList;
     }
 
@@ -68,11 +68,11 @@ public class Survey {
         this.duration = duration;
     }
 
-    public ArrayList<User> getPartiosipantsEmailList() {
+    public List<User> getPartiosipantsEmailList() {
         return participantsEmailList;
     }
 
-    public void setPartiosipantsEmailList(ArrayList<User> participantsEmailList) {
+    public void setPartiosipantsEmailList(List<User> participantsEmailList) {
         this.participantsEmailList = participantsEmailList;
     }
 

@@ -24,7 +24,6 @@ import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.ItemListDialogFragment;
-import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     private List<String> optionsList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
-    private Survey survey;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -177,10 +175,10 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             userList.child("here will be generated ID")
                     .child("Title")
                     .setValue(editTextTitle.getText().toString());
-            for (String option: optionsList) {
+            for (String option : optionsList) {
                 userList.child("here will be generated ID")
                         .child("Options")
-                        .child("option" + optionsList.indexOf(option))
+                        .child("option" + (optionsList.indexOf(option) + 1))
                         .setValue(option);
             }
             startActivity(new Intent(EditorActivity.this, MainActivity.class));
