@@ -3,7 +3,6 @@ package com.springcamp.rostykboiko.rada3.editor.view;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,24 +10,24 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.springcamp.rostykboiko.rada3.EditorContract;
 import com.springcamp.rostykboiko.rada3.editor.presenter.OptionEditorAdapter;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
-import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
 import com.springcamp.rostykboiko.rada3.shared.utlils.ItemListDialogFragment;
-import com.springcamp.rostykboiko.rada3.shared.utlils.firebaseMessaging.FCMMessagingService;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,28 +37,36 @@ import android.widget.Toast;
 public class EditorActivity extends AppCompatActivity implements EditorContract.View,
         ItemListDialogFragment.Listener {
 
-    private ArrayList<String> optionsList = new ArrayList<>();
+    private List<String> optionsList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
+    private Survey survey;
 
-    @BindView(R.id.option_recycler_view)
-    RecyclerView optionslistView;
-    @BindView(R.id.rv_add_option)
-    RelativeLayout addNewOption;
-    @BindView(R.id.backBtn)
-    ImageView backButton;
-    @BindView(R.id.participants_row)
-    RelativeLayout participantsBtn;
-    @BindView(R.id.duration_row)
-    RelativeLayout durationBtn;
-    @BindView(R.id.tv_duration_time)
-    TextView durationTime;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @Override
-    public void onItemClicked(int position) {
+    @BindView(R.id.edTitle)
+    EditText editTextTitle;
 
-    }
+    @BindView(R.id.option_recycler_view)
+    RecyclerView optionsListView;
+
+    @BindView(R.id.rv_add_option)
+    RelativeLayout addNewOption;
+
+    @BindView(R.id.tv_duration_time)
+    TextView durationTime;
+
+    @BindView(R.id.duration_row)
+    RelativeLayout durationBtn;
+
+    @BindView(R.id.participants_row)
+    RelativeLayout participantsBtn;
+
+    @BindView(R.id.backBtn)
+    ImageView backButton;
+
+    @BindView(R.id.saveBtn)
+    ImageView saveButton;
 
     @Nullable
     EditorContract.Presenter presenter;
@@ -73,12 +80,20 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         presenter = new EditorPresenter(this);
         setSupportActionBar(toolbar);
 
+        ButterKnife.bind(this);
+
         initClickListeners();
         initOptionsListView();
         addOptionRow();
     }
 
     private void initClickListeners() {
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSaveBtnPressed();
+            }
+        });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,14 +121,11 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     }
 
     private void initOptionsListView() {
-        optionslistView = (RecyclerView) findViewById(R.id.option_recycler_view);
-        // TO DO: Without findViewById() butterKnife return null on View
-
         optionsAdapter = new OptionEditorAdapter(optionsList);
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
-        optionslistView.setLayoutManager(mListManager);
-        optionslistView.setItemAnimator(new DefaultItemAnimator());
-        optionslistView.setAdapter(optionsAdapter);
+        optionsListView.setLayoutManager(mListManager);
+        optionsListView.setItemAnimator(new DefaultItemAnimator());
+        optionsListView.setAdapter(optionsAdapter);
     }
 
     private void durationPicker() {
@@ -138,21 +150,72 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         dialog.show();
     }
 
+    private void addOptionRow() {
+        if (optionsList.size() < 5) {
+            optionsList.add(getText(R.string.ed_option).toString());
+            optionsAdapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    "Максимально 5 варіантів відповіді",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onSaveBtnPressed() {
+        if (editTextTitle.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(),
+                    "Дайте назву опитуванню",
+                    Toast.LENGTH_SHORT).show();
+        } else if (optionsList.size() < 2) {
+            Toast.makeText(getApplicationContext(),
+                    "Додайте варіант відповіді",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference userList = database.getReference("Survey");
+            System.out.println("Title" + editTextTitle.getText());
+            userList.child("here will be generated ID")
+                    .child("Title")
+                    .setValue(editTextTitle.getText().toString());
+            for (String option: optionsList) {
+                userList.child("here will be generated ID")
+                        .child("Options")
+                        .child("option" + optionsList.indexOf(option))
+                        .setValue(option);
+            }
+            startActivity(new Intent(EditorActivity.this, MainActivity.class));
+            finish();
+        }
+    }
+
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(EditorActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-
-        super.onBackPressed();
+        if (editTextTitle.getText().toString().equals("") || optionsList.size() < 2) {
+            startActivity(new Intent(EditorActivity.this, MainActivity.class));
+            finish();
+        } else {
+            AlertDialog.Builder confirmDialog = new AlertDialog.Builder(EditorActivity.this);
+            confirmDialog.setMessage("Дійсно скасувати"); // сообщение
+            confirmDialog.setPositiveButton("Так", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int arg1) {
+                    startActivity(new Intent(EditorActivity.this, MainActivity.class));
+                    finish();
+                }
+            });
+            confirmDialog.setNegativeButton("Ні, редагувати далі", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int arg1) {
+                }
+            });
+            confirmDialog.setCancelable(true);
+            confirmDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                public void onCancel(DialogInterface dialog) {
+                }
+            });
+            confirmDialog.show();
+        }
     }
 
-    private void addOptionRow() {
-        optionsList.add(getText(R.string.ed_option).toString());
-
-        optionsAdapter.notifyDataSetChanged();
-    }
-
+    // Presenter
     @Override
     public String getId() {
         return null;
@@ -168,28 +231,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         return null;
     }
 
+    // Bottom Sheet
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+    public void onItemClicked(int position) {
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(EditorActivity.this, SettingsActivity.class);
-            startActivity(intent);
-        }
-        if (id == R.id.action_delete) {
-            return true;
-        }
-        if (id == R.id.action_share) {
-            return true;
-        }
-        if (id == R.id.backBtn) {
-            onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

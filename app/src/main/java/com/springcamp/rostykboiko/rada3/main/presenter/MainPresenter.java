@@ -11,10 +11,6 @@ import com.springcamp.rostykboiko.rada3.R;
 import butterknife.BindView;
 
 public class MainPresenter implements MainContract.Presenter {
-    @Nullable
-    private CardsAdaptor cardsAdaptor;
-    @Nullable
-    private OptionCardAdapter optionsAdapter;
 
     @Nullable
     private MainContract.View view;
@@ -29,8 +25,6 @@ public class MainPresenter implements MainContract.Presenter {
         this.view = view;
         this.mainUseCase = new MainInteractor();
     }
-
-
 
     @Override
     public void onStart() {

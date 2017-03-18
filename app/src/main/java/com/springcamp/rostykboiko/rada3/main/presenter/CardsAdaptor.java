@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.springcamp.rostykboiko.rada3.R;
-import com.springcamp.rostykboiko.rada3.shared.utlils.Survey;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,6 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
             optionsRecycler.setLayoutManager(mListManager);
             optionsRecycler.setItemAnimator(new DefaultItemAnimator());
             optionsRecycler.setAdapter(optionCardAdapter);
-
         }
     }
 

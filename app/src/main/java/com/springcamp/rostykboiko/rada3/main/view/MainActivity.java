@@ -43,8 +43,8 @@ import com.springcamp.rostykboiko.rada3.main.presenter.MainPresenter;
 import com.springcamp.rostykboiko.rada3.MainContract;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.main.presenter.CardsAdaptor;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
-import com.springcamp.rostykboiko.rada3.shared.utlils.Survey;
 import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.login.view.LoginActivity;
 import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
@@ -59,8 +59,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View {
-    private List<Survey> surveyList;
+public class MainActivity extends AppCompatActivity
+
+        implements MainContract.View {
+    private List<Survey> surveyList = new ArrayList<>();;
     private ArrayList<String> optionslist = new ArrayList<>();
     private CardsAdaptor cardsAdaptor;
     private FloatingActionButton fab;
@@ -77,15 +79,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         setContentView(R.layout.activity_main);
 
         presenter = new MainPresenter(this);
-        token = FirebaseInstanceId.getInstance().getToken();
-        System.out.println("Token: " + FirebaseInstanceId.getInstance().getToken());
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-
-        myRef.setValue("Hello, World!");
-
-        surveyList = new ArrayList<>();
         initNavDrawer();
         initViewItems();
         initClickListeners();

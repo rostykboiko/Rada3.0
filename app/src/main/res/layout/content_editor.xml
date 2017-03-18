@@ -40,7 +40,7 @@
                     android:id="@+id/btn_add_option"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_large"
+                    android:layout_marginStart="@dimen/margin_switch"
                     android:padding="@dimen/margin_small"
                     android:src="@drawable/ic_material_plus" />
 
@@ -101,10 +101,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="@dimen/margin_switch"
-                    android:layout_marginEnd="@dimen/margin_large"
-                    android:layout_marginStart="@dimen/margin_small"
-                    android:layout_marginTop="@dimen/margin_switch" />
+                    android:paddingEnd="@dimen/item_switch_padding_end"
+                    android:paddingStart="@dimen/item_switch_padding_end"
+                    android:padding="@dimen/item_switch_padding" />
             </RelativeLayout>
 
             <RelativeLayout

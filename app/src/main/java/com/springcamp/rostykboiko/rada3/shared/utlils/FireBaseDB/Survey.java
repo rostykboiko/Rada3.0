@@ -1,14 +1,14 @@
-package com.springcamp.rostykboiko.rada3.shared.utlils;
+package com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB;
 
 import java.util.ArrayList;
 
 public class Survey {
+    private String surveyID;
     private String syrveyTitle;
     private ArrayList<String> surveyOptionList;
-    private boolean surveyPublic;
     private boolean surveySingleOption;
     private int duration;
-    private ArrayList<String> partiosipantsEmailList;
+    private ArrayList<User> participantsEmailList;
     private int color;
 
     public Survey(String syrveyTitle) {
@@ -20,19 +20,18 @@ public class Survey {
         this.surveyOptionList = surveyOptionList;
     }
 
-    public Survey(String syrveyTitle,
+    public Survey(String surveyID, String syrveyTitle,
                   ArrayList<String> surveyOptionList,
-                  boolean surveyPublic,
                   boolean surveySingleOption,
                   int duration,
-                  ArrayList<String> partiosipantsEmailList,
+                  ArrayList<User> participantsEmailList,
                   int color) {
+        this.surveyID = surveyID;
         this.syrveyTitle = syrveyTitle;
         this.surveyOptionList = surveyOptionList;
-        this.surveyPublic = surveyPublic;
         this.surveySingleOption = surveySingleOption;
         this.duration = duration;
-        this.partiosipantsEmailList = partiosipantsEmailList;
+        this.participantsEmailList = participantsEmailList;
         this.color = color;
     }
 
@@ -53,14 +52,6 @@ public class Survey {
         this.surveyOptionList = surveyOptionList;
     }
 
-    public boolean isSurveyPublic() {
-        return surveyPublic;
-    }
-
-    public void setSurveyPublic(boolean surveyPublic) {
-        this.surveyPublic = surveyPublic;
-    }
-
     public boolean isSurveySingleOption() {
         return surveySingleOption;
     }
@@ -77,11 +68,27 @@ public class Survey {
         this.duration = duration;
     }
 
-    public ArrayList<String> getPartiosipantsEmailList() {
-        return partiosipantsEmailList;
+    public ArrayList<User> getPartiosipantsEmailList() {
+        return participantsEmailList;
     }
 
-    public void setPartiosipantsEmailList(ArrayList<String> partiosipantsEmailList) {
-        this.partiosipantsEmailList = partiosipantsEmailList;
+    public void setPartiosipantsEmailList(ArrayList<User> participantsEmailList) {
+        this.participantsEmailList = participantsEmailList;
+    }
+
+    public int getSurveyColor() {
+        return color;
+    }
+
+    public void setSurveyColor(int color) {
+        this.color = color;
+    }
+
+    public String getSurveyID() {
+        return surveyID;
+    }
+
+    public void setSurveyID(String surveyID) {
+        this.surveyID = surveyID;
     }
 }

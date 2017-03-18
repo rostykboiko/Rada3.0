@@ -10,6 +10,5 @@ public class MainInteractor implements MainUseCase {
                           @NonNull ArrayList<String> ptionsList,
                           @NonNull MainUseCase.EditorCallback callback) {
         callback.success();
-
     }
 }

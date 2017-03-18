@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -25,6 +26,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.springcamp.rostykboiko.rada3.LoginContract;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
@@ -44,7 +48,6 @@ public class LoginActivity extends AppCompatActivity implements
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
     @BindView(R.id.sign_in_button)
     SignInButton signInButton;
 
@@ -160,10 +163,17 @@ public class LoginActivity extends AppCompatActivity implements
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
             if (acct != null) {
+                GoogleAccountAdapter.setUserID(acct.getId());
                 GoogleAccountAdapter.setUserName(acct.getDisplayName());
                 GoogleAccountAdapter.setUserEmail(acct.getEmail());
-                GoogleAccountAdapter.setUserID(acct.getId());
                 GoogleAccountAdapter.setProfileIcon(acct.getPhotoUrl());
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference userList = database.getReference("User");
+                userList.child(acct.getId()).child("Email").setValue(acct.getEmail());
+                userList.child(acct.getId()).child("Name").setValue(acct.getDisplayName());
+                userList.child(acct.getId()).child("TokenID").setValue(acct.getIdToken());
+                userList.child(acct.getId()).child("deviceToken").setValue(FirebaseInstanceId.getInstance().getToken());
             }
             Log.d(TAG, "User name: " + GoogleAccountAdapter.getUserName());
             startActivity(new Intent(LoginActivity.this, MainActivity.class));

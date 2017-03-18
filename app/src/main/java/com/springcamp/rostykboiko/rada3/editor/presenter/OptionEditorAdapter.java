@@ -8,11 +8,11 @@ import android.widget.EditText;
 
 import com.springcamp.rostykboiko.rada3.R;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewHolder> {
 
-    private ArrayList<String> optionsList;
+    private List<String> optionsList;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private EditText optionItem;
@@ -23,7 +23,7 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
         }
     }
 
-    public OptionEditorAdapter(ArrayList<String> optionsList) {
+    public OptionEditorAdapter(List<String> optionsList) {
         this.optionsList = optionsList;
     }
 

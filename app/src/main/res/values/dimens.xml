@@ -51,12 +51,14 @@
     <dimen name="list_item_spacing_half">8dp</dimen>
 
     <!-- Editor Activity-->
+    <dimen name="item_radioBtn">14dp</dimen>
     <dimen name="item_name_start">72dp</dimen>
     <dimen name="item_name_end">16dp</dimen>
     <dimen name="item_name_padding">16dp</dimen>
     <dimen name="item_name_margin">0dp</dimen>
     <dimen name="item_icon_padding">16dp</dimen>
-    <dimen name="item_switch">8dp</dimen>
+    <dimen name="item_switch_padding_end">10dp</dimen>
+    <dimen name="item_switch_padding">20dp</dimen>
     <dimen name="item_duration_time">28dp</dimen>
     <dimen name="item_rl_row">0dp</dimen>
 
