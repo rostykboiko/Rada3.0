@@ -21,6 +21,10 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -60,8 +64,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-
         implements MainContract.View {
+    private Survey survey;
     private List<Survey> surveyList = new ArrayList<>();;
     private ArrayList<String> optionslist = new ArrayList<>();
     private CardsAdaptor cardsAdaptor;
@@ -80,11 +84,35 @@ public class MainActivity extends AppCompatActivity
 
         presenter = new MainPresenter(this);
 
+        Firebase surveyRef = new Firebase("https://rada3-30775.firebaseio.com");
+
+        surveyRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                DataSnapshot surveyRef = dataSnapshot
+                        .child("Survey")
+                        .child("here will be generated ID");
+                String surveyTitle = surveyRef.child("Title").getValue().toString();
+                optionslist.add(surveyRef.child("Options").child("option").getValue().toString());
+                optionslist.add(surveyRef.child("Options").child("option0").getValue().toString());
+                System.out.println("Value from DB: " + surveyRef);
+
+                survey = new Survey(surveyTitle, optionslist);
+                surveyList.add(survey);
+                cardsAdaptor.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+
         initNavDrawer();
         initViewItems();
         initClickListeners();
         cardViewInit();
-        initOptions();
+      //  initOptions();
     }
 
     private void initViewItems() {

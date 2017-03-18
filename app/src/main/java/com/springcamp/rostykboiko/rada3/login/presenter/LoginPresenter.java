@@ -24,7 +24,6 @@ public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void logIn() {
         if (view != null) {
-            view.showProgress();
             view.tryLogin(Auth.GoogleSignInApi.getSignInIntent(view.getGoogleApiClient()));
         }
     }
