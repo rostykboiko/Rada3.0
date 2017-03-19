@@ -37,6 +37,8 @@
     <string name="tv_duration_time">2хв</string>
     <string name="tv_participants">Учасники</string>
     <string name="ed_option">Варіант відповіді</string>
+    <string name="tv_duration_min">хв</string>
+    <string name="tv_duration_hour">год</string>
     <string name="tv_duration_2min">2 хвилини</string>
     <string name="tv_duration_10min">10 хвилин</string>
     <string name="tv_duration_30min">30 хвилин</string>

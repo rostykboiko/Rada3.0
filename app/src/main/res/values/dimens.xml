@@ -54,6 +54,8 @@
     <dimen name="item_radioBtn">14dp</dimen>
     <dimen name="item_name_start">72dp</dimen>
     <dimen name="item_name_end">16dp</dimen>
+    <dimen name="item_close_padding">12dp</dimen>
+    <dimen name="item_close_paddingEnd">16dp</dimen>
     <dimen name="item_name_padding">16dp</dimen>
     <dimen name="item_name_margin">0dp</dimen>
     <dimen name="item_icon_padding">16dp</dimen>

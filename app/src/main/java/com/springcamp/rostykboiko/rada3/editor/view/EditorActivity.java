@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
@@ -37,8 +38,9 @@ import android.widget.Toast;
 
 public class EditorActivity extends AppCompatActivity implements EditorContract.View,
         ItemListDialogFragment.Listener {
-
+    private String[] separated;
     private List<String> optionsList = new ArrayList<>();
+    private List<String> userList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
     private SecureRandom random = new SecureRandom();
 
@@ -69,6 +71,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     @BindView(R.id.saveBtn)
     ImageView saveButton;
+
+    @BindView(R.id.one_option_switch)
+    Switch oneOptionSwitch;
 
     @Nullable
     EditorContract.Presenter presenter;
@@ -143,11 +148,14 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         builder.setItems(mDurationOptions, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                Toast.makeText(getApplicationContext(),
-                        "Тривалість: " + mDurationOptions[item],
-                        Toast.LENGTH_SHORT).show();
+                separated = mDurationOptions[item].split(" ");
+                if (separated[1].equals("година"))
+                    durationTime.setText(separated[0] + getString(R.string.tv_duration_hour));
+                else
+                    durationTime.setText(separated[0] + getString(R.string.tv_duration_min));
             }
         });
+
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -157,10 +165,15 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             optionsList.add(getText(R.string.ed_option).toString());
             optionsAdapter.notifyDataSetChanged();
         } else {
+            addNewOption.setVisibility(View.GONE);
             Toast.makeText(getApplicationContext(),
                     "Максимально 5 варіантів відповіді",
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void addUser() {
+
     }
 
     private void onSaveBtnPressed() {
@@ -176,17 +189,39 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             String generatedString = generatedId();
 
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference userList = database.getReference("Survey");
-            System.out.println("Title" + editTextTitle.getText());
-            userList.child(generatedString)
+            DatabaseReference surveyRef = database.getReference("Survey");
+            surveyRef.child(generatedString)
                     .child("Title")
                     .setValue(editTextTitle.getText().toString());
             for (String option : optionsList) {
-                userList.child(generatedString)
+                surveyRef.child(generatedString)
                         .child("Options")
                         .child("option" + (optionsList.indexOf(option) + 1))
                         .setValue(option);
             }
+
+            surveyRef.child(generatedString)
+                    .child("One Positive Option")
+                    .setValue(oneOptionSwitch.isChecked());
+            if (separated != null)
+                surveyRef.child(generatedString)
+                        .child("duration")
+                        .setValue(separated[0] + " " + separated[1]);
+            else surveyRef.child(generatedString)
+                    .child("duration")
+                    .setValue(getString(R.string.tv_duration_2min));
+
+            surveyRef.child(generatedString)
+                    .child("color")
+                    .setValue("#color");
+
+            for (String user : userList) {
+                surveyRef.child(generatedString)
+                        .child("Participants")
+                        .child("user" + (optionsList.indexOf(user) + 1))
+                        .setValue(user);
+            }
+
             startActivity(new Intent(EditorActivity.this, MainActivity.class));
             finish();
         }

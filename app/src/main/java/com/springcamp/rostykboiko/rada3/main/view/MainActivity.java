@@ -273,7 +273,6 @@ public class MainActivity extends AppCompatActivity
         surveyRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
                 String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
                 System.out.println("Survey title " + surveyTitle);
                 survey.setSurveyTitle(surveyTitle);

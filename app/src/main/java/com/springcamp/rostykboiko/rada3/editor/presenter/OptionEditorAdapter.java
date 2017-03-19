@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.springcamp.rostykboiko.rada3.R;
 
@@ -18,10 +19,12 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private EditText optionItem;
+        private ImageView closeIcon;
 
         ViewHolder(View view) {
             super(view);
             optionItem = (EditText) view.findViewById(R.id.optionItem);
+            closeIcon = (ImageView) view.findViewById(R.id.close_icon);
         }
     }
 
@@ -58,9 +61,19 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
 
             }
         });
+
+        holder.closeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeItem(position);
+            }
+        });
     }
 
-
+    private void removeItem(int position) {
+        optionsList.remove(position);
+        notifyItemRemoved(position);
+    }
 
     @Override
     public int getItemCount() {

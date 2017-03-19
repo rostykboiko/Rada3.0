@@ -9,20 +9,29 @@
         android:id="@+id/radioBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_normal"
         android:layout_marginStart="@dimen/item_radioBtn"
-        android:clickable="false"/>
+        android:layout_marginTop="@dimen/margin_normal"
+        android:clickable="false" />
 
     <EditText
         android:id="@+id/optionItem"
         android:layout_width="wrap_content"
-        android:background="@android:color/transparent"
-        android:inputType="textAutoCorrect|textMultiLine"
-        android:hint="@string/title_activity_editor"
-        android:maxLength="25"
         android:layout_height="@dimen/row_text_height"
         android:layout_marginStart="@dimen/margin_tab"
         android:layout_marginTop="@dimen/margin_normal"
+        android:background="@android:color/transparent"
+        android:hint="@string/title_activity_editor"
+        android:inputType="textAutoCorrect|textMultiLine"
+        android:maxLength="25"
         android:padding="@dimen/margin_small"
         android:textSize="@dimen/text_size_standard" />
+
+    <ImageView
+        android:id="@+id/close_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/item_close_padding"
+        android:paddingEnd="@dimen/item_close_paddingEnd"
+        android:src="@drawable/ic_material_close" />
 </RelativeLayout>
