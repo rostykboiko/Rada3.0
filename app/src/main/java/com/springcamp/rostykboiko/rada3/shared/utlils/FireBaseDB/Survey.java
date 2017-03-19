@@ -1,11 +1,12 @@
 package com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Survey {
     private String surveyID;
     private String surveyTitle;
-    private List<String> surveyOptionList;
+    private List<String> surveyOptionList = new ArrayList<>();
     private boolean surveySingleOption;
     private int duration;
     private List<User> participantsEmailList;

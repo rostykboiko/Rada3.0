@@ -62,7 +62,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
-    private Survey survey;
+    private Survey survey = new Survey();
     private List<Survey> surveyList = new ArrayList<>();
     private List<String> optionslist = new ArrayList<>();
     private CardsAdaptor cardsAdaptor;
@@ -269,31 +269,32 @@ public class MainActivity extends AppCompatActivity
      */
 
     private void initFireBase() {
-        final Firebase surveyRef = new Firebase("https://rada3-30775.firebaseio.com/Survey");
-        optionslist = new ArrayList<>();
+        Firebase surveyRef = new Firebase("https://rada3-30775.firebaseio.com/Survey");
         surveyRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                survey = new Survey();
+
                 String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
                 System.out.println("Survey title " + surveyTitle);
                 survey.setSurveyTitle(surveyTitle);
-                optionslist = new ArrayList<>();
 
-                int i = 0;
                 for (DataSnapshot child : dataSnapshot.child("Options").getChildren()) {
-                    optionslist.add(child.getValue().toString());
-                    survey.setSurveyOptionList(optionslist);
-                    System.out.println("Survey option list: " + optionslist.get(i));
-                    i++;
+                    String fckingOption = child.getValue().toString();
+                    optionslist.add(fckingOption);
+                    System.out.println("Survey option list: " + fckingOption);
+                    survey.getSurveyOptionList().add(fckingOption);
                 }
+
                 surveyList.add(survey);
                 cardsAdaptor.notifyDataSetChanged();
+                survey = new Survey();
+                optionslist = new ArrayList<>();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 cardsAdaptor.notifyDataSetChanged();
+
             }
 
             @Override

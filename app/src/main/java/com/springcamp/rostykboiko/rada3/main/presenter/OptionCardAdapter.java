@@ -7,11 +7,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.springcamp.rostykboiko.rada3.R;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolder> {
+class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolder> {
 
-    private List<String> optionsList;
+    private List<String> optionsList = new ArrayList<>();
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView optionItem;
@@ -22,7 +24,10 @@ public class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.Vi
         }
     }
 
-    public OptionCardAdapter(List<String> optionsList) {
+    OptionCardAdapter() {
+    }
+
+    OptionCardAdapter(List<String> optionsList) {
         this.optionsList = optionsList;
     }
 
@@ -39,8 +44,6 @@ public class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.Vi
         String option = optionsList.get(position);
         holder.optionItem.setText(option);
     }
-
-
 
     @Override
     public int getItemCount() {
