@@ -8,10 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -169,10 +167,13 @@ public class LoginActivity extends AppCompatActivity implements
 
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference userList = database.getReference("User");
+
                 userList.child(acct.getId()).child("Email").setValue(acct.getEmail());
                 userList.child(acct.getId()).child("Name").setValue(acct.getDisplayName());
-                userList.child(acct.getId()).child("TokenID").setValue(acct.getIdToken());
+                userList.child(acct.getId()).child("ProfileIconUrl").setValue(acct.getPhotoUrl().toString());
                 userList.child(acct.getId()).child("deviceToken").setValue(FirebaseInstanceId.getInstance().getToken());
+                if (mAuth != null)
+                    userList.child(acct.getId()).child("Uid").setValue(mAuth.getCurrentUser().getUid());
             }
             Log.d(TAG, "User name: " + GoogleAccountAdapter.getUserName());
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -186,7 +187,6 @@ public class LoginActivity extends AppCompatActivity implements
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             }

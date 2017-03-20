@@ -21,10 +21,12 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -63,8 +65,11 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
     private Survey survey = new Survey();
+
     private List<Survey> surveyList = new ArrayList<>();
-    private List<String> optionslist = new ArrayList<>();
+    private List<String> optionsList = new ArrayList<>();
+    private List<String> userList = new ArrayList<>();
+
     private CardsAdaptor cardsAdaptor;
     private FloatingActionButton fab;
     private Drawer mDrawer = null;
@@ -72,6 +77,12 @@ public class MainActivity extends AppCompatActivity
 
     @Nullable
     MainContract.Presenter presenter;
+
+    @Override
+    protected void onResume() {
+        cardsAdaptor.notifyDataSetChanged();
+        super.onResume();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,52 +280,55 @@ public class MainActivity extends AppCompatActivity
      */
 
     private void initFireBase() {
-        Firebase surveyRef = new Firebase("https://rada3-30775.firebaseio.com/Survey");
-        surveyRef.addChildEventListener(new ChildEventListener() {
+        DatabaseReference mCurentUserRef = FirebaseDatabase.getInstance().getReference()
+                .child("Survey");
+        mCurentUserRef.keepSynced(true);
+
+        Query mQueryUser = mCurentUserRef
+                .orderByChild("uid")
+                .equalTo("EDOj8fqi9eV7jVSgmAbHFOFNm0o2");
+
+        mQueryUser.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
-                System.out.println("Survey title " + surveyTitle);
-                survey.setSurveyTitle(surveyTitle);
+                    String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
+                    System.out.println("Survey title " + surveyTitle);
+                    survey.setSurveyTitle(surveyTitle);
 
-                for (DataSnapshot child : dataSnapshot.child("Options").getChildren()) {
-                    String fckingOption = child.getValue().toString();
-                    optionslist.add(fckingOption);
-                    System.out.println("Survey option list: " + fckingOption);
-                    survey.getSurveyOptionList().add(fckingOption);
+                    for (DataSnapshot child : dataSnapshot.child("Options").getChildren())
+                        survey.getSurveyOptionList().add(child.getValue().toString());
+
+                    surveyList.add(survey);
+                    cardsAdaptor.notifyDataSetChanged();
+                    survey = new Survey();
+                    optionsList = new ArrayList<>();
                 }
 
-                surveyList.add(survey);
-                cardsAdaptor.notifyDataSetChanged();
-                survey = new Survey();
-                optionslist = new ArrayList<>();
-            }
+                @Override
+                public void onChildChanged(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                cardsAdaptor.notifyDataSetChanged();
+                }
 
-            }
+                @Override
+                public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                }
 
-            }
+                @Override
+                public void onChildMoved(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
+                }
+            });
     }
 
     private void initCardView() {
-        cardsAdaptor = new CardsAdaptor(this, surveyList, optionslist);
+        cardsAdaptor = new CardsAdaptor(this, surveyList, optionsList);
+
         RecyclerView cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
         RecyclerView.LayoutManager mCardManager = new GridLayoutManager(this, 2);
         cardRecyclerView.setLayoutManager(mCardManager);

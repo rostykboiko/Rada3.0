@@ -31,7 +31,6 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
             title = (TextView) view.findViewById(R.id.title);
             optionsRecycler = (RecyclerView) view.findViewById(R.id.card_option_recycler);
 
-
             RecyclerView.LayoutManager mListManager = new LinearLayoutManager(mContext.getApplicationContext());
             optionsRecycler.setLayoutManager(mListManager);
             optionsRecycler.setItemAnimator(new DefaultItemAnimator());

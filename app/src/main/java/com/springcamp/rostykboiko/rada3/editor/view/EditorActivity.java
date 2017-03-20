@@ -218,7 +218,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             for (String user : userList) {
                 surveyRef.child(generatedString)
                         .child("Participants")
-                        .child("user" + (optionsList.indexOf(user) + 1))
+                        .child("user" + (userList.indexOf(user) + 1))
                         .setValue(user);
             }
 
