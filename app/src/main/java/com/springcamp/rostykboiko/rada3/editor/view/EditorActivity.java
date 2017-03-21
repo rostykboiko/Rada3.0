@@ -2,6 +2,7 @@ package com.springcamp.rostykboiko.rada3.editor.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,10 +26,10 @@ import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.ItemListDialogFragment;
+import com.thebluealliance.spectrum.SpectrumDialog;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.List;
 import java.security.SecureRandom;
 
 import butterknife.BindView;
@@ -39,6 +40,7 @@ import android.widget.Toast;
 public class EditorActivity extends AppCompatActivity implements EditorContract.View,
         ItemListDialogFragment.Listener {
     private String[] separated;
+    private String colorName;
     private ArrayList<String> optionsList = new ArrayList<>();
     private ArrayList<String> userList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
@@ -62,6 +64,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     @BindView(R.id.duration_row)
     RelativeLayout durationBtn;
+
+    @BindView(R.id.color_row)
+    RelativeLayout colorBtn;
 
     @BindView(R.id.participants_row)
     RelativeLayout participantsBtn;
@@ -125,6 +130,12 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 ItemListDialogFragment.newInstance(30).show(getSupportFragmentManager(), "dialog");
             }
         });
+        colorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                colorPicker();
+            }
+        });
     }
 
     private void initOptionsListView() {
@@ -133,6 +144,24 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         optionsListView.setLayoutManager(mListManager);
         optionsListView.setItemAnimator(new DefaultItemAnimator());
         optionsListView.setAdapter(optionsAdapter);
+    }
+
+    private void colorPicker(){
+        new SpectrumDialog.Builder(this)
+                .setColors(R.array.demo_colors)
+                .setSelectedColorRes(R.color.md_blue_500)
+                .setDismissOnColorSelected(true)
+                .setOutlineWidth(2)
+                .setOnColorSelectedListener(new SpectrumDialog.OnColorSelectedListener() {
+                    @Override public void onColorSelected(boolean positiveResult, @ColorInt int color) {
+                        if (positiveResult) {
+                            colorName = Integer.toHexString(color).toUpperCase();
+                            Toast.makeText(EditorActivity.this, "Color selected: #" + Integer.toHexString(color).toUpperCase(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(EditorActivity.this, "Dialog cancelled", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).build().show(getSupportFragmentManager(), "demo_dialog_1");
     }
 
     private void durationPicker() {
@@ -213,7 +242,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
             surveyRef.child(generatedString)
                     .child("color")
-                    .setValue("#color");
+                    .setValue("#" + colorName);
 
             for (String user : userList) {
                 surveyRef.child(generatedString)

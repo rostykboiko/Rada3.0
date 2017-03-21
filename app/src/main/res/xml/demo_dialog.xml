@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="demo_dialog_1"
+        android:summary="This dialog will close automatically when you select a color"
+        android:title="Click for a dialog"/>
+
+    <Preference
+        android:key="demo_dialog_2"
+        android:summary="This dialog won't close automatically when a color is selected; you have to press OK"
+        android:title="Click for another dialog" />
+
+    <Preference
+        android:key="demo_dialog_3"
+        android:summary="This demonstrates Spectrum's behavior with a range of light and dark colors"
+        android:title="256 Shades of Grey" />
+
+    <Preference
+        android:key="demo_dialog_4"
+        android:summary="This demonstrates a dialog with a fixed number of columns (4). This column count will be used no matter how big the screen is."
+        android:title="Fixed Column Count" />
+
+    <Preference
+        android:key="demo_dialog_5"
+        android:summary="This demonstrates a dialog with a custom theme."
+        android:title="Custom Theme" />
+
+</PreferenceScreen>

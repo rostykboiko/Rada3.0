@@ -122,16 +122,17 @@ public class MainActivity extends AppCompatActivity
         cardRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),
                 cardRecyclerView,
                 new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                startActivity(new Intent(MainActivity.this, EditorActivity.class)
-                        .putExtra("String", survey));
-            }
+                    @Override
+                    public void onClick(View view, int position) {
+                        startActivity(new Intent(MainActivity.this, EditorActivity.class)
+                                .putExtra("String", survey));
+                        finish();
+                    }
 
-            @Override
-            public void onLongClick(View view, int position) {
-            }
-        }));
+                    @Override
+                    public void onLongClick(View view, int position) {
+                    }
+                }));
     }
 
     /* NavDrawer Start */
@@ -310,39 +311,39 @@ public class MainActivity extends AppCompatActivity
         mQueryUser.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
-                    System.out.println("Survey title " + surveyTitle);
-                    survey.setSurveyTitle(surveyTitle);
+                String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
+                System.out.println("Survey title " + surveyTitle);
+                survey.setSurveyTitle(surveyTitle);
 
-                    for (DataSnapshot child : dataSnapshot.child("Options").getChildren())
-                        survey.getSurveyOptionList().add(child.getValue().toString());
+                for (DataSnapshot child : dataSnapshot.child("Options").getChildren())
+                    survey.getSurveyOptionList().add(child.getValue().toString());
 
-                    surveyList.add(survey);
-                    cardsAdaptor.notifyDataSetChanged();
-                    survey = new Survey();
-                    optionsList = new ArrayList<>();
-                }
+                surveyList.add(survey);
+                cardsAdaptor.notifyDataSetChanged();
+                survey = new Survey();
+                optionsList = new ArrayList<>();
+            }
 
-                @Override
-                public void onChildChanged(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildChanged(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
 
-                }
+            }
 
-                @Override
-                public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
+            @Override
+            public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
 
-                }
+            }
 
-                @Override
-                public void onChildMoved(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildMoved(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
 
-                }
+            }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                }
-            });
+            }
+        });
     }
 
     private void initCardView() {
