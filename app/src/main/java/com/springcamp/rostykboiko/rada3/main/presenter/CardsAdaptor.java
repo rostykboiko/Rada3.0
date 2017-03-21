@@ -12,12 +12,11 @@ import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHolder> {
     private Context mContext;
-    private List<String> optionsList = new ArrayList<>();
-    private List<Survey> surveyList = new ArrayList<>();
+    private ArrayList<String> optionsList = new ArrayList<>();
+    private ArrayList<Survey> surveyList = new ArrayList<>();
 
     private OptionCardAdapter optionCardAdapter = new OptionCardAdapter();
 
@@ -38,7 +37,7 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
         }
     }
 
-    public CardsAdaptor(Context mContext, List<Survey> surveyList, List<String> optionsList) {
+    public CardsAdaptor(Context mContext, ArrayList<Survey> surveyList, ArrayList<String> optionsList) {
         this.mContext = mContext;
         this.surveyList = surveyList;
         this.optionsList = optionsList;

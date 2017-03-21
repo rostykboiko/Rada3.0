@@ -39,8 +39,8 @@ import android.widget.Toast;
 public class EditorActivity extends AppCompatActivity implements EditorContract.View,
         ItemListDialogFragment.Listener {
     private String[] separated;
-    private List<String> optionsList = new ArrayList<>();
-    private List<String> userList = new ArrayList<>();
+    private ArrayList<String> optionsList = new ArrayList<>();
+    private ArrayList<String> userList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
     private SecureRandom random = new SecureRandom();
 

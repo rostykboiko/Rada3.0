@@ -1,32 +1,27 @@
 package com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Survey {
+public class Survey implements Parcelable {
     private String surveyID;
     private String surveyTitle;
-    private List<String> surveyOptionList = new ArrayList<>();
+    private ArrayList<String> surveyOptionList = new ArrayList<>();
     private boolean surveySingleOption;
     private int duration;
-    private List<User> participantsEmailList;
+    private ArrayList<User> participantsEmailList;
     private int color;
 
     public Survey(){}
-    public Survey(String surveyTitle) {
-        this.surveyTitle = surveyTitle;
-    }
-
-    public Survey(String surveyTitle, List<String> surveyOptionList) {
-        this.surveyTitle = surveyTitle;
-        this.surveyOptionList = surveyOptionList;
-    }
 
     public Survey(String surveyID, String surveyTitle,
-                  List<String> surveyOptionList,
+                  ArrayList<String> surveyOptionList,
                   boolean surveySingleOption,
                   int duration,
-                  List<User> participantsEmailList,
+                  ArrayList<User> participantsEmailList,
                   int color) {
         this.surveyID = surveyID;
         this.surveyTitle = surveyTitle;
@@ -46,51 +41,46 @@ public class Survey {
         this.surveyTitle = surveyTitle;
     }
 
-    public List<String> getSurveyOptionList() {
+    public ArrayList<String> getSurveyOptionList() {
         return surveyOptionList;
     }
 
-    public void setSurveyOptionList(List<String> surveyOptionList) {
-        this.surveyOptionList = surveyOptionList;
+// Parcel
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public boolean isSurveySingleOption() {
-        return surveySingleOption;
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeString(surveyID);
+        out.writeString(surveyTitle);
+        out.writeList(surveyOptionList);
+        out.writeByte((byte) (surveySingleOption ? 1 : 0));
+        out.writeInt(duration);
+        out.writeInt(color);
+        out.writeList(participantsEmailList);
     }
 
-    public void setSurveySingleOption(boolean surveySingleOption) {
-        this.surveySingleOption = surveySingleOption;
-    }
+    // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
+    public static final Parcelable.Creator<Survey> CREATOR = new Parcelable.Creator<Survey>() {
+        public Survey createFromParcel(Parcel in) {
+            return new Survey(in);
+        }
 
-    public int getDuration() {
-        return duration;
-    }
+        public Survey[] newArray(int size) {
+            return new Survey[size];
+        }
+    };
 
-    public void setDuration(int duration) {
-        this.duration = duration;
-    }
-
-    public List<User> getPartiosipantsEmailList() {
-        return participantsEmailList;
-    }
-
-    public void setPartiosipantsEmailList(List<User> participantsEmailList) {
-        this.participantsEmailList = participantsEmailList;
-    }
-
-    public int getSurveyColor() {
-        return color;
-    }
-
-    public void setSurveyColor(int color) {
-        this.color = color;
-    }
-
-    public String getSurveyID() {
-        return surveyID;
-    }
-
-    public void setSurveyID(String surveyID) {
-        this.surveyID = surveyID;
+    // example constructor that takes a Parcel and gives you an object populated with it's values
+    private Survey(Parcel in) {
+        surveyID = in.readString();
+        surveyTitle = in.readString();
+        color = in.readInt();
+        duration = in.readInt();
+        surveySingleOption = in.readByte() != 0;
+        surveyOptionList = in.readArrayList(null);
+        participantsEmailList = in.readArrayList(null);
     }
 }

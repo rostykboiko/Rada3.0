@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -46,6 +48,7 @@ import com.springcamp.rostykboiko.rada3.main.presenter.MainPresenter;
 import com.springcamp.rostykboiko.rada3.MainContract;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.main.presenter.CardsAdaptor;
+import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
@@ -57,6 +60,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -66,9 +70,10 @@ public class MainActivity extends AppCompatActivity
         implements MainContract.View {
     private Survey survey = new Survey();
 
-    private List<Survey> surveyList = new ArrayList<>();
-    private List<String> optionsList = new ArrayList<>();
-    private List<String> userList = new ArrayList<>();
+    private RecyclerView cardRecyclerView;
+    private ArrayList<Survey> surveyList = new ArrayList<>();
+    private ArrayList<String> optionsList = new ArrayList<>();
+    private ArrayList<String> userList = new ArrayList<>();
 
     private CardsAdaptor cardsAdaptor;
     private FloatingActionButton fab;
@@ -100,6 +105,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initViewItems() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
         setSupportActionBar(toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
     }
@@ -108,11 +114,24 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(MainActivity.this, EditorActivity.class));
                 finish();
             }
         });
+
+        cardRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),
+                cardRecyclerView,
+                new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                startActivity(new Intent(MainActivity.this, EditorActivity.class)
+                        .putExtra("String", survey));
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+            }
+        }));
     }
 
     /* NavDrawer Start */
@@ -329,7 +348,6 @@ public class MainActivity extends AppCompatActivity
     private void initCardView() {
         cardsAdaptor = new CardsAdaptor(this, surveyList, optionsList);
 
-        RecyclerView cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
         RecyclerView.LayoutManager mCardManager = new GridLayoutManager(this, 2);
         cardRecyclerView.setLayoutManager(mCardManager);
         cardRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
@@ -453,4 +471,6 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

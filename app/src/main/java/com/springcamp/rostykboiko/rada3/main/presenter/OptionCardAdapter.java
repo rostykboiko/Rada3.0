@@ -13,7 +13,7 @@ import java.util.List;
 
 class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolder> {
 
-    private List<String> optionsList = new ArrayList<>();
+    private ArrayList<String> optionsList = new ArrayList<>();
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView optionItem;
@@ -27,7 +27,7 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
     OptionCardAdapter() {
     }
 
-    OptionCardAdapter(List<String> optionsList) {
+    OptionCardAdapter(ArrayList<String> optionsList) {
         this.optionsList = optionsList;
     }
 
