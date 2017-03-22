@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.springcamp.rostykboiko.rada3.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolder> {
 

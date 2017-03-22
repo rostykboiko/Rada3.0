@@ -2,37 +2,37 @@ package com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB;
 
 import android.net.Uri;
 
-class User {
-    private static String userName;
-    private static String userEmail;
+public class User {
+    private String userName;
+    private String userEmail;
     private static String userID;
     private static Uri userProfileIcon;
 
-    public static String getUserName() {
+    public String getUserName() {
         return userName;
     }
 
-    public static void setUserName(String userName) {
-        User.userName = userName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public static String getUserEmail() {
+    public String getUserEmail() {
         return userEmail;
     }
 
-    public static void setUserEmail(String userEmail) {
-        User.userEmail = userEmail;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
-    public static String getUserID() {
+    public String getUserID() {
         return userID;
     }
 
-    public static void setUserID(String userID) {
+    public void setUserID(String userID) {
         User.userID = userID;
     }
 
-    public static Uri getUserProfileIcon() {
+    public Uri getUserProfileIcon() {
         return userProfileIcon;
     }
 

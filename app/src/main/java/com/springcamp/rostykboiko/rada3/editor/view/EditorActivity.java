@@ -27,6 +27,7 @@ import com.springcamp.rostykboiko.rada3.editor.presenter.OptionEditorAdapter;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 import com.thebluealliance.spectrum.SpectrumDialog;
 
 import java.math.BigInteger;
@@ -42,7 +43,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     private String[] separated;
     private String colorName;
     private ArrayList<String> optionsList = new ArrayList<>();
-    private ArrayList<String> userList = new ArrayList<>();
+    private ArrayList<User> userList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
     private SecureRandom random = new SecureRandom();
 
@@ -203,10 +204,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         }
     }
 
-    private void addUser() {
-
-    }
-
     private void onSaveBtnPressed() {
         if (editTextTitle.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(),
@@ -246,11 +243,11 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     .child("color")
                     .setValue("#" + colorName);
 
-            for (String user : userList) {
+            for (User user : userList) {
                 surveyRef.child(generatedString)
                         .child("Participants")
                         .child("user" + (userList.indexOf(user) + 1))
-                        .setValue(user);
+                        .setValue(user.getUserEmail());
             }
 
             startActivity(new Intent(EditorActivity.this, MainActivity.class));
