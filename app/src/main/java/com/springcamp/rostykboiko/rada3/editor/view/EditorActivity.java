@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,11 +22,11 @@ import android.widget.TextView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.springcamp.rostykboiko.rada3.EditorContract;
+import com.springcamp.rostykboiko.rada3.editor.presenter.BottomSheetFragment;
 import com.springcamp.rostykboiko.rada3.editor.presenter.OptionEditorAdapter;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
-import com.springcamp.rostykboiko.rada3.shared.utlils.ItemListDialogFragment;
 import com.thebluealliance.spectrum.SpectrumDialog;
 
 import java.math.BigInteger;
@@ -37,8 +38,7 @@ import butterknife.ButterKnife;
 
 import android.widget.Toast;
 
-public class EditorActivity extends AppCompatActivity implements EditorContract.View,
-        ItemListDialogFragment.Listener {
+public class EditorActivity extends AppCompatActivity implements EditorContract.View {
     private String[] separated;
     private String colorName;
     private ArrayList<String> optionsList = new ArrayList<>();
@@ -127,7 +127,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         participantsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ItemListDialogFragment.newInstance(30).show(getSupportFragmentManager(), "dialog");
+                BottomSheetDialogFragment bottomSheetDialogFragment = new BottomSheetFragment();
+                bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
             }
         });
         colorBtn.setOnClickListener(new View.OnClickListener() {
@@ -146,14 +147,15 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         optionsListView.setAdapter(optionsAdapter);
     }
 
-    private void colorPicker(){
+    private void colorPicker() {
         new SpectrumDialog.Builder(this)
                 .setColors(R.array.demo_colors)
                 .setSelectedColorRes(R.color.md_blue_500)
                 .setDismissOnColorSelected(true)
                 .setOutlineWidth(2)
                 .setOnColorSelectedListener(new SpectrumDialog.OnColorSelectedListener() {
-                    @Override public void onColorSelected(boolean positiveResult, @ColorInt int color) {
+                    @Override
+                    public void onColorSelected(boolean positiveResult, @ColorInt int color) {
                         if (positiveResult) {
                             colorName = Integer.toHexString(color).toUpperCase();
                             Toast.makeText(EditorActivity.this, "Color selected: #" + Integer.toHexString(color).toUpperCase(), Toast.LENGTH_SHORT).show();
@@ -301,11 +303,5 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     @Override
     public ArrayList<String> getOptionsList() {
         return null;
-    }
-
-    // Bottom Sheet
-    @Override
-    public void onItemClicked(int position) {
-
     }
 }
