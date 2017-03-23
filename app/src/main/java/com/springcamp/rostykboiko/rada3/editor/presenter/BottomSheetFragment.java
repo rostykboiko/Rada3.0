@@ -2,6 +2,7 @@ package com.springcamp.rostykboiko.rada3.editor.presenter;
 
 import android.app.Dialog;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
@@ -16,8 +17,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 public class BottomSheetFragment extends BottomSheetDialogFragment {
@@ -37,7 +40,6 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         @Override
         public void onSlide(@NonNull View bottomSheet, float slideOffset) {
             System.out.println("Method: onSlide ");
-
         }
     };
 
@@ -63,9 +65,16 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String userEmail = dataSnapshot.child("Email").getValue(String.class);
+                String userName = dataSnapshot.child("Name").getValue(String.class);
+                String userID = dataSnapshot.child("Uid").getValue(String.class);
+                String profileIcon = dataSnapshot.child("ProfileIconUrl").getValue(String.class);
                 System.out.println("User Email " + userEmail);
+
                 User user = new User();
                 user.setUserEmail(userEmail);
+                user.setUserName(userName);
+                user.setUserID(userID);
+                //user.setUserProfileIcon(profileIcon);
                 userList.add(user);
             }
 
@@ -99,5 +108,18 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         usersListView.setLayoutManager(mListManager);
         usersListView.setItemAnimator(new DefaultItemAnimator());
         usersListView.setAdapter(participantsAdapter);
+
+        usersListView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(),
+                usersListView,
+                new RecyclerTouchListener.ClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        System.out.println("User " + userList.get(position).getUserName());
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+                    }
+                }));
     }
 }

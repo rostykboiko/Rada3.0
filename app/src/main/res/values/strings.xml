@@ -36,6 +36,7 @@
     <string name="tv_duration">Тривалість</string>
     <string name="tv_duration_time">2хв</string>
     <string name="tv_participants">Учасники</string>
+    <string name="tv_participants_title">Виберіть учасника</string>
     <string name="tv_color">Колір</string>
     <string name="ed_option">Варіант відповіді</string>
     <string name="tv_duration_min">хв</string>

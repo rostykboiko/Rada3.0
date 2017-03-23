@@ -28,6 +28,7 @@ import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
+import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 import com.thebluealliance.spectrum.SpectrumDialog;
 
 import java.math.BigInteger;
@@ -231,6 +232,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             surveyRef.child(generatedString)
                     .child("One Positive Option")
                     .setValue(oneOptionSwitch.isChecked());
+
             if (separated != null)
                 surveyRef.child(generatedString)
                         .child("duration")
@@ -243,12 +245,10 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     .child("color")
                     .setValue("#" + colorName);
 
-            for (User user : userList) {
-                surveyRef.child(generatedString)
-                        .child("Participants")
-                        .child("user" + (userList.indexOf(user) + 1))
-                        .setValue(user.getUserEmail());
-            }
+            surveyRef.child(generatedString)
+                    .child("uid")
+                    .setValue(GoogleAccountAdapter.getUserID());
+
 
             startActivity(new Intent(EditorActivity.this, MainActivity.class));
             finish();

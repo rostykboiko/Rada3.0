@@ -8,11 +8,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 public interface LoginContract {
 
     interface View {
-        String getEmail();
-
-        String getPassword();
-
-        void loginSuccess();
 
         void tryLogin(Intent signInIntent);
 
@@ -20,15 +15,10 @@ public interface LoginContract {
 
         GoogleSignInOptions getGoogleSignInOptions();
 
-        void showProgress();
-
-        void onViewStart();
     }
 
     interface Presenter {
         void logIn();
-
-        void onStop();
 
         void onStart();
     }

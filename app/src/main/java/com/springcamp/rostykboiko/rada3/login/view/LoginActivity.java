@@ -94,21 +94,6 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     @Override
-    public String getEmail() {
-        return "Vasa";
-    }
-
-    @Override
-    public String getPassword() {
-        return "123456";
-    }
-
-    @Override
-    public void loginSuccess() {
-        Toast.makeText(this, "SUCCESS", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void tryLogin(Intent signInIntent) {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -127,22 +112,6 @@ public class LoginActivity extends AppCompatActivity implements
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
-    }
-
-    @Override
-    public void showProgress() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.loading));
-            mProgressDialog.setIndeterminate(true);
-        }
-    }
-
-    @Override
-    public void onViewStart() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.hide();
-        }
     }
 
     /**
@@ -172,8 +141,11 @@ public class LoginActivity extends AppCompatActivity implements
                 userList.child(acct.getId()).child("Name").setValue(acct.getDisplayName());
                 userList.child(acct.getId()).child("ProfileIconUrl").setValue(acct.getPhotoUrl().toString());
                 userList.child(acct.getId()).child("deviceToken").setValue(FirebaseInstanceId.getInstance().getToken());
-                if (mAuth != null)
+                if (mAuth != null) {
                     userList.child(acct.getId()).child("Uid").setValue(mAuth.getCurrentUser().getUid());
+                    GoogleAccountAdapter.setUserID(mAuth.getCurrentUser().getUid());
+
+                }
             }
             Log.d(TAG, "User name: " + GoogleAccountAdapter.getUserName());
             startActivity(new Intent(LoginActivity.this, MainActivity.class));

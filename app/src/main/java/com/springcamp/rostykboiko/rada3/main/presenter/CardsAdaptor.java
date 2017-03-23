@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHolder> {
     private Context mContext;
-    private ArrayList<String> optionsList = new ArrayList<>();
     private ArrayList<Survey> surveyList = new ArrayList<>();
 
     private OptionCardAdapter optionCardAdapter = new OptionCardAdapter();
@@ -37,10 +36,9 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
         }
     }
 
-    public CardsAdaptor(Context mContext, ArrayList<Survey> surveyList, ArrayList<String> optionsList) {
+    public CardsAdaptor(Context mContext, ArrayList<Survey> surveyList) {
         this.mContext = mContext;
         this.surveyList = surveyList;
-        this.optionsList = optionsList;
     }
 
     @Override

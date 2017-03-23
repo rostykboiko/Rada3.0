@@ -28,10 +28,6 @@ public class LoginPresenter implements LoginContract.Presenter {
         }
     }
 
-    @Override
-    public void onStop() {
-        view = null;
-    }
 
     @Override
     public void onStart() {

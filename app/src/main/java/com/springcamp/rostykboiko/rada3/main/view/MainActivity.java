@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -131,6 +132,8 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onLongClick(View view, int position) {
+                        surveyList.remove(position);
+                        cardsAdaptor.notifyDataSetChanged();
                     }
                 }));
     }
@@ -304,10 +307,9 @@ public class MainActivity extends AppCompatActivity
                 .child("Survey");
         mCurentUserRef.keepSynced(true);
 
-        Query mQueryUser = mCurentUserRef
-                .orderByChild("uid")
-                .equalTo("EDOj8fqi9eV7jVSgmAbHFOFNm0o2");
-
+         Query mQueryUser = mCurentUserRef
+                  .orderByChild("uid")
+         .equalTo(GoogleAccountAdapter.getUserID());
         mQueryUser.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -347,7 +349,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initCardView() {
-        cardsAdaptor = new CardsAdaptor(this, surveyList, optionsList);
+        cardsAdaptor = new CardsAdaptor(this, surveyList);
 
         RecyclerView.LayoutManager mCardManager = new GridLayoutManager(this, 2);
         cardRecyclerView.setLayoutManager(mCardManager);
