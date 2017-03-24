@@ -7,7 +7,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -21,7 +20,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -46,7 +44,7 @@ import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerUIUtils;
 import com.springcamp.rostykboiko.rada3.intro.view.MainIntroActivity;
 import com.springcamp.rostykboiko.rada3.main.presenter.MainPresenter;
-import com.springcamp.rostykboiko.rada3.MainContract;
+import com.springcamp.rostykboiko.rada3.main.MainContract;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.main.presenter.CardsAdaptor;
 import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
@@ -61,11 +59,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
@@ -125,8 +121,12 @@ public class MainActivity extends AppCompatActivity
                 new RecyclerTouchListener.ClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        startActivity(new Intent(MainActivity.this, EditorActivity.class)
-                                .putExtra("String", survey));
+
+//                        startActivity(new Intent(MainActivity.this, EditorActivity.class)
+//                        startActivity(new Intent(MainActivity.this, EditorActivity.class)
+//                                .putExtra("String", survey));
+//
+                        EditorActivity.launchActivity(MainActivity.this, survey);
                         finish();
                     }
 
@@ -221,8 +221,9 @@ public class MainActivity extends AppCompatActivity
                                     @Override
                                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                                         mDrawer.closeDrawer();
-                                        startActivity(new Intent(MainActivity.this, EditorActivity.class));
-                                        finish();
+                                        if (presenter != null && survey != null) {
+                                            presenter.showEditor(survey);
+                                        }
                                         return false;
                                     }
                                 }),
@@ -307,9 +308,9 @@ public class MainActivity extends AppCompatActivity
                 .child("Survey");
         mCurentUserRef.keepSynced(true);
 
-         Query mQueryUser = mCurentUserRef
-                  .orderByChild("uid")
-         .equalTo(GoogleAccountAdapter.getUserID());
+        Query mQueryUser = mCurentUserRef
+                .orderByChild("uid")
+                .equalTo(GoogleAccountAdapter.getUserID());
         mQueryUser.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -407,6 +408,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void showEditor(@NonNull Survey survey) {
+        EditorActivity.launchActivity(this, survey);
+        finish();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -428,13 +435,12 @@ public class MainActivity extends AppCompatActivity
         JSONObject data = new JSONObject();
         JSONObject notificationFCM = new JSONObject();
 
-        String tokenID = "fM_jRk_3QgE:APA91bG5iZfEZFgDIsQzhUwgj5qJwdOS9_9q3Z-0nfzSX6Q-IzCHZHeN_" +
-                "mndFr1TGM2Auk45VxZCGmGU1gQjtqAKlYXVF36YZDOfs2wXpsAcWbjmlouCGFIcZGygyJjLdNSfZREoc1Yg";
+        String tokenID = "cWptMA2wFSI:APA91bE9YqnvznZJo2C9dz8GuNxOcXI6iOF52HAaRPbywKijt42Jg3ZHbZBgtz4T4-faiba_PpDpRpt0CDQEKLAjfYUBvahXDkAP2-I76Z_sA_uuTaHAhW0IGw1iVRrn8Uwt8XxIG9my";
         notificationFCM.put("body", "Message sent from device");
         notificationFCM.put("title", "Survey");
         notificationFCM.put("sound", "default");
         notificationFCM.put("priority", "high");
-        data.put("notification", notificationFCM);
+        data.put("data", notificationFCM);
         data.put("to", tokenID);
         OutputStream os = con.getOutputStream();
         os.write(data.toString().getBytes());

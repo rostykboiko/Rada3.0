@@ -3,6 +3,7 @@ package com.springcamp.rostykboiko.rada3.editor.view;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +28,7 @@ import com.springcamp.rostykboiko.rada3.editor.presenter.OptionEditorAdapter;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 import com.thebluealliance.spectrum.SpectrumDialog;
@@ -41,12 +43,22 @@ import butterknife.ButterKnife;
 import android.widget.Toast;
 
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
+    private static final String SURVEY_KEY = "SURVEY_KEY";
     private String[] separated;
     private String colorName;
     private ArrayList<String> optionsList = new ArrayList<>();
     private ArrayList<User> userList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
     private SecureRandom random = new SecureRandom();
+
+    public static void launchActivity(@NonNull AppCompatActivity activity, @NonNull Survey survey){
+        Intent intent = new Intent(activity, EditorActivity.class);
+        intent.putExtra(SURVEY_KEY, survey);
+        activity.startActivity(intent);
+    }
+
+    @Nullable
+    private Survey survey;
 
 
     @BindView(R.id.toolbar)
@@ -91,6 +103,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         setContentView(R.layout.activity_editor);
 
         ButterKnife.bind(this);
+
+        survey = getIntent().getExtras().getParcelable(SURVEY_KEY);
+
         presenter = new EditorPresenter(this);
         setSupportActionBar(toolbar);
 

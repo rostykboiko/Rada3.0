@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "514646034117-pep0vbi4mlblv5ac4ipb772o9jf7t9sn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.springcamp.rostykboiko.rada3",
+            "certificate_hash": "c81906c12818b71b09fe5bd3e51cf72b6bcac6d0"
+          }
+        },
+        {
           "client_id": "514646034117-so1re427aa13pv44gi1mt514map08f2i.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

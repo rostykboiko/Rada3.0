@@ -25,14 +25,9 @@ public class FCMMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         if (remoteMessage.getData().size() > 0) {
+            sendNotification("fuyfyfgfgfjgfgfj");
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
         }
-
-        // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-        }
-
     }
     // [END receive_message]
 

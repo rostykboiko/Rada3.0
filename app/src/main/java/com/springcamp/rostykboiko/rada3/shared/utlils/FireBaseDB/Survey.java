@@ -63,7 +63,7 @@ public class Survey implements Parcelable {
     }
 
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
-    public static final Parcelable.Creator<Survey> CREATOR = new Parcelable.Creator<Survey>() {
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator<Survey>() {
         public Survey createFromParcel(Parcel in) {
             return new Survey(in);
         }
@@ -80,7 +80,8 @@ public class Survey implements Parcelable {
         color = in.readInt();
         duration = in.readInt();
         surveySingleOption = in.readByte() != 0;
-        surveyOptionList = in.readArrayList(null);
-        participantsEmailList = in.readArrayList(null);
+        in.readTypedList(surveyOptionList, CREATOR);
+//        surveyOptionList = in.readArrayList();
+//        participantsEmailList = in.readArrayList(null);
     }
 }
