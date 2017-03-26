@@ -47,7 +47,6 @@ public class MainIntroActivity extends AppCompatActivity {
         prefManager = new PrefManager(this);
         if (!prefManager.isFirstTimeLaunch()) {
             launchHomeScreen();
-            finish();
         }
     }
 

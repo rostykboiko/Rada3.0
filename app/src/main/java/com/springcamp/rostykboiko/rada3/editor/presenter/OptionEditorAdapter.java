@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.editor.EditorContract;
 
 import java.util.ArrayList;
 
@@ -42,9 +44,8 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
 
     @Override
     public void onBindViewHolder(final OptionEditorAdapter.ViewHolder holder, final int position) {
-        String option = optionsList.get(position);
-        holder.optionItem.setHint(option);
-
+        holder.optionItem.setHint(R.string.ed_option);
+        if (holder.optionItem != null)
         holder.optionItem.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -53,11 +54,11 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                optionsList.set(position, holder.optionItem.getText().toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                optionsList.set(position, holder.optionItem.getText().toString());
 
             }
         });
@@ -65,14 +66,11 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
         holder.closeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                removeItem(position);
+                if (position != 0)
+                    optionsList.remove(position);
+                notifyItemRemoved(position);
             }
         });
-    }
-
-    private void removeItem(int position) {
-        optionsList.remove(position);
-        notifyItemRemoved(position);
     }
 
     @Override

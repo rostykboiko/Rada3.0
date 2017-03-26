@@ -2,10 +2,12 @@ package com.springcamp.rostykboiko.rada3.editor.presenter;
 
 import android.app.Dialog;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 public class BottomSheetFragment extends BottomSheetDialogFragment {
     private View contentView;
     private ArrayList<User> userList = new ArrayList<>();
+
     private BottomSheetBehavior.BottomSheetCallback
             mBottomSheetBehaviorCallback = new BottomSheetBehavior.BottomSheetCallback() {
         @Override
@@ -115,6 +119,7 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
                     @Override
                     public void onClick(View view, int position) {
                         System.out.println("User " + userList.get(position).getUserName());
+
                     }
 
                     @Override

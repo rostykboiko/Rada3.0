@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.auth.api.Auth;
-import com.springcamp.rostykboiko.rada3.LoginContract;
+import com.springcamp.rostykboiko.rada3.login.LoginContract;
 import com.springcamp.rostykboiko.rada3.login.data.LoginInteractor;
 import com.springcamp.rostykboiko.rada3.login.data.LoginUseCase;
 

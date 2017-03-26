@@ -1,7 +1,7 @@
 package com.springcamp.rostykboiko.rada3.editor.presenter;
 
 import android.support.annotation.Nullable;
-import com.springcamp.rostykboiko.rada3.EditorContract;
+import com.springcamp.rostykboiko.rada3.editor.EditorContract;
 import com.springcamp.rostykboiko.rada3.editor.data.EditorInteractor;
 import com.springcamp.rostykboiko.rada3.editor.data.EditorUseCase;
 

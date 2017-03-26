@@ -42,10 +42,15 @@ public class Survey implements Parcelable {
     }
 
     public ArrayList<String> getSurveyOptionList() {
+        System.out.println("get list" + surveyOptionList);
         return surveyOptionList;
     }
 
-// Parcel
+    public void setSurveyOptionList(ArrayList<String> surveyOptionList) {
+        this.surveyOptionList = surveyOptionList;
+    }
+
+    // Parcel
     @Override
     public int describeContents() {
         return 0;
@@ -60,6 +65,7 @@ public class Survey implements Parcelable {
         out.writeInt(duration);
         out.writeInt(color);
         out.writeList(participantsEmailList);
+        System.out.println("String array list " + surveyOptionList);
     }
 
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
@@ -73,6 +79,7 @@ public class Survey implements Parcelable {
         }
     };
 
+
     // example constructor that takes a Parcel and gives you an object populated with it's values
     private Survey(Parcel in) {
         surveyID = in.readString();
@@ -80,7 +87,10 @@ public class Survey implements Parcelable {
         color = in.readInt();
         duration = in.readInt();
         surveySingleOption = in.readByte() != 0;
-        in.readTypedList(surveyOptionList, CREATOR);
+       // System.out.println("list " + getSurveyOptionList());
+        in.readStringList(getSurveyOptionList());
+
+        //  in.readTypedList(surveyOptionList, CREATOR);
 //        surveyOptionList = in.readArrayList();
 //        participantsEmailList = in.readArrayList(null);
     }

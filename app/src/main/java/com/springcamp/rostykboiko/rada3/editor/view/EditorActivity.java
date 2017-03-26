@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +23,7 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.springcamp.rostykboiko.rada3.EditorContract;
+import com.springcamp.rostykboiko.rada3.editor.EditorContract;
 import com.springcamp.rostykboiko.rada3.editor.presenter.BottomSheetFragment;
 import com.springcamp.rostykboiko.rada3.editor.presenter.OptionEditorAdapter;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
@@ -36,6 +37,7 @@ import com.thebluealliance.spectrum.SpectrumDialog;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.security.SecureRandom;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,15 +53,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     private OptionEditorAdapter optionsAdapter;
     private SecureRandom random = new SecureRandom();
 
-    public static void launchActivity(@NonNull AppCompatActivity activity, @NonNull Survey survey){
-        Intent intent = new Intent(activity, EditorActivity.class);
-        intent.putExtra(SURVEY_KEY, survey);
-        activity.startActivity(intent);
-    }
-
     @Nullable
     private Survey survey;
-
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -102,18 +97,44 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
-        ButterKnife.bind(this);
-
-        survey = getIntent().getExtras().getParcelable(SURVEY_KEY);
-
         presenter = new EditorPresenter(this);
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
 
-        initClickListeners();
-        initOptionsListView();
-        addOptionRow();
+        BottomSheetBehavior.from(findViewById(R.id.bottom_sheet))
+                .setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                    @Override
+                    public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                        switch (newState) {
+                            case BottomSheetBehavior.STATE_HIDDEN:
+                                finish();
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                        // no op
+                    }
+                });
+
+
+    getOptionsList();
+
+    initClickListeners();
+
+    initOptionsListView();
+
+    addOptionRow();
+
+}
+
+    public static void launchActivity(@NonNull AppCompatActivity activity, @NonNull Survey survey) {
+        Intent intent = new Intent(activity, EditorActivity.class);
+        intent.putExtra(SURVEY_KEY, survey);
+
+        activity.startActivity(intent);
     }
 
     private void initClickListeners() {
@@ -144,8 +165,10 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         participantsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BottomSheetDialogFragment bottomSheetDialogFragment = new BottomSheetFragment();
-                bottomSheetDialogFragment.show(getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+                BottomSheetDialogFragment bottomSheetDialogFragment =
+                        new BottomSheetFragment();
+                bottomSheetDialogFragment.show(getSupportFragmentManager(),
+                        bottomSheetDialogFragment.getTag());
             }
         });
         colorBtn.setOnClickListener(new View.OnClickListener() {
@@ -157,6 +180,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     }
 
     private void initOptionsListView() {
+        survey = getIntent().getExtras().getParcelable(SURVEY_KEY);
+
         optionsAdapter = new OptionEditorAdapter(optionsList);
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         optionsListView.setLayoutManager(mListManager);
@@ -218,6 +243,11 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     "Максимально 5 варіантів відповіді",
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void addNewParticipant() {
+        List<String> participantsList = new ArrayList<>();
+
     }
 
     private void onSaveBtnPressed() {

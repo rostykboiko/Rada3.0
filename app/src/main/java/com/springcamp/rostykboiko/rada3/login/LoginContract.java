@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3;
+package com.springcamp.rostykboiko.rada3.login;
 
 import android.content.Intent;
 

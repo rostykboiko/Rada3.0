@@ -111,7 +111,9 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, EditorActivity.class));
+                survey = new Survey();
+                EditorActivity.launchActivity(MainActivity.this,
+                        survey);
                 finish();
             }
         });
@@ -121,12 +123,10 @@ public class MainActivity extends AppCompatActivity
                 new RecyclerTouchListener.ClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-
-//                        startActivity(new Intent(MainActivity.this, EditorActivity.class)
-//                        startActivity(new Intent(MainActivity.this, EditorActivity.class)
-//                                .putExtra("String", survey));
-//
-                        EditorActivity.launchActivity(MainActivity.this, survey);
+                        EditorActivity.launchActivity(MainActivity.this,
+                                surveyList.get(position));
+                        System.out.println("Survey List Main " +
+                                surveyList.get(position).getSurveyOptionList());
                         finish();
                     }
 
@@ -138,7 +138,109 @@ public class MainActivity extends AppCompatActivity
                 }));
     }
 
-    /* NavDrawer Start */
+    /* List of Cards Start */
+
+    private void initFireBase() {
+        DatabaseReference mCurentUserRef = FirebaseDatabase.getInstance().getReference()
+                .child("Survey");
+        mCurentUserRef.keepSynced(true);
+
+        Query mQueryUser = mCurentUserRef
+                .orderByChild("uid")
+                .equalTo(GoogleAccountAdapter.getUserID());
+        mQueryUser.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
+                System.out.println("Survey title " + surveyTitle);
+                survey.setSurveyTitle(surveyTitle);
+
+                for (DataSnapshot child : dataSnapshot.child("Options").getChildren()){
+                    optionsList.add(child.getValue().toString());
+                    survey.setSurveyOptionList(optionsList);
+                }
+
+                surveyList.add(survey);
+                cardsAdaptor.notifyDataSetChanged();
+                survey = new Survey();
+                optionsList = new ArrayList<>();
+            }
+
+            @Override
+            public void onChildChanged(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void initCardView() {
+        cardsAdaptor = new CardsAdaptor(this, surveyList);
+
+        RecyclerView.LayoutManager mCardManager = new GridLayoutManager(this, 2);
+        cardRecyclerView.setLayoutManager(mCardManager);
+        cardRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
+        cardRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        cardRecyclerView.setAdapter(cardsAdaptor);
+    }
+
+    private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
+    }
+
+    private int dpToPx(int dp) {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    /* List of Cards End */
+
+     /* NavDrawer Start */
     private AccountHeader initNawDrawerHeader() {
         //          Image Download
         if (GoogleAccountAdapter.getProfileIcon() != null) {
@@ -159,7 +261,7 @@ public class MainActivity extends AppCompatActivity
                     if (DrawerImageLoader.Tags.PROFILE.name().equals(tag)) {
                         return DrawerUIUtils.getPlaceHolder(ctx);
                     } else if (DrawerImageLoader.Tags.ACCOUNT_HEADER.name().equals(tag)) {
-                        return new IconicsDrawable(ctx).iconText(" ").backgroundColorRes(R.color.primary).sizeDp(56);
+                        return new IconicsDrawable(ctx).iconText(" ").backgroundColorRes(R.color.colorActiveSwitch).sizeDp(56);
                     } else if ("customUrlItem".equals(tag)) {
                         return new IconicsDrawable(ctx).iconText(" ").backgroundColorRes(R.color.colorActiveSwitch).sizeDp(56);
                     }
@@ -299,110 +401,6 @@ public class MainActivity extends AppCompatActivity
     }
     /* NavDrawer End */
 
-    /**
-     * List of Cards Start
-     */
-
-    private void initFireBase() {
-        DatabaseReference mCurentUserRef = FirebaseDatabase.getInstance().getReference()
-                .child("Survey");
-        mCurentUserRef.keepSynced(true);
-
-        Query mQueryUser = mCurentUserRef
-                .orderByChild("uid")
-                .equalTo(GoogleAccountAdapter.getUserID());
-        mQueryUser.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
-                System.out.println("Survey title " + surveyTitle);
-                survey.setSurveyTitle(surveyTitle);
-
-                for (DataSnapshot child : dataSnapshot.child("Options").getChildren())
-                    survey.getSurveyOptionList().add(child.getValue().toString());
-
-                surveyList.add(survey);
-                cardsAdaptor.notifyDataSetChanged();
-                survey = new Survey();
-                optionsList = new ArrayList<>();
-            }
-
-            @Override
-            public void onChildChanged(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void initCardView() {
-        cardsAdaptor = new CardsAdaptor(this, surveyList);
-
-        RecyclerView.LayoutManager mCardManager = new GridLayoutManager(this, 2);
-        cardRecyclerView.setLayoutManager(mCardManager);
-        cardRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
-        cardRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        cardRecyclerView.setAdapter(cardsAdaptor);
-    }
-
-    private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
-    }
-
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
-
-    /**
-     * List of Cards End
-     */
-
     @Override
     public void showProgress() {
     }
@@ -435,7 +433,8 @@ public class MainActivity extends AppCompatActivity
         JSONObject data = new JSONObject();
         JSONObject notificationFCM = new JSONObject();
 
-        String tokenID = "cWptMA2wFSI:APA91bE9YqnvznZJo2C9dz8GuNxOcXI6iOF52HAaRPbywKijt42Jg3ZHbZBgtz4T4-faiba_PpDpRpt0CDQEKLAjfYUBvahXDkAP2-I76Z_sA_uuTaHAhW0IGw1iVRrn8Uwt8XxIG9my";
+        String tokenID = "d_fw0Is5igk:APA91bFhU4ZUSczxAES5xExdog68O1x7ATXhL9Bgj8YQlJOsdEUbcJukfGxO"+
+                "ANDALr2DpzrDE6yPF3naXhb-ieCIfh2d41HXNzyrPjsGLLJ3PGUdsQ5fUuFcjVTVC8oShZRtHLbYje-H";
         notificationFCM.put("body", "Message sent from device");
         notificationFCM.put("title", "Survey");
         notificationFCM.put("sound", "default");
@@ -480,6 +479,4 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }
