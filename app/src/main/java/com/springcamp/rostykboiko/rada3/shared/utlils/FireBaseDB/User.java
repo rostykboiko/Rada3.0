@@ -5,7 +5,7 @@ import android.net.Uri;
 public class User {
     private String userName;
     private String userEmail;
-    private static String userID;
+    private String userID;
     private static Uri userProfileIcon;
 
     public String getUserName() {
@@ -29,7 +29,7 @@ public class User {
     }
 
     public void setUserID(String userID) {
-        User.userID = userID;
+        this.userID = userID;
     }
 
     public Uri getUserProfileIcon() {

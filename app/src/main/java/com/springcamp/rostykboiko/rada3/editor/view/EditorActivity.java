@@ -2,11 +2,15 @@ package com.springcamp.rostykboiko.rada3.editor.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.os.Build;
+import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,7 +28,7 @@ import android.widget.TextView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.springcamp.rostykboiko.rada3.editor.EditorContract;
-import com.springcamp.rostykboiko.rada3.editor.presenter.BottomSheetFragment;
+import com.springcamp.rostykboiko.rada3.editor.presenter.BottomSheet;
 import com.springcamp.rostykboiko.rada3.editor.presenter.OptionEditorAdapter;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
@@ -37,7 +41,6 @@ import com.thebluealliance.spectrum.SpectrumDialog;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.security.SecureRandom;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,10 +52,10 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     private String[] separated;
     private String colorName;
     private ArrayList<String> optionsList = new ArrayList<>();
+    private ArrayList<String> paticipants = new ArrayList<>();
     private ArrayList<User> userList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
     private SecureRandom random = new SecureRandom();
-
     @Nullable
     private Survey survey;
 
@@ -102,33 +105,11 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
         ButterKnife.bind(this);
 
-        BottomSheetBehavior.from(findViewById(R.id.bottom_sheet))
-                .setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                    @Override
-                    public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                        switch (newState) {
-                            case BottomSheetBehavior.STATE_HIDDEN:
-                                finish();
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                        // no op
-                    }
-                });
-
-
-    getOptionsList();
-
-    initClickListeners();
-
-    initOptionsListView();
-
-    addOptionRow();
-
-}
+        getOptionsList();
+        initClickListeners();
+        initOptionsListView();
+        addOptionRow();
+    }
 
     public static void launchActivity(@NonNull AppCompatActivity activity, @NonNull Survey survey) {
         Intent intent = new Intent(activity, EditorActivity.class);
@@ -165,10 +146,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         participantsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BottomSheetDialogFragment bottomSheetDialogFragment =
-                        new BottomSheetFragment();
-                bottomSheetDialogFragment.show(getSupportFragmentManager(),
-                        bottomSheetDialogFragment.getTag());
+                startActivity(new Intent(EditorActivity.this, BottomSheet.class));
             }
         });
         colorBtn.setOnClickListener(new View.OnClickListener() {
@@ -245,11 +223,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         }
     }
 
-    private void addNewParticipant() {
-        List<String> participantsList = new ArrayList<>();
-
-    }
-
     private void onSaveBtnPressed() {
         if (editTextTitle.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(),
@@ -290,14 +263,18 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     .child("color")
                     .setValue("#" + colorName);
 
+            for (String parti : paticipants)
             surveyRef.child(generatedString)
                     .child("uid")
                     .setValue(GoogleAccountAdapter.getUserID());
 
-
             startActivity(new Intent(EditorActivity.this, MainActivity.class));
             finish();
         }
+    }
+
+    private void initParticipantsList(){
+        paticipants.add(getIntent().getExtras().getString("Participant"));
     }
 
     public String generatedId() {

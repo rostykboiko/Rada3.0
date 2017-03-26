@@ -10,6 +10,10 @@
     tools:context="com.springcamp.rostykboiko.rada3.main.view.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <View
+        android:id="@+id/touch_outside"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -199,13 +203,4 @@
         </android.support.v7.widget.CardView>
     </RelativeLayout>
 
-    <FrameLayout
-        android:id="@+id/bottom_sheet"
-        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
-        app:behavior_peekHeight="128dp"
-        app:behavior_hideable="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

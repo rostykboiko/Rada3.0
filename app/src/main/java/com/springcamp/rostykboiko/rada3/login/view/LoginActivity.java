@@ -147,7 +147,6 @@ public class LoginActivity extends AppCompatActivity implements
                 if (mAuth != null  && mAuth.getCurrentUser() != null && mAuth.getCurrentUser().getUid() != null) {
                     userList.child(acct.getId()).child("Uid").setValue(mAuth.getCurrentUser().getUid());
                     GoogleAccountAdapter.setUserID(mAuth.getCurrentUser().getUid());
-
                 }
             }
             Log.d(TAG, "User name: " + GoogleAccountAdapter.getUserName());
