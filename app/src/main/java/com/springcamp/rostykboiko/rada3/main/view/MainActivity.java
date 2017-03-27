@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView cardRecyclerView;
     private ArrayList<Survey> surveyList = new ArrayList<>();
     private ArrayList<String> optionsList = new ArrayList<>();
-    private ArrayList<String> userList = new ArrayList<>();
+    private ArrayList<String> surveyIdList = new ArrayList<>();
 
     private CardsAdaptor cardsAdaptor;
     private FloatingActionButton fab;
@@ -93,11 +93,13 @@ public class MainActivity extends AppCompatActivity
 
         presenter = new MainPresenter(this);
 
-        initFireBase();
         initNavDrawer();
         initViewItems();
         initClickListeners();
         initCardView();
+        initFireBase();
+        System.out.println("Surveys Value " + surveyIdList);
+
     }
 
     private void initViewItems() {
@@ -141,51 +143,42 @@ public class MainActivity extends AppCompatActivity
     /* List of Cards Start */
 
     private void initFireBase() {
-        DatabaseReference mCurentUserRef = FirebaseDatabase.getInstance().getReference()
-                .child("Survey");
-        mCurentUserRef.keepSynced(true);
-
-        Query mQueryUser = mCurentUserRef
-                .orderByChild("uid")
-                .equalTo(GoogleAccountAdapter.getUserID());
-        mQueryUser.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
-                System.out.println("Survey title " + surveyTitle);
-                survey.setSurveyTitle(surveyTitle);
-
-                for (DataSnapshot child : dataSnapshot.child("Options").getChildren()){
-                    optionsList.add(child.getValue().toString());
-                    survey.setSurveyOptionList(optionsList);
+        DatabaseReference mCurrentUserRef;
+        if (GoogleAccountAdapter.getUserID() != null) {
+            mCurrentUserRef = FirebaseDatabase.getInstance().getReference()
+                    .child("User").child("108208555023077609692").child("Surveys");
+            System.out.println("UID " + GoogleAccountAdapter.getUserID());
+            Query mQueryUser = mCurrentUserRef;
+            mQueryUser.orderByValue().addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    surveyIdList.add(dataSnapshot.getValue().toString());
+                    cardsAdaptor.notifyDataSetChanged();
+                    System.out.println("surveysIDs" + dataSnapshot.getValue().toString());
                 }
 
-                surveyList.add(survey);
-                cardsAdaptor.notifyDataSetChanged();
-                survey = new Survey();
-                optionsList = new ArrayList<>();
-            }
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-            @Override
-            public void onChildChanged(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+                }
 
-            }
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            @Override
-            public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                }
 
-            }
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            @Override
-            public void onChildMoved(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+                }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                }
 
-            }
-        });
+            });
+        }
     }
 
     private void initCardView() {
@@ -231,6 +224,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
+
     }
 
     private int dpToPx(int dp) {
@@ -240,7 +234,7 @@ public class MainActivity extends AppCompatActivity
 
     /* List of Cards End */
 
-     /* NavDrawer Start */
+    /* NavDrawer Start */
     private AccountHeader initNawDrawerHeader() {
         //          Image Download
         if (GoogleAccountAdapter.getProfileIcon() != null) {
@@ -417,55 +411,12 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void sendMessage()
-            throws IOException, JSONException {
-        URL url = new URL("https://fcm.googleapis.com/fcm/send");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setDoOutput(true);
-
-        // HTTP request header
-        con.setRequestProperty("Content-Type", "application/json");
-        con.setRequestProperty("Authorization", "key=AIzaSyCoKx1rrWKUcCf6QMIyB2viYed_l0RnxtQ");
-        con.setRequestMethod("POST");
-        con.connect();
-
-        // HTTP request
-        JSONObject data = new JSONObject();
-        JSONObject notificationFCM = new JSONObject();
-
-        String tokenID = "d_fw0Is5igk:APA91bFhU4ZUSczxAES5xExdog68O1x7ATXhL9Bgj8YQlJOsdEUbcJukfGxO"+
-                "ANDALr2DpzrDE6yPF3naXhb-ieCIfh2d41HXNzyrPjsGLLJ3PGUdsQ5fUuFcjVTVC8oShZRtHLbYje-H";
-        notificationFCM.put("body", "Message sent from device");
-        notificationFCM.put("title", "Survey");
-        notificationFCM.put("sound", "default");
-        notificationFCM.put("priority", "high");
-        data.put("data", notificationFCM);
-        data.put("to", tokenID);
-        OutputStream os = con.getOutputStream();
-        os.write(data.toString().getBytes());
-        os.close();
-        System.out.println("Response Code: " + con.getResponseCode());
-
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_share:
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            sendMessage();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                thread.start();
+
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));

@@ -2,15 +2,9 @@ package com.springcamp.rostykboiko.rada3.editor.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.Color;
-import android.os.Build;
-import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,8 +19,12 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.springcamp.rostykboiko.rada3.editor.EditorContract;
 import com.springcamp.rostykboiko.rada3.editor.presenter.BottomSheet;
 import com.springcamp.rostykboiko.rada3.editor.presenter.OptionEditorAdapter;
@@ -35,10 +33,13 @@ import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
-import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 import com.thebluealliance.spectrum.SpectrumDialog;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigInteger;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.security.SecureRandom;
 
@@ -47,17 +48,23 @@ import butterknife.ButterKnife;
 
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
     private static final String SURVEY_KEY = "SURVEY_KEY";
     private String[] separated;
     private String colorName;
     private ArrayList<String> optionsList = new ArrayList<>();
-    private ArrayList<String> paticipants = new ArrayList<>();
+    private ArrayList<String> participants = new ArrayList<>();
     private ArrayList<User> userList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
     private SecureRandom random = new SecureRandom();
     @Nullable
     private Survey survey;
+
+    @Nullable
+    private User user;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -109,6 +116,20 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         initClickListeners();
         initOptionsListView();
         addOptionRow();
+        initParticipantsList();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        participants.add(getIntent().getStringExtra("Participant"));
+        System.out.println("Intent thread " + participants);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent != null)
+            setIntent(intent);
     }
 
     public static void launchActivity(@NonNull AppCompatActivity activity, @NonNull Survey survey) {
@@ -146,7 +167,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         participantsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(EditorActivity.this, BottomSheet.class));
+                startActivity(new Intent(EditorActivity.this, BottomSheet.class)
+                        .putParcelableArrayListExtra("UserList", userList));
             }
         });
         colorBtn.setOnClickListener(new View.OnClickListener() {
@@ -263,18 +285,61 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     .child("color")
                     .setValue("#" + colorName);
 
-            for (String parti : paticipants)
-            surveyRef.child(generatedString)
-                    .child("uid")
-                    .setValue(GoogleAccountAdapter.getUserID());
+
+            System.out.println("Thread user" + participants);
+                sendMessage(participants.get(1));
+
 
             startActivity(new Intent(EditorActivity.this, MainActivity.class));
             finish();
         }
     }
 
-    private void initParticipantsList(){
-        paticipants.add(getIntent().getExtras().getString("Participant"));
+    private void initParticipantsList() {
+        DatabaseReference mCurentUserRef = FirebaseDatabase.getInstance().getReference()
+                .child("User");
+        mCurentUserRef.keepSynced(true);
+
+        Query mQueryUser = mCurentUserRef;
+        mQueryUser.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                user = new User();
+                user.setUserName(dataSnapshot.child("Name").getValue(String.class));
+                user.setUserEmail(dataSnapshot.child("Email").getValue(String.class));
+                user.setDeviceToken(dataSnapshot.child("deviceToken").getValue(String.class));
+                user.setUserProfileIcon(dataSnapshot.child("ProfileIconUrl").getValue(String.class));
+
+                userList.add(user);
+            }
+
+            @Override
+            public void onChildChanged(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void sendMessage(String token) {
+        System.out.println("Thread Token: " + token);
+
+        Thread thread = new Thread(new OneShotTask(token));
+        thread.start();
     }
 
     public String generatedId() {
@@ -322,5 +387,45 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     @Override
     public ArrayList<String> getOptionsList() {
         return null;
+    }
+
+    class OneShotTask implements Runnable{
+        String userToken;
+
+        OneShotTask(String tokenThread) { userToken = tokenThread; }
+        public void run() {
+            try {
+                URL url = new URL("https://fcm.googleapis.com/fcm/send");
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                con.setDoOutput(true);
+
+                // HTTP request header
+                con.setRequestProperty("Content-Type", "application/json");
+                con.setRequestProperty("Authorization", "key=AIzaSyCoKx1rrWKUcCf6QMIyB2viYed_l0RnxtQ");
+                con.setRequestMethod("POST");
+                con.connect();
+
+                // HTTP request
+                JSONObject data = new JSONObject();
+                JSONObject notificationFCM = new JSONObject();
+
+                System.out.println("Thread Token: " + userToken);
+
+                notificationFCM.put("body", "Message sent from device");
+                notificationFCM.put("title", "Survey");
+                notificationFCM.put("sound", "default");
+                notificationFCM.put("priority", "high");
+                data.put("data", notificationFCM);
+                data.put("to", userToken);
+                OutputStream os = con.getOutputStream();
+                os.write(data.toString().getBytes());
+                os.close();
+                System.out.println("Response Code: " + con.getResponseCode());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

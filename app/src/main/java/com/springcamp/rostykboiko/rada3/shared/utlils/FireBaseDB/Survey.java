@@ -87,8 +87,9 @@ public class Survey implements Parcelable {
         color = in.readInt();
         duration = in.readInt();
         surveySingleOption = in.readByte() != 0;
-       // System.out.println("list " + getSurveyOptionList());
-        in.readStringList(getSurveyOptionList());
+
+        surveyOptionList = in.createStringArrayList();
+        System.out.println("list " + surveyOptionList);
 
         //  in.readTypedList(surveyOptionList, CREATOR);
 //        surveyOptionList = in.readArrayList();

@@ -16,11 +16,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
@@ -48,22 +43,21 @@ public class BottomSheet extends AppCompatActivity {
                 finish();
             }
         });
-        if (userList == null)
-            userList = new ArrayList<>();
+
+        userList = getIntent().getExtras().getParcelableArrayList("UserList");
+
         initBehavior();
-        initUsersList();
         initRecyclerView();
     }
 
-
-    private void initBehavior(){
+    private void initBehavior() {
         BottomSheetBehavior.from(findViewById(R.id.bottom_sheet))
                 .setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
                     @Override
                     public void onStateChanged(@NonNull View bottomSheet, int newState) {
                         switch (newState) {
                             case BottomSheetBehavior.STATE_HIDDEN:
-                                finish();
+                                //finish();
                                 break;
                             case BottomSheetBehavior.STATE_EXPANDED:
                                 setStatusBarDim(false);
@@ -73,6 +67,7 @@ public class BottomSheet extends AppCompatActivity {
                                 break;
                         }
                     }
+
                     @Override
                     public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                         // no op
@@ -94,52 +89,6 @@ public class BottomSheet extends AppCompatActivity {
         return resId;
     }
 
-    private void initUsersList() {
-        System.out.println("Method: usersList ");
-
-        DatabaseReference mUserListRef = FirebaseDatabase.getInstance().getReference()
-                .child("User");
-        mUserListRef.keepSynced(true);
-
-        mUserListRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String userEmail = dataSnapshot.child("Email").getValue(String.class);
-                String userName = dataSnapshot.child("Name").getValue(String.class);
-                String userID = dataSnapshot.getKey();
-                String profileIcon = dataSnapshot.child("ProfileIconUrl").getValue(String.class);
-                System.out.println("User Email " + userEmail);
-
-                User user = new User();
-                user.setUserEmail(userEmail);
-                user.setUserName(userName);
-                user.setUserID(userID);
-               // user.setUserProfileIcon(profileIcon);
-                userList.add(user);
-            }
-
-            @Override
-            public void onChildChanged(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
     private void initRecyclerView() {
         final RecyclerView usersListView = (RecyclerView) findViewById(R.id.users_recycler_view);
 
@@ -154,9 +103,14 @@ public class BottomSheet extends AppCompatActivity {
                 new RecyclerTouchListener.ClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        System.out.println("User " + userList.get(position).getUserID());
-                        startActivity(new Intent(BottomSheet.this, EditorActivity.class).putExtra(
-                                "Participant", userList.get(position).getUserID()));
+                        startActivity(new Intent(BottomSheet.this, EditorActivity.class)
+                                .putExtra("Participant", userList
+                                        .get(position)
+                                        .getDeviceToken())
+                                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                        System.out.println("Parti list Shit: " + userList
+                                .get(position)
+                                .getDeviceToken());
                     }
 
                     @Override
