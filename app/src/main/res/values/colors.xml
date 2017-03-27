@@ -3,7 +3,7 @@
     <color name="colorPrimary">#FAFAFA</color>
     <color name="colorPrimaryDark">#FAFAFA</color>
     <color name="colorPrimaryLight">#BBDEFB</color>
-    <color name="colorAccent">#FFFFFF</color>
+    <color name="colorAccent">#FAFAFA</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#727272</color>
     <color name="colorDivider">#B6B6B6</color>

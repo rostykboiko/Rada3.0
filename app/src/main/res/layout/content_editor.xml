@@ -115,7 +115,8 @@
                         android:layout_alignParentEnd="true"
                         android:padding="@dimen/item_switch_padding"
                         android:paddingEnd="@dimen/item_switch_padding_end"
-                        android:paddingStart="@dimen/item_switch_padding_end" />
+                        android:paddingStart="@dimen/item_switch_padding_end"
+                        android:checked="true"/>
                 </RelativeLayout>
 
                 <RelativeLayout

@@ -3,9 +3,9 @@ package com.springcamp.rostykboiko.rada3.shared.utlils;
 import android.net.Uri;
 
 public class GoogleAccountAdapter {
-
     private static String userName = null;
     private static String userEmail = null;
+    private static String accountID = null;
     private static String userID = null;
     private static Uri userProfileIcon;
 
@@ -39,6 +39,14 @@ public class GoogleAccountAdapter {
 
     public static Uri getProfileIcon() {
         return userProfileIcon;
+    }
+
+    public static String getAccountID() {
+        return accountID;
+    }
+
+    public static void setAccountID(String accountID) {
+        GoogleAccountAdapter.accountID = accountID;
     }
 
     public static void logOut() {

@@ -40,7 +40,7 @@
                     android:background="@android:color/transparent"
                     android:hint="@string/title_activity_editor"
                     android:inputType="textAutoCorrect|textMultiLine"
-                    android:maxLength="75"
+                    android:maxLength="25"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 

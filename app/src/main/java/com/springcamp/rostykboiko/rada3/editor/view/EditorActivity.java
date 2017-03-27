@@ -60,6 +60,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     private ArrayList<User> userList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
     private SecureRandom random = new SecureRandom();
+
     @Nullable
     private Survey survey;
 
@@ -287,7 +288,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
 
             System.out.println("Thread user" + participants);
-                sendMessage(participants.get(1));
+            for (String part : participants)
+                sendMessage(part);
 
 
             startActivity(new Intent(EditorActivity.this, MainActivity.class));
@@ -389,10 +391,13 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         return null;
     }
 
-    class OneShotTask implements Runnable{
+    private class OneShotTask implements Runnable {
         String userToken;
 
-        OneShotTask(String tokenThread) { userToken = tokenThread; }
+        OneShotTask(String tokenThread) {
+            userToken = tokenThread;
+        }
+
         public void run() {
             try {
                 URL url = new URL("https://fcm.googleapis.com/fcm/send");

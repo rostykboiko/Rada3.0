@@ -1,6 +1,8 @@
 package com.springcamp.rostykboiko.rada3.main.view;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -10,16 +12,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -59,6 +64,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -66,6 +72,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
     private Survey survey = new Survey();
+    private AlertDialog.Builder builder;
 
     private RecyclerView cardRecyclerView;
     private ArrayList<Survey> surveyList = new ArrayList<>();
@@ -81,12 +88,6 @@ public class MainActivity extends AppCompatActivity
     MainContract.Presenter presenter;
 
     @Override
-    protected void onResume() {
-        cardsAdaptor.notifyDataSetChanged();
-        super.onResume();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -98,7 +99,6 @@ public class MainActivity extends AppCompatActivity
         initClickListeners();
         initCardView();
         initFireBase();
-        System.out.println("Surveys Value " + surveyIdList);
 
     }
 
@@ -127,8 +127,6 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(View view, int position) {
                         EditorActivity.launchActivity(MainActivity.this,
                                 surveyList.get(position));
-                        System.out.println("Survey List Main " +
-                                surveyList.get(position).getSurveyOptionList());
                         finish();
                     }
 
@@ -146,15 +144,61 @@ public class MainActivity extends AppCompatActivity
         DatabaseReference mCurrentUserRef;
         if (GoogleAccountAdapter.getUserID() != null) {
             mCurrentUserRef = FirebaseDatabase.getInstance().getReference()
-                    .child("User").child("108208555023077609692").child("Surveys");
+                    .child("User").child(GoogleAccountAdapter.getAccountID()).child("Surveys");
             System.out.println("UID " + GoogleAccountAdapter.getUserID());
+
             Query mQueryUser = mCurrentUserRef;
             mQueryUser.orderByValue().addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     surveyIdList.add(dataSnapshot.getValue().toString());
                     cardsAdaptor.notifyDataSetChanged();
-                    System.out.println("surveysIDs" + dataSnapshot.getValue().toString());
+                    System.out.println("surveysIDs " + dataSnapshot.getValue().toString());
+
+                    DatabaseReference mCurrentSurvey = FirebaseDatabase
+                            .getInstance()
+                            .getReference()
+                            .child("Survey");
+
+                    Query mSurveyQuery = mCurrentSurvey;
+                    mSurveyQuery.orderByChild(dataSnapshot.getValue().toString()).addChildEventListener(
+                            new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                    String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
+                                    System.out.println("Survey title " + surveyTitle);
+                                    survey.setSurveyTitle(surveyTitle);
+
+                                    for (DataSnapshot child : dataSnapshot.child("Options").getChildren())
+                                        survey.getSurveyOptionList().add(child.getValue().toString());
+
+                                    surveyList.add(survey);
+                                    cardsAdaptor.notifyDataSetChanged();
+                                    survey = new Survey();
+                                    optionsList = new ArrayList<>();
+                                }
+
+                                @Override
+                                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                }
+
+                                @Override
+                                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
                 }
 
                 @Override
@@ -179,6 +223,7 @@ public class MainActivity extends AppCompatActivity
 
             });
         }
+
     }
 
     private void initCardView() {
@@ -411,12 +456,40 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        String[] array = getResources().getStringArray(R.array.names_options);
+
+        switch (id) {
+            case 1:
+                final String[] mChooseOptions = {"option1", "option2", "option3"};
+                builder = new AlertDialog.Builder(
+                        new ContextThemeWrapper(this, R.style.AlertDialogCustom));
+                builder.setTitle("Survey title")
+                        .setCancelable(true)
+                        .setSingleChoiceItems(array, -1,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int item) {
+                                        Toast.makeText(
+                                                getApplicationContext(),
+                                                "Ваш вибір: "
+                                                        + mChooseOptions[item],
+                                                Toast.LENGTH_SHORT).show();
+                                        dialog.cancel();
+                                    }
+                                });
+        }        return builder.create();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_share:
-
+                showDialog(1);
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));

@@ -27,12 +27,14 @@ public class FCMMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             sendNotification("Message here");
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+
         }
     }
     // [END receive_message]
 
     public void sendNotification(String messageBody) {
-        Intent intent = new Intent(this, MainActivity.class);//**The activity that you want to open when the notification is clicked
+        Intent intent = new Intent(this, MainActivity.class);
+        //**The activity that you want to open when the notification is clicked
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
