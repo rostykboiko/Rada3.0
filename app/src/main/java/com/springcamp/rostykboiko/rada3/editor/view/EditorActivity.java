@@ -38,6 +38,7 @@ import com.thebluealliance.spectrum.SpectrumDialog;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -190,6 +191,48 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         optionsListView.setAdapter(optionsAdapter);
     }
 
+    private void initParticipantsList() {
+        DatabaseReference mCurentUserRef = FirebaseDatabase.getInstance().getReference()
+                .child("User");
+        mCurentUserRef.keepSynced(true);
+
+        Query mQueryUser = mCurentUserRef;
+        mQueryUser.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                user = new User();
+                user.setUserName(dataSnapshot.child("Name").getValue(String.class));
+                user.setUserEmail(dataSnapshot.child("Email").getValue(String.class));
+                user.setUserID(dataSnapshot.child("UID").getValue(String.class));
+                user.setAccountID(dataSnapshot.child("accountID").getValue(String.class));
+                user.setDeviceToken(dataSnapshot.child("deviceToken").getValue(String.class));
+                user.setUserProfileIcon(dataSnapshot.child("ProfileIconUrl").getValue(String.class));
+
+                userList.add(user);
+            }
+
+            @Override
+            public void onChildChanged(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void colorPicker() {
         new SpectrumDialog.Builder(this)
                 .setColors(R.array.demo_colors)
@@ -235,8 +278,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     }
 
     private void addOptionRow() {
-        if (optionsList.size() < 5) {
-            optionsList.add(getText(R.string.ed_option).toString());
+        if (optionsAdapter.getItemCount() < 5) {
+            optionsAdapter.addNewItem();
             optionsAdapter.notifyDataSetChanged();
         } else {
             addNewOption.setVisibility(View.GONE);
@@ -257,7 +300,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     Toast.LENGTH_SHORT).show();
         } else {
             String generatedString = generatedId();
-
+            String surveyTitle = editTextTitle.getText().toString();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference surveyRef = database.getReference("Survey");
             surveyRef.child(generatedString)
@@ -288,59 +331,29 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
 
             System.out.println("Thread user" + participants);
-            for (String part : participants)
-                sendMessage(part);
-
-
+            for (String part : participants) {
+                if (part != null) {
+                    for (User user : userList) {
+                        if (!user.equals(null) && user.getDeviceToken().equals(part)){
+                        DatabaseReference userRef = database.getReference("User");
+                        userRef
+                                .child(user.getAccountID())
+                                .child("Surveys")
+                                .child(generatedString).setValue(generatedString);
+                        sendMessage(part, generatedString, surveyTitle);
+                        }
+                    }
+                }
+            }
             startActivity(new Intent(EditorActivity.this, MainActivity.class));
             finish();
         }
     }
 
-    private void initParticipantsList() {
-        DatabaseReference mCurentUserRef = FirebaseDatabase.getInstance().getReference()
-                .child("User");
-        mCurentUserRef.keepSynced(true);
-
-        Query mQueryUser = mCurentUserRef;
-        mQueryUser.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                user = new User();
-                user.setUserName(dataSnapshot.child("Name").getValue(String.class));
-                user.setUserEmail(dataSnapshot.child("Email").getValue(String.class));
-                user.setDeviceToken(dataSnapshot.child("deviceToken").getValue(String.class));
-                user.setUserProfileIcon(dataSnapshot.child("ProfileIconUrl").getValue(String.class));
-
-                userList.add(user);
-            }
-
-            @Override
-            public void onChildChanged(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(com.google.firebase.database.DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(com.google.firebase.database.DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void sendMessage(String token) {
+    public void sendMessage(String token, String surveyID, String surveyTitle) {
         System.out.println("Thread Token: " + token);
 
-        Thread thread = new Thread(new OneShotTask(token));
+        Thread thread = new Thread(new OneShotTask(token, surveyID, surveyTitle));
         thread.start();
     }
 
@@ -393,9 +406,13 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     private class OneShotTask implements Runnable {
         String userToken;
+        String mSurveyTitle;
+        String generatedString;
 
-        OneShotTask(String tokenThread) {
+        OneShotTask(String tokenThread, String surveyID, String surveyTitle) {
             userToken = tokenThread;
+            mSurveyTitle = surveyTitle;
+            generatedString = surveyID;
         }
 
         public void run() {
@@ -415,11 +432,13 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 JSONObject notificationFCM = new JSONObject();
 
                 System.out.println("Thread Token: " + userToken);
-
                 notificationFCM.put("body", "Message sent from device");
                 notificationFCM.put("title", "Survey");
                 notificationFCM.put("sound", "default");
                 notificationFCM.put("priority", "high");
+                notificationFCM.put("surveyTitle", mSurveyTitle);
+                notificationFCM.put("surveyId", generatedString);
+
                 data.put("data", notificationFCM);
                 data.put("to", userToken);
                 OutputStream os = con.getOutputStream();

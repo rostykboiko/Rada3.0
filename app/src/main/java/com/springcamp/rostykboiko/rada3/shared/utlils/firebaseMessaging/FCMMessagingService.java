@@ -15,7 +15,6 @@ import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 
 public class FCMMessagingService extends FirebaseMessagingService {
-
     private static final String TAG = "MyFirebaseMsgService";
 
     @Override
@@ -25,24 +24,29 @@ public class FCMMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         if (remoteMessage.getData().size() > 0) {
-            sendNotification("Message here");
+            String body = remoteMessage.getData().get("surveyId");
+            String title = remoteMessage.getData().get("surveyTitle");
+
+            sendNotification(title , body);
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
 
         }
     }
     // [END receive_message]
 
-    public void sendNotification(String messageBody) {
+    public void sendNotification(String messageTitle, String messageBody) {
         Intent intent = new Intent(this, MainActivity.class);
         //**The activity that you want to open when the notification is clicked
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
 
+        System.out.println("Message body, sendNoti " + messageBody);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */,
+                intent.putExtra("surveyID", messageBody),
+                PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("FCM Message")
+                .setContentTitle(messageTitle)
                 .setContentText(messageBody)
                 .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
                 .setAutoCancel(true)

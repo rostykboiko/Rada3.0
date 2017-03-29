@@ -111,6 +111,7 @@ public class BottomSheet extends AppCompatActivity {
                         System.out.println("Parti list Shit: " + userList
                                 .get(position)
                                 .getDeviceToken());
+                    finish();
                     }
 
                     @Override

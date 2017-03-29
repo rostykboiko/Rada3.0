@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewHolder> {
 
-    private ArrayList<String> optionsList;
+    private ArrayList<String> optionsList = new ArrayList<>();
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private EditText optionItem;
@@ -66,8 +66,11 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
         holder.closeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (position != 0)
+                if (position != 0){
                     optionsList.remove(position);
+                }
+                if (position == 0)
+                    optionsList.clear();
                 notifyItemRemoved(position);
             }
         });
@@ -76,5 +79,9 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
     @Override
     public int getItemCount() {
         return optionsList.size();
+    }
+
+    public void addNewItem(){
+        optionsList.add("Варіант відповіді");
     }
 }

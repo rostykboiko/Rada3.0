@@ -10,6 +10,7 @@ public class User implements Parcelable {
     private String userName;
     private String userEmail;
     private String userID;
+    private String accountID;
     private String deviceToken;
     private List<String> surveysList = new ArrayList<>();
     private String userProfileIcon;
@@ -90,6 +91,13 @@ public class User implements Parcelable {
         }
     };
 
+    public String getAccountID() {
+        return accountID;
+    }
+
+    public void setAccountID(String accountID) {
+        this.accountID = accountID;
+    }
 
     private User(Parcel in) {
         userName = in.readString();
