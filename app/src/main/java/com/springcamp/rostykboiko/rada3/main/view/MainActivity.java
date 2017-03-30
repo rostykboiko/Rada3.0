@@ -94,17 +94,6 @@ public class MainActivity extends AppCompatActivity
         ifMessageReceived();
     }
 
-    private void ifMessageReceived() {
-        Intent intent = getIntent();
-        surveyId = "das not good";
-        if (intent.getExtras() != null){
-            surveyId = intent.getExtras().getString("surveyID");
-            System.out.println("ifMessageReceived: " + surveyId);
-
-            initSurveyById(surveyId);
-        }
-    }
-
     private void initViewItems() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
@@ -186,7 +175,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void initSurveyById(String surveyId) {
+    private void initSurveyById(final String surveyId) {
         DatabaseReference mCurrentSurvey = FirebaseDatabase
                 .getInstance()
                 .getReference()
@@ -197,17 +186,20 @@ public class MainActivity extends AppCompatActivity
                 new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
-                        System.out.println("Survey title " + surveyTitle);
-                        survey.setSurveyTitle(surveyTitle);
+                        if (dataSnapshot.getKey().equals(surveyId)) {
+                            System.out.println("dataSnapshot.getkey() - " + dataSnapshot.getKey());
+                            String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
+                            System.out.println("Survey title " + surveyTitle);
+                            survey.setSurveyTitle(surveyTitle);
 
-                        for (DataSnapshot child : dataSnapshot.child("Options").getChildren())
-                            survey.getSurveyOptionList().add(child.getValue().toString());
+                            for (DataSnapshot child : dataSnapshot.child("Options").getChildren())
+                                survey.getSurveyOptionList().add(child.getValue().toString());
 
-                        surveyList.add(survey);
-                        cardsAdaptor.notifyDataSetChanged();
-                        survey = new Survey();
-                        optionsList = new ArrayList<>();
+                            surveyList.add(survey);
+                            cardsAdaptor.notifyDataSetChanged();
+                            survey = new Survey();
+                            optionsList = new ArrayList<>();
+                        }
                     }
 
                     @Override
@@ -445,6 +437,16 @@ public class MainActivity extends AppCompatActivity
         );
     }
     /* NavDrawer End */
+
+    private void ifMessageReceived() {
+        Intent intent = getIntent();
+        surveyId = "das not good";
+        if (intent.getExtras() != null) {
+            surveyId = intent.getExtras().getString("surveyID");
+            System.out.println("ifMessageReceived: " + surveyId);
+
+        }
+    }
 
     @Override
     public void showProgress() {

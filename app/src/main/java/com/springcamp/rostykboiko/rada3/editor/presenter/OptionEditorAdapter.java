@@ -66,11 +66,8 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
         holder.closeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (position != 0){
-                    optionsList.remove(position);
-                }
-                if (position == 0)
-                    optionsList.clear();
+
+                optionsList.remove(position);
                 notifyItemRemoved(position);
             }
         });
