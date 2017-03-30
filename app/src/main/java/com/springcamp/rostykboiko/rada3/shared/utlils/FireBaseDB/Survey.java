@@ -78,4 +78,12 @@ public class Survey implements Parcelable {
 //        surveyOptionList = in.readArrayList();
 //        participantsEmailList = in.readArrayList(null);
     }
+
+    public String getSurveyID() {
+        return surveyID;
+    }
+
+    public void setSurveyID(String surveyID) {
+        this.surveyID = surveyID;
+    }
 }

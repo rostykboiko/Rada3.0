@@ -1,8 +1,6 @@
 package com.springcamp.rostykboiko.rada3.main.view;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -12,19 +10,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -64,13 +59,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
     private Survey survey = new Survey();
-    private AlertDialog.Builder builder;
-
-    private String surveyId;
     private RecyclerView cardRecyclerView;
     private ArrayList<Survey> surveyList = new ArrayList<>();
-    private ArrayList<String> optionsList = new ArrayList<>();
-    private ArrayList<String> surveyIdList = new ArrayList<>();
 
     private CardsAdaptor cardsAdaptor;
     private FloatingActionButton fab;
@@ -86,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         presenter = new MainPresenter(this);
+
         initNavDrawer();
         initViewItems();
         initClickListeners();
@@ -117,13 +108,16 @@ public class MainActivity extends AppCompatActivity
                 new RecyclerTouchListener.ClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        EditorActivity.launchActivity(MainActivity.this,
-                                surveyList.get(position));
-                        finish();
                     }
 
                     @Override
                     public void onLongClick(View view, int position) {
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("User")
+                                .child(GoogleAccountAdapter.getAccountID())
+                                .child("Surveys").child(surveyList.get(position).getSurveyID())
+                                .removeValue();
+
                         surveyList.remove(position);
                         cardsAdaptor.notifyDataSetChanged();
                     }
@@ -143,7 +137,6 @@ public class MainActivity extends AppCompatActivity
             mQueryUser.orderByValue().addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    surveyIdList.add(dataSnapshot.getValue().toString());
                     cardsAdaptor.notifyDataSetChanged();
                     System.out.println("surveysIDs " + dataSnapshot.getValue().toString());
 
@@ -181,13 +174,13 @@ public class MainActivity extends AppCompatActivity
                 .getReference()
                 .child("Survey");
 
-        Query mSurveyQuery = mCurrentSurvey;
-        mSurveyQuery.orderByChild(surveyId).addChildEventListener(
+        mCurrentSurvey.orderByChild(surveyId).addChildEventListener(
                 new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         if (dataSnapshot.getKey().equals(surveyId)) {
-                            System.out.println("dataSnapshot.getkey() - " + dataSnapshot.getKey());
+                            survey.setSurveyID(dataSnapshot.getKey());
+                            System.out.println("dataSnapshot.getkey() - " + survey.getSurveyID());
                             String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
                             System.out.println("Survey title " + surveyTitle);
                             survey.setSurveyTitle(surveyTitle);
@@ -198,7 +191,6 @@ public class MainActivity extends AppCompatActivity
                             surveyList.add(survey);
                             cardsAdaptor.notifyDataSetChanged();
                             survey = new Survey();
-                            optionsList = new ArrayList<>();
                         }
                     }
 
@@ -440,11 +432,10 @@ public class MainActivity extends AppCompatActivity
 
     private void ifMessageReceived() {
         Intent intent = getIntent();
-        surveyId = "das not good";
+        String surveyId;
         if (intent.getExtras() != null) {
             surveyId = intent.getExtras().getString("surveyID");
             System.out.println("ifMessageReceived: " + surveyId);
-
         }
     }
 
@@ -465,39 +456,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected Dialog onCreateDialog(int id) {
-        String[] array = getResources().getStringArray(R.array.names_options);
-        surveyId = getIntent().getStringExtra("surveyID");
-        switch (id) {
-            case 1:
-                final String[] mChooseOptions = {"option1", "option2", "option3"};
-                builder = new AlertDialog.Builder(
-                        new ContextThemeWrapper(this, R.style.AlertDialogCustom));
-                builder.setTitle(surveyId)
-                        .setCancelable(true)
-                        .setSingleChoiceItems(array, -1,
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog,
-                                                        int item) {
-                                        Toast.makeText(
-                                                getApplicationContext(),
-                                                "Ваш вибір: "
-                                                        + mChooseOptions[item],
-                                                Toast.LENGTH_SHORT).show();
-                                        dialog.cancel();
-                                    }
-                                });
-        }
-        return builder.create();
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_share:
-                showDialog(1);
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));

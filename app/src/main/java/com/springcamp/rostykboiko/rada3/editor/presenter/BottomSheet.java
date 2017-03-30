@@ -24,8 +24,6 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 import java.util.ArrayList;
 
 public class BottomSheet extends AppCompatActivity {
-    private BottomSheetBehavior bottomSheetBehavior;
-
     @Nullable
     private ArrayList<User> userList;
 
@@ -34,8 +32,6 @@ public class BottomSheet extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setStatusBarDim(true);
         setContentView(R.layout.bottom_sheet);
-
-        bottomSheetBehavior = new BottomSheetBehavior();
 
         findViewById(R.id.touch_outside).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +53,7 @@ public class BottomSheet extends AppCompatActivity {
                     public void onStateChanged(@NonNull View bottomSheet, int newState) {
                         switch (newState) {
                             case BottomSheetBehavior.STATE_HIDDEN:
-                                //finish();
+                                finish();
                                 break;
                             case BottomSheetBehavior.STATE_EXPANDED:
                                 setStatusBarDim(false);
@@ -83,9 +79,9 @@ public class BottomSheet extends AppCompatActivity {
     }
 
     private int getThemedResId(@AttrRes int attr) {
-        TypedArray a = getTheme().obtainStyledAttributes(new int[]{attr});
-        int resId = a.getResourceId(0, 0);
-        a.recycle();
+        TypedArray typedArray = getTheme().obtainStyledAttributes(new int[]{attr});
+        int resId = typedArray.getResourceId(0, 0);
+        typedArray.recycle();
         return resId;
     }
 
@@ -108,9 +104,6 @@ public class BottomSheet extends AppCompatActivity {
                                         .get(position)
                                         .getDeviceToken())
                                 .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
-                        System.out.println("Parti list Shit: " + userList
-                                .get(position)
-                                .getDeviceToken());
                     finish();
                     }
 

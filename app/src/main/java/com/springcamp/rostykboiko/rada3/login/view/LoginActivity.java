@@ -144,6 +144,7 @@ public class LoginActivity extends AppCompatActivity implements
                 userList.child(acct.getId()).child("accountID").setValue(acct.getId());
                 userList.child(acct.getId()).child("ProfileIconUrl").setValue(acct.getPhotoUrl().toString());
                 userList.child(acct.getId()).child("deviceToken").setValue(FirebaseInstanceId.getInstance().getToken());
+                System.out.println("deviceToken " + FirebaseInstanceId.getInstance().getToken());
 
                 if (mAuth != null  && mAuth.getCurrentUser() != null && mAuth.getCurrentUser().getUid() != null) {
                     userList.child(acct.getId()).child("Uid").setValue(mAuth.getCurrentUser().getUid());

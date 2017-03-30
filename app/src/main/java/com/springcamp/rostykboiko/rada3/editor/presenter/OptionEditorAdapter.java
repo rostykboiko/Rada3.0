@@ -8,10 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.springcamp.rostykboiko.rada3.R;
-import com.springcamp.rostykboiko.rada3.editor.EditorContract;
 
 import java.util.ArrayList;
 
@@ -37,7 +35,7 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
     @Override
     public OptionEditorAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.option_ed_row, parent, false);
+                .inflate(R.layout.row_option_ed, parent, false);
 
         return new OptionEditorAdapter.ViewHolder(itemView);
     }

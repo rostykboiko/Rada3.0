@@ -31,7 +31,7 @@ class ParticipantsSheetAdapter extends RecyclerView.Adapter<ParticipantsSheetAda
     @Override
     public ParticipantsSheetAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.participant_row, parent, false);
+                .inflate(R.layout.row_participant, parent, false);
 
         return new ParticipantsSheetAdapter.ViewHolder(itemView);
     }

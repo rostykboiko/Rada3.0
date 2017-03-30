@@ -35,7 +35,7 @@ public class FCMMessagingService extends FirebaseMessagingService {
     // [END receive_message]
 
     public void sendNotification(String messageTitle, String messageBody) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, SurveyDialogActivity.class);
         //**The activity that you want to open when the notification is clicked
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
