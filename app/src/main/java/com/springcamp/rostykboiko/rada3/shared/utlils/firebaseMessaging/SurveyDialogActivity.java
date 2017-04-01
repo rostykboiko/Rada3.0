@@ -32,6 +32,7 @@ import butterknife.ButterKnife;
 public class SurveyDialogActivity extends AppCompatActivity {
     private Survey survey = new Survey();
     private Option option = new Option();
+    private RecyclerView usersListView;
     private OptionDialogAdapter optionDialogAdapter;
 
     @BindView(R.id.title_survey_dialog)
@@ -46,10 +47,10 @@ public class SurveyDialogActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        initRecyclerView();
         initClickListeners();
         setStatusBarDim(true);
         messageReceiver();
-        initRecyclerView();
     }
 
     private void messageReceiver() {
@@ -84,21 +85,18 @@ public class SurveyDialogActivity extends AppCompatActivity {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         if (dataSnapshot.getKey().equals(surveyId)) {
-                            System.out.println("dataSnapshot.getkey() - " + dataSnapshot.getKey());
                             String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
-                            System.out.println("Survey title " + surveyTitle);
                             survey.setSurveyTitle(surveyTitle);
                             titleView.setText(surveyTitle);
 
                             for (DataSnapshot child : dataSnapshot.child("Options").getChildren()) {
                                 option.setOptiomTitle(child.getValue().toString());
                                 survey.getSurveyOptionList().add(option);
-
                                 option = new Option();
                             }
-                            survey = new Survey();
+                            System.out.println("optionList dialog" + survey.getSurveyOptionList());
+                            optionDialogAdapter.notifyDataSetChanged();
                         }
-                        optionDialogAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -124,27 +122,13 @@ public class SurveyDialogActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-        final RecyclerView usersListView = (RecyclerView) findViewById(R.id.option_list_view);
-
+        usersListView = (RecyclerView) findViewById(R.id.option_list_view);
         optionDialogAdapter = new OptionDialogAdapter(survey.getSurveyOptionList());
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         usersListView.setLayoutManager(mListManager);
         usersListView.setItemAnimator(new DefaultItemAnimator());
         usersListView.setAdapter(optionDialogAdapter);
 
-        usersListView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),
-                usersListView,
-                new RecyclerTouchListener.ClickListener() {
-                    @Override
-                    public void onClick(View view, int position) {
-
-                        // finish();
-                    }
-
-                    @Override
-                    public void onLongClick(View view, int position) {
-                    }
-                }));
     }
 
     private void initClickListeners() {

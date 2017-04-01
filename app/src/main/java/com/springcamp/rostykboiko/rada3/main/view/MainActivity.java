@@ -13,14 +13,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -55,11 +58,16 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.login.view.LoginActivity;
 import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
+import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
+
+    SessionManager session;
+
     private Option option = new Option();
     private Survey survey = new Survey();
     private RecyclerView cardRecyclerView;
@@ -80,18 +88,24 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         presenter = new MainPresenter(this);
+        session = new SessionManager(getApplicationContext());
+
+        Toast.makeText(getApplicationContext(), "User Login Status: "
+                + session.isLoggedIn(), Toast.LENGTH_LONG).show();
+
+
+      //  session.checkLogin();
 
         initNavDrawer();
         initViewItems();
-        initClickListeners();
         initCardView();
         initFireBase();
+        initClickListeners();
     }
 
     private void initViewItems() {
         navDrawerBtn = (ImageView) findViewById(R.id.drawerBtn);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
         setSupportActionBar(toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
     }
@@ -198,9 +212,7 @@ public class MainActivity extends AppCompatActivity
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         if (dataSnapshot.getKey().equals(surveyId)) {
                             survey.setSurveyID(dataSnapshot.getKey());
-                            System.out.println("dataSnapshot.getkey() - " + survey.getSurveyID());
                             String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
-                            System.out.println("Survey title " + surveyTitle);
                             survey.setSurveyTitle(surveyTitle);
 
                             for (DataSnapshot child : dataSnapshot.child("Options").getChildren()){
@@ -239,54 +251,14 @@ public class MainActivity extends AppCompatActivity
 
     private void initCardView() {
         cardsAdaptor = new CardsAdaptor(this, surveyList);
+        cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
 
-        RecyclerView.LayoutManager mCardManager = new GridLayoutManager(this, 2);
+        RecyclerView.LayoutManager mCardManager = new LinearLayoutManager(getApplicationContext());
         cardRecyclerView.setLayoutManager(mCardManager);
-        cardRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
         cardRecyclerView.setItemAnimator(new DefaultItemAnimator());
         cardRecyclerView.setAdapter(cardsAdaptor);
     }
 
-    private class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
-
-    }
-
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
 
     /* List of Cards End */
 
