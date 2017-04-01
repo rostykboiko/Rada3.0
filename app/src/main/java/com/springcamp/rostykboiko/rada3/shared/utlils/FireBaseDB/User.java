@@ -107,4 +107,5 @@ public class User implements Parcelable {
         userProfileIcon = in.readString();
         surveysList = in.createStringArrayList();
     }
+
 }

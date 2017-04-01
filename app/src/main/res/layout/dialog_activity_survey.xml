@@ -1,30 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/touch_outside"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    app:theme="@style/AppTheme.TextItem">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/dialog_activity_survey"
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/options_card_view"
         android:layout_gravity="center"
         android:layout_margin="@dimen/card_margin"
-        android:layout_marginTop="150dp"
-        android:background="@color/cardview_light_background"
-        card_view:cardElevation="@dimen/card_elevation">
+        android:elevation="3dp"
+        card_view:cardCornerRadius="@dimen/card_album_radius">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Title will be here" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/optionList"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/title_survey_dialog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/album_title"
+                    android:textSize="@dimen/text_size_large"
+                    app:theme="@style/AppTheme.TitleText" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/option_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:scrollbars="vertical" />
+
+            <Button
+                android:id="@+id/button_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_ok_btn" />
+        </LinearLayout>
     </android.support.v7.widget.CardView>
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

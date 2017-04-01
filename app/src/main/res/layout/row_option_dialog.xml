@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/row_small"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <RadioButton
@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_normal"
         android:layout_marginTop="@dimen/margin_normal"
-        android:clickable="false" />
+        android:clickable="true" />
 
     <TextView
         android:id="@+id/optionItemDialog"
@@ -22,4 +22,5 @@
         android:padding="@dimen/margin_small"
         android:text="@string/title_activity_editor"
         android:textSize="@dimen/text_size_standard" />
+
 </RelativeLayout>

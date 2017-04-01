@@ -14,14 +14,14 @@
         android:clickable="false" />
 
     <EditText
-        android:id="@+id/optionItem"
+        android:id="@+id/optionItemDialog"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/row_text_height"
         android:layout_marginStart="@dimen/margin_tab"
         android:layout_marginTop="@dimen/margin_normal"
         android:background="@android:color/transparent"
         android:hint="@string/title_activity_editor"
-        android:inputType="textAutoCorrect|textMultiLine"
+        android:inputType="textAutoCorrect"
         android:maxLength="25"
         android:padding="@dimen/margin_small"
         android:textSize="@dimen/text_size_standard" />

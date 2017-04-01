@@ -19,7 +19,7 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
 
         ViewHolder(View view) {
             super(view);
-            optionItem = (TextView) view.findViewById(R.id.optionItem);
+            optionItem = (TextView) view.findViewById(R.id.optionItemDialog);
         }
     }
 

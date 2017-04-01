@@ -48,6 +48,10 @@
     <string name="tv_duration_pref">Налаштувати</string>
     <!--Editor Activity End-->
 
+    <!-- Dialog -->
+    <string name="dialog_ok_btn">OK</string>
+
+
     <!-- Intro Res Start-->
     <string name="title_activity_welcome">Home Screen</string>
     <string name="next">NEXT</string>

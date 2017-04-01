@@ -23,7 +23,7 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
 
         ViewHolder(View view) {
             super(view);
-            optionItem = (EditText) view.findViewById(R.id.optionItem);
+            optionItem = (EditText) view.findViewById(R.id.optionItemDialog);
             closeIcon = (ImageView) view.findViewById(R.id.close_icon);
         }
     }
@@ -64,7 +64,6 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
         holder.closeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 optionsList.remove(position);
                 notifyItemRemoved(position);
             }

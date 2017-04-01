@@ -33,12 +33,12 @@ import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
+import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 import com.thebluealliance.spectrum.SpectrumDialog;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -121,26 +121,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         initParticipantsList();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        participants.add(getIntent().getStringExtra("Participant"));
-        System.out.println("Intent thread " + participants);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        if (intent != null)
-            setIntent(intent);
-    }
-
-    public static void launchActivity(@NonNull AppCompatActivity activity, @NonNull Survey survey) {
-        Intent intent = new Intent(activity, EditorActivity.class);
-        intent.putExtra(SURVEY_KEY, survey);
-
-        activity.startActivity(intent);
-    }
-
+    /** View init start */
     private void initClickListeners() {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -289,6 +270,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         }
     }
 
+    /* View init end */
+
+    /** Sync with Firebase Start */
     private void onSaveBtnPressed() {
         if (editTextTitle.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(),
@@ -299,54 +283,79 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     "Додайте варіант відповіді",
                     Toast.LENGTH_SHORT).show();
         } else {
-            String generatedString = generatedId();
-            String surveyTitle = editTextTitle.getText().toString();
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference surveyRef = database.getReference("Survey");
-            surveyRef.child(generatedString)
-                    .child("Title")
-                    .setValue(editTextTitle.getText().toString());
-            for (String option : optionsList) {
-                surveyRef.child(generatedString)
-                        .child("Options")
-                        .child("option" + (optionsList.indexOf(option) + 1))
-                        .setValue(option);
-            }
 
-            surveyRef.child(generatedString)
-                    .child("One Positive Option")
-                    .setValue(oneOptionSwitch.isChecked());
+            dataSurveyReference(database);
 
-            if (separated != null)
-                surveyRef.child(generatedString)
-                        .child("duration")
-                        .setValue(separated[0] + " " + separated[1]);
-            else surveyRef.child(generatedString)
+            startActivity(new Intent(EditorActivity.this, MainActivity.class));
+            finish();
+        }
+    }
+
+    private void dataSurveyReference(FirebaseDatabase database){
+        String generatedString = generatedId();
+        String surveyTitle = editTextTitle.getText().toString();
+
+        DatabaseReference surveyRef = database.getReference("Survey");
+
+        /** Title */
+        surveyRef.child(generatedString)
+                .child("Title")
+                .setValue(editTextTitle.getText().toString());
+
+        /** Options */
+        for (String option : optionsList) {
+            surveyRef.child(generatedString)
+                    .child("Options")
+                    .child("option" + (optionsList.indexOf(option) + 1))
+                    .setValue(option);
+        }
+
+        surveyRef.child(generatedString)
+                .child("One Positive Option")
+                .setValue(oneOptionSwitch.isChecked());
+
+        /** Duration */
+        if (separated != null)
+            surveyRef.child(generatedString)
                     .child("duration")
-                    .setValue(getString(R.string.tv_duration_2min));
+                    .setValue(separated[0] + " " + separated[1]);
+        else surveyRef.child(generatedString)
+                .child("duration")
+                .setValue(getString(R.string.tv_duration_2min));
 
-            surveyRef.child(generatedString)
-                    .child("color")
-                    .setValue("#" + colorName);
+        /** Color */
+        surveyRef.child(generatedString)
+                .child("color")
+                .setValue("#" + colorName);
 
+        dataUserRef(database, generatedString, surveyTitle);
+    }
 
-            System.out.println("Thread user" + participants);
-            for (String part : participants) {
-                if (part != null) {
-                    for (User user : userList) {
-                        if (!user.equals(null) && user.getDeviceToken().equals(part)){
-                        DatabaseReference userRef = database.getReference("User");
+    private void dataUserRef(FirebaseDatabase database, String generatedString, String surveyTitle){
+        DatabaseReference userRef = database.getReference("User");
+        int userCounter = participants.size();
+
+        if (GoogleAccountAdapter.getAccountID() != null)
+            userRef
+                    .child(GoogleAccountAdapter.getAccountID())
+                    .child("Surveys")
+                    .child(generatedString).setValue(userCounter);
+
+        sendMessage(GoogleAccountAdapter.getDeviceToken(), generatedString, surveyTitle);
+
+        for (String part : participants) {
+            if (part != null) {
+                for (User user : userList) {
+                    if (!user.equals(null) && user.getDeviceToken().equals(part)){
                         userRef
                                 .child(user.getAccountID())
                                 .child("Surveys")
-                                .child(generatedString).setValue(generatedString);
+                                .child(generatedString).setValue(userCounter);
                         sendMessage(part, generatedString, surveyTitle);
-                        }
                     }
                 }
             }
-            startActivity(new Intent(EditorActivity.this, MainActivity.class));
-            finish();
         }
     }
 
@@ -359,49 +368,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     public String generatedId() {
         return new BigInteger(130, random).toString(32);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (editTextTitle.getText().toString().equals("") || optionsList.size() < 2) {
-            startActivity(new Intent(EditorActivity.this, MainActivity.class));
-            finish();
-        } else {
-            AlertDialog.Builder confirmDialog = new AlertDialog.Builder(EditorActivity.this);
-            confirmDialog.setMessage("Дійсно скасувати"); // сообщение
-            confirmDialog.setPositiveButton("Так", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int arg1) {
-                    startActivity(new Intent(EditorActivity.this, MainActivity.class));
-                    finish();
-                }
-            });
-            confirmDialog.setNegativeButton("Ні, редагувати далі", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int arg1) {
-                }
-            });
-            confirmDialog.setCancelable(true);
-            confirmDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                public void onCancel(DialogInterface dialog) {
-                }
-            });
-            confirmDialog.show();
-        }
-    }
-
-    // Presenter
-    @Override
-    public String getId() {
-        return null;
-    }
-
-    @Override
-    public String getSurveyTitle() {
-        return null;
-    }
-
-    @Override
-    public ArrayList<String> getOptionsList() {
-        return null;
     }
 
     private class OneShotTask implements Runnable {
@@ -452,4 +418,70 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             }
         }
     }
+
+    /* Sync with Firebase Start */
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        participants.add(getIntent().getStringExtra("Participant"));
+        System.out.println("Intent thread " + participants);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent != null)
+            setIntent(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (editTextTitle.getText().toString().equals("") || optionsList.size() < 2) {
+            startActivity(new Intent(EditorActivity.this, MainActivity.class));
+            finish();
+        } else {
+            AlertDialog.Builder confirmDialog = new AlertDialog.Builder(EditorActivity.this);
+            confirmDialog.setMessage("Дійсно скасувати"); // сообщение
+            confirmDialog.setPositiveButton("Так", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int arg1) {
+                    startActivity(new Intent(EditorActivity.this, MainActivity.class));
+                    finish();
+                }
+            });
+            confirmDialog.setNegativeButton("Ні, редагувати далі", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int arg1) {
+                }
+            });
+            confirmDialog.setCancelable(true);
+            confirmDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                public void onCancel(DialogInterface dialog) {
+                }
+            });
+            confirmDialog.show();
+        }
+    }
+
+    /** Presenter Methods */
+    @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
+    public String getSurveyTitle() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<String> getOptionsList() {
+        return null;
+    }
+
+    public static void launchActivity(@NonNull AppCompatActivity activity, @NonNull Survey survey) {
+        Intent intent = new Intent(activity, EditorActivity.class);
+        intent.putExtra(SURVEY_KEY, survey);
+
+        activity.startActivity(intent);
+    }
+
 }

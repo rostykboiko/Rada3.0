@@ -135,6 +135,7 @@ public class LoginActivity extends AppCompatActivity implements
                 GoogleAccountAdapter.setUserName(acct.getDisplayName());
                 GoogleAccountAdapter.setUserEmail(acct.getEmail());
                 GoogleAccountAdapter.setProfileIcon(acct.getPhotoUrl());
+                GoogleAccountAdapter.setDeviceToken(FirebaseInstanceId.getInstance().getToken());
 
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference userList = database.getReference("User");
@@ -146,7 +147,7 @@ public class LoginActivity extends AppCompatActivity implements
                 userList.child(acct.getId()).child("deviceToken").setValue(FirebaseInstanceId.getInstance().getToken());
                 System.out.println("deviceToken " + FirebaseInstanceId.getInstance().getToken());
 
-                if (mAuth != null  && mAuth.getCurrentUser() != null && mAuth.getCurrentUser().getUid() != null) {
+                if (mAuth != null  && mAuth.getCurrentUser() != null) {
                     userList.child(acct.getId()).child("Uid").setValue(mAuth.getCurrentUser().getUid());
                     GoogleAccountAdapter.setUserID(mAuth.getCurrentUser().getUid());
                 }

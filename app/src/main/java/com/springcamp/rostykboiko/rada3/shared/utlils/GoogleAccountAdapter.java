@@ -7,6 +7,7 @@ public class GoogleAccountAdapter {
     private static String userEmail = null;
     private static String accountID = null;
     private static String userID = null;
+    private static String deviceToken = null;
     private static Uri userProfileIcon;
 
     public static String getUserName() {
@@ -49,6 +50,21 @@ public class GoogleAccountAdapter {
         GoogleAccountAdapter.accountID = accountID;
     }
 
+    public static String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public static void setDeviceToken(String deviceToken) {
+        GoogleAccountAdapter.deviceToken = deviceToken;
+    }
+
+    public static Uri getUserProfileIcon() {
+        return userProfileIcon;
+    }
+
+    public static void setUserProfileIcon(Uri userProfileIcon) {
+        GoogleAccountAdapter.userProfileIcon = userProfileIcon;
+    }
     public static void logOut() {
         userName = null;
         userEmail = null;

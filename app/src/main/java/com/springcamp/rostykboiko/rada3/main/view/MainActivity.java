@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton fab;
     private Drawer mDrawer = null;
     private Toolbar toolbar;
+    private ImageView navDrawerBtn;
 
     @Nullable
     MainContract.Presenter presenter;
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         presenter = new MainPresenter(this);
 
         initNavDrawer();
@@ -82,10 +85,10 @@ public class MainActivity extends AppCompatActivity
         initClickListeners();
         initCardView();
         initFireBase();
-        ifMessageReceived();
     }
 
     private void initViewItems() {
+        navDrawerBtn = (ImageView) findViewById(R.id.drawerBtn);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
         setSupportActionBar(toolbar);
@@ -118,10 +121,23 @@ public class MainActivity extends AppCompatActivity
                                 .child("Surveys").child(surveyList.get(position).getSurveyID())
                                 .removeValue();
 
+                    DatabaseReference databaseReference =
+                            FirebaseDatabase.getInstance().getReference()
+                            .child("Survey")
+                            .child(surveyList.get(position).getSurveyID());
+                        System.out.println("UserCounter" + databaseReference.toString());
+
                         surveyList.remove(position);
                         cardsAdaptor.notifyDataSetChanged();
                     }
                 }));
+
+        navDrawerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDrawer.openDrawer();
+            }
+        });
     }
 
     /* List of Cards Start */
@@ -138,9 +154,10 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     cardsAdaptor.notifyDataSetChanged();
-                    System.out.println("surveysIDs " + dataSnapshot.getValue().toString());
 
-                    initSurveyById(dataSnapshot.getValue().toString());
+                    System.out.println("surveysIDs " + dataSnapshot.getKey());
+
+                    initSurveyById(dataSnapshot.getKey());
                 }
 
                 @Override
@@ -174,7 +191,7 @@ public class MainActivity extends AppCompatActivity
                 .getReference()
                 .child("Survey");
 
-        mCurrentSurvey.orderByChild(surveyId).addChildEventListener(
+        mCurrentSurvey.addChildEventListener(
                 new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -429,15 +446,6 @@ public class MainActivity extends AppCompatActivity
         );
     }
     /* NavDrawer End */
-
-    private void ifMessageReceived() {
-        Intent intent = getIntent();
-        String surveyId;
-        if (intent.getExtras() != null) {
-            surveyId = intent.getExtras().getString("surveyID");
-            System.out.println("ifMessageReceived: " + surveyId);
-        }
-    }
 
     @Override
     public void showProgress() {

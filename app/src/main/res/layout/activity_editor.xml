@@ -39,7 +39,7 @@
                     android:layout_marginTop="@dimen/margin_medium"
                     android:background="@android:color/transparent"
                     android:hint="@string/title_activity_editor"
-                    android:inputType="textAutoCorrect|textMultiLine"
+                    android:inputType="textAutoCorrect"
                     android:maxLength="25"
                     android:textSize="24sp"
                     android:textStyle="bold" />
