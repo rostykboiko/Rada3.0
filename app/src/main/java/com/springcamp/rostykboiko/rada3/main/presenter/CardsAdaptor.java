@@ -54,6 +54,7 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
         Survey survey = surveyList.get(position);
 
         holder.title.setText(survey.getSurveyTitle());
+
         optionCardAdapter = new OptionCardAdapter(survey.getSurveyOptionList());
         holder.optionsRecycler.setAdapter(optionCardAdapter);
     }

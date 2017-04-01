@@ -9,7 +9,7 @@ import java.util.List;
 public class Survey implements Parcelable {
     private String surveyID;
     private String surveyTitle;
-    private ArrayList<String> surveyOptionList = new ArrayList<>();
+    private ArrayList<Option> surveyOptionList = new ArrayList<>();
     private boolean surveySingleOption;
     private int duration;
     private ArrayList<User> participantsEmailList;
@@ -25,12 +25,12 @@ public class Survey implements Parcelable {
         this.surveyTitle = surveyTitle;
     }
 
-    public ArrayList<String> getSurveyOptionList() {
+    public ArrayList<Option> getSurveyOptionList() {
         System.out.println("get list" + surveyOptionList);
         return surveyOptionList;
     }
 
-    public void setSurveyOptionList(ArrayList<String> surveyOptionList) {
+    public void setSurveyOptionList(ArrayList<Option> surveyOptionList) {
         this.surveyOptionList = surveyOptionList;
     }
 
@@ -71,9 +71,6 @@ public class Survey implements Parcelable {
         color = in.readInt();
         duration = in.readInt();
         surveySingleOption = in.readByte() != 0;
-        surveyOptionList = in.createStringArrayList();
-        System.out.println("surveyOptionList " + surveyOptionList);
-
         //  in.readTypedList(surveyOptionList, CREATOR);
 //        surveyOptionList = in.readArrayList();
 //        participantsEmailList = in.readArrayList(null);

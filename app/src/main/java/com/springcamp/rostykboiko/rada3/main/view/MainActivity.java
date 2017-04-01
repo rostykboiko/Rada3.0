@@ -49,6 +49,7 @@ import com.springcamp.rostykboiko.rada3.main.MainContract;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.main.presenter.CardsAdaptor;
 import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
@@ -59,6 +60,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
+    private Option option = new Option();
     private Survey survey = new Survey();
     private RecyclerView cardRecyclerView;
     private ArrayList<Survey> surveyList = new ArrayList<>();
@@ -76,7 +78,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         presenter = new MainPresenter(this);
 
@@ -202,8 +203,11 @@ public class MainActivity extends AppCompatActivity
                             System.out.println("Survey title " + surveyTitle);
                             survey.setSurveyTitle(surveyTitle);
 
-                            for (DataSnapshot child : dataSnapshot.child("Options").getChildren())
-                                survey.getSurveyOptionList().add(child.getValue().toString());
+                            for (DataSnapshot child : dataSnapshot.child("Options").getChildren()){
+                                option.setOptiomTitle(child.getValue().toString());
+                                survey.getSurveyOptionList().add(option);
+                                option = new Option();
+                            }
 
                             surveyList.add(survey);
                             cardsAdaptor.notifyDataSetChanged();

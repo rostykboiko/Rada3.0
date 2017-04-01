@@ -4,28 +4,33 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
+
 import java.util.ArrayList;
 
 class OptionDialogAdapter extends RecyclerView.Adapter<OptionDialogAdapter.ViewHolder> {
 
-    private ArrayList<String> optionsList = new ArrayList<>();
+    private ArrayList<Option> optionsList = new ArrayList<>();
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView optionItem;
         private CheckBox checkBox;
+        private Button okBtn;
 
         ViewHolder(View view) {
             super(view);
             optionItem = (TextView) view.findViewById(R.id.optionItemDialog);
             checkBox = (CheckBox) view.findViewById(R.id.checkbox);
+            okBtn = (Button) view.findViewById(R.id.button_ok);
         }
     }
 
-    OptionDialogAdapter(ArrayList<String> optionsList) {
+    OptionDialogAdapter(ArrayList<Option> optionsList) {
         this.optionsList = optionsList;
     }
 
@@ -39,13 +44,8 @@ class OptionDialogAdapter extends RecyclerView.Adapter<OptionDialogAdapter.ViewH
 
     @Override
     public void onBindViewHolder(final OptionDialogAdapter.ViewHolder holder, final int position) {
-            holder.optionItem.setText(optionsList.get(position));
-            holder.checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            holder.optionItem.setText(optionsList.get(position).getOptiomTitle());
 
-                }
-            });
     }
 
     @Override

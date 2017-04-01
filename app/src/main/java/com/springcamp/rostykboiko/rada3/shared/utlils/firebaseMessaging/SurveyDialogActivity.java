@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 
 import butterknife.BindView;
@@ -30,6 +31,7 @@ import butterknife.ButterKnife;
 
 public class SurveyDialogActivity extends AppCompatActivity {
     private Survey survey = new Survey();
+    private Option option = new Option();
     private OptionDialogAdapter optionDialogAdapter;
 
     @BindView(R.id.title_survey_dialog)
@@ -77,7 +79,7 @@ public class SurveyDialogActivity extends AppCompatActivity {
                 .getReference()
                 .child("Survey");
 
-        mCurrentSurvey.orderByChild(surveyId).addChildEventListener(
+        mCurrentSurvey.addChildEventListener(
                 new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -88,12 +90,15 @@ public class SurveyDialogActivity extends AppCompatActivity {
                             survey.setSurveyTitle(surveyTitle);
                             titleView.setText(surveyTitle);
 
-                            for (DataSnapshot child : dataSnapshot.child("Options").getChildren())
-                                survey.getSurveyOptionList().add(child.getValue().toString());
+                            for (DataSnapshot child : dataSnapshot.child("Options").getChildren()) {
+                                option.setOptiomTitle(child.getValue().toString());
+                                survey.getSurveyOptionList().add(option);
 
-                            optionDialogAdapter.notifyDataSetChanged();
+                                option = new Option();
+                            }
                             survey = new Survey();
                         }
+                        optionDialogAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -142,7 +147,7 @@ public class SurveyDialogActivity extends AppCompatActivity {
                 }));
     }
 
-    private void initClickListeners(){
+    private void initClickListeners() {
         outsideArea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
