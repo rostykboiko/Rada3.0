@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.springcamp.rostykboiko.rada3.R;
@@ -16,12 +16,12 @@ class OptionDialogAdapter extends RecyclerView.Adapter<OptionDialogAdapter.ViewH
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView optionItem;
-        private RadioButton radioBtn;
+        private CheckBox checkBox;
 
         ViewHolder(View view) {
             super(view);
             optionItem = (TextView) view.findViewById(R.id.optionItemDialog);
-            radioBtn = (RadioButton) view.findViewById(R.id.radioBtn);
+            checkBox = (CheckBox) view.findViewById(R.id.checkbox);
         }
     }
 
@@ -40,11 +40,11 @@ class OptionDialogAdapter extends RecyclerView.Adapter<OptionDialogAdapter.ViewH
     @Override
     public void onBindViewHolder(final OptionDialogAdapter.ViewHolder holder, final int position) {
             holder.optionItem.setText(optionsList.get(position));
-            holder.radioBtn.setOnClickListener(new View.OnClickListener() {
+            holder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    holder.radioBtn.setChecked(true);
-                    }
+
+                }
             });
     }
 
