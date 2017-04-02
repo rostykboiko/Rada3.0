@@ -32,8 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/album_title"
-                    android:textSize="@dimen/text_size_large"
-                    app:theme="@style/AppTheme.TitleText" />
+                    android:textSize="@dimen/text_size_large" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView

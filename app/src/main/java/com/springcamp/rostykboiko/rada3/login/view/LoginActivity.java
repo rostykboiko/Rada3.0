@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -48,8 +47,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    @BindView(R.id.sign_in_button)
-    SignInButton signInButton;
+
 
     @Nullable
     LoginContract.Presenter presenter;
@@ -61,9 +59,8 @@ public class LoginActivity extends AppCompatActivity implements
 
         presenter = new LoginPresenter(this);
 
-        ButterKnife.bind(this);
         initFireBaseListener();
-        initClickListeners();
+        clickListener();
     }
 
     private void initFireBaseListener() {
@@ -84,15 +81,10 @@ public class LoginActivity extends AppCompatActivity implements
         };
     }
 
-    private void initClickListeners() {
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    private void clickListener() {
                 if (presenter != null) {
                     presenter.logIn();
                 }
-            }
-        });
     }
 
     @Override
@@ -146,6 +138,8 @@ public class LoginActivity extends AppCompatActivity implements
                 userList.child(acct.getId()).child("ProfileIconUrl").setValue(acct.getPhotoUrl().toString());
                 userList.child(acct.getId()).child("deviceToken").setValue(FirebaseInstanceId.getInstance().getToken());
                 System.out.println("deviceToken " + FirebaseInstanceId.getInstance().getToken());
+
+
 
                 if (mAuth != null  && mAuth.getCurrentUser() != null) {
                     userList.child(acct.getId()).child("Uid").setValue(mAuth.getCurrentUser().getUid());

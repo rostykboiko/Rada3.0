@@ -94,8 +94,6 @@ public class MainActivity extends AppCompatActivity
                 + session.isLoggedIn(), Toast.LENGTH_LONG).show();
 
 
-      //  session.checkLogin();
-
         initNavDrawer();
         initViewItems();
         initCardView();
@@ -390,7 +388,8 @@ public class MainActivity extends AppCompatActivity
                                             startActivity(new Intent(MainActivity.this, LoginActivity.class));
                                         else {
                                             GoogleAccountAdapter.logOut();
-                                            initNavDrawer();
+                                            //initNavDrawer();
+                                            onResume();
                                         }
                                         return false;
                                     }
