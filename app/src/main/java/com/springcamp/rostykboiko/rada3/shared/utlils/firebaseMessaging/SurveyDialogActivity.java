@@ -14,7 +14,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,12 +28,16 @@ import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SurveyDialogActivity extends AppCompatActivity {
+    private String surveyId;
     private Survey survey = new Survey();
     private Option option = new Option();
+    private ArrayList<Option> optionsList = new ArrayList<>();
     private RecyclerView usersListView;
     private OptionDialogAdapter optionDialogAdapter;
 
@@ -39,6 +45,8 @@ public class SurveyDialogActivity extends AppCompatActivity {
     TextView titleView;
     @BindView(R.id.touch_outside)
     CoordinatorLayout outsideArea;
+    @BindView(R.id.button_ok)
+    Button okBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +64,8 @@ public class SurveyDialogActivity extends AppCompatActivity {
     private void messageReceiver() {
         Intent intent = getIntent();
         if (intent.getExtras() != null) {
-            initSurveyById(intent.getExtras().getString("surveyID"));
+            surveyId = intent.getExtras().getString("surveyID");
+            initSurveyById(surveyId);
         }
     }
 
@@ -90,11 +99,11 @@ public class SurveyDialogActivity extends AppCompatActivity {
                             titleView.setText(surveyTitle);
 
                             for (DataSnapshot child : dataSnapshot.child("Options").getChildren()) {
-                                option.setOptiomTitle(child.getValue().toString());
+                                option.setOptionTitle(child.getValue().toString());
+                                option.setOptionKey(child.getKey());
                                 survey.getSurveyOptionList().add(option);
                                 option = new Option();
                             }
-                            System.out.println("optionList dialog" + survey.getSurveyOptionList());
                             optionDialogAdapter.notifyDataSetChanged();
                         }
                     }
@@ -138,5 +147,63 @@ public class SurveyDialogActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitAnswer();
+            }
+        });
+
+        usersListView.addOnItemTouchListener(new RecyclerTouchListener(
+                getApplicationContext(),
+                usersListView,
+                new RecyclerTouchListener.ClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        if (optionsList.contains(
+                                optionDialogAdapter.getOptionsList().get(position))){
+                                optionsList.remove(
+                                        optionDialogAdapter.getOptionsList().get(position));
+                        } else {
+                            optionsList.add(optionDialogAdapter
+                                    .getOptionsList()
+                                    .get(position));
+                        }
+
+                        //System.out.println("Answer List" + optionsList);
+                        //System.out.println("Answer position " + position);
+
+                        Toast.makeText(getApplicationContext(),
+                                "User Login Status: " +
+                                        optionDialogAdapter
+                                                .getOptionsList()
+                                                .get(position)
+                                                .getOptionTitle(),
+                                Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+
+                    }
+                })
+        );
+    }
+
+    private void submitAnswer() {
+        DatabaseReference mCurrentSurvey = FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .child("Survey")
+                .child(surveyId)
+                .child("Answers");
+
+        for (Option option : optionsList){
+            mCurrentSurvey.child(option.getOptionKey()).setValue(1);
+            System.out.println("Key " + option.getOptionKey() + " option " + option);
+        }
+
+
     }
 }

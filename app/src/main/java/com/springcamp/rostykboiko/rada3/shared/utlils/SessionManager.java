@@ -34,12 +34,19 @@ public class SessionManager {
     // Email address (make variable public to access from outside)
     public static final String KEY_EMAIL = "email";
 
+    public static final GoogleAccountAdapter userData = new GoogleAccountAdapter();
+
     // Constructor
     public SessionManager(Context context){
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
         editor = pref.edit();
     }
+
+    public static GoogleAccountAdapter getUserData() {
+        return userData;
+    }
+
 
     /**
      * Create login session

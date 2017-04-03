@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.springcamp.rostykboiko.rada3.R;
@@ -17,9 +18,11 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView optionItem;
+        private ProgressBar progressBar;
 
         ViewHolder(View view) {
             super(view);
+            progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
             optionItem = (TextView) view.findViewById(R.id.optionItemDialog);
         }
     }
@@ -42,7 +45,7 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
     @Override
     public void onBindViewHolder(OptionCardAdapter.ViewHolder holder, int position) {
         Option option = optionsList.get(position);
-        holder.optionItem.setText(option.getOptiomTitle());
+        holder.optionItem.setText(option.getOptionTitle());
     }
 
     @Override

@@ -2,8 +2,6 @@ package com.springcamp.rostykboiko.rada3.main.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,17 +10,13 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -61,13 +55,10 @@ import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
 import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
-
     SessionManager session;
-
     private Option option = new Option();
     private Survey survey = new Survey();
     private RecyclerView cardRecyclerView;
@@ -92,7 +83,6 @@ public class MainActivity extends AppCompatActivity
 
         Toast.makeText(getApplicationContext(), "User Login Status: "
                 + session.isLoggedIn(), Toast.LENGTH_LONG).show();
-
 
         initNavDrawer();
         initViewItems();
@@ -119,7 +109,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        cardRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),
+        cardRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(
+                getApplicationContext(),
                 cardRecyclerView,
                 new RecyclerTouchListener.ClickListener() {
                     @Override
@@ -154,7 +145,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     /* List of Cards Start */
-
     private void initFireBase() {
         DatabaseReference mCurrentUserRef;
         if (GoogleAccountAdapter.getUserID() != null) {
@@ -214,7 +204,7 @@ public class MainActivity extends AppCompatActivity
                             survey.setSurveyTitle(surveyTitle);
 
                             for (DataSnapshot child : dataSnapshot.child("Options").getChildren()){
-                                option.setOptiomTitle(child.getValue().toString());
+                                option.setOptionTitle(child.getValue().toString());
                                 survey.getSurveyOptionList().add(option);
                                 option = new Option();
                             }
@@ -256,8 +246,6 @@ public class MainActivity extends AppCompatActivity
         cardRecyclerView.setItemAnimator(new DefaultItemAnimator());
         cardRecyclerView.setAdapter(cardsAdaptor);
     }
-
-
     /* List of Cards End */
 
     /* NavDrawer Start */

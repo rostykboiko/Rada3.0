@@ -24,7 +24,7 @@
         android:textSize="@dimen/text_size_standard" />
 
     <ProgressBar
-        android:id="@+id/progressBar2"
+        android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +41,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:padding="@dimen/margin_small"
-        android:paddingEnd="@dimen/margin_normal"
+        android:paddingStart="@dimen/margin_medium"
+        android:paddingEnd="@dimen/margin_medium"
         android:text="0%"
         android:layout_alignTop="@+id/optionItemDialog"
         android:layout_above="@+id/progressBar2" />

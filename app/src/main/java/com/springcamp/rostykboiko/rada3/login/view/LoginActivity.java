@@ -2,8 +2,13 @@ package com.springcamp.rostykboiko.rada3.login.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.os.Build;
+import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,10 +62,25 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        presenter = new LoginPresenter(this);
+        setStatusBarDim(true);
 
+        presenter = new LoginPresenter(this);
         initFireBaseListener();
         clickListener();
+    }
+
+    private void setStatusBarDim(boolean dim) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(dim ? Color.TRANSPARENT :
+                    ContextCompat.getColor(this, getThemedResId(R.attr.colorPrimaryDark)));
+        }
+    }
+
+    private int getThemedResId(@AttrRes int attr) {
+        TypedArray typedArray = getTheme().obtainStyledAttributes(new int[]{attr});
+        int resId = typedArray.getResourceId(0, 0);
+        typedArray.recycle();
+        return resId;
     }
 
     private void initFireBaseListener() {

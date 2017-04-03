@@ -1,15 +1,16 @@
 package com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB;
 
 public class Option {
-    private String optiomTitle;
+    private String optionKey;
+    private String optionTitle;
     private boolean checked;
 
-    public String getOptiomTitle() {
-        return optiomTitle;
+    public String getOptionTitle() {
+        return optionTitle;
     }
 
-    public void setOptiomTitle(String optiomTitle) {
-        this.optiomTitle = optiomTitle;
+    public void setOptionTitle(String optionTitle) {
+        this.optionTitle = optionTitle;
     }
 
     public boolean isChecked() {
@@ -18,5 +19,13 @@ public class Option {
 
     public void setChecked(boolean checked) {
         this.checked = checked;
+    }
+
+    public String getOptionKey() {
+        return optionKey;
+    }
+
+    public void setOptionKey(String optionKey) {
+        this.optionKey = optionKey;
     }
 }

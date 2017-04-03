@@ -4,35 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Survey implements Parcelable {
     private String surveyID;
     private String surveyTitle;
     private ArrayList<Option> surveyOptionList = new ArrayList<>();
+    private ArrayList<String> surveyAnswersList = new ArrayList<>();
     private boolean surveySingleOption;
     private int duration;
-    private ArrayList<User> participantsEmailList;
     private int color;
+    private int participantsCount;
+    private ArrayList<User> participantsEmailList;
 
     public Survey(){}
-
-    public String getSurveyTitle() {
-        return surveyTitle;
-    }
-
-    public void setSurveyTitle(String surveyTitle) {
-        this.surveyTitle = surveyTitle;
-    }
-
-    public ArrayList<Option> getSurveyOptionList() {
-        System.out.println("get list" + surveyOptionList);
-        return surveyOptionList;
-    }
-
-    public void setSurveyOptionList(ArrayList<Option> surveyOptionList) {
-        this.surveyOptionList = surveyOptionList;
-    }
 
     // Parcel
     @Override
@@ -64,6 +48,22 @@ public class Survey implements Parcelable {
     };
 
 
+    public String getSurveyTitle() {
+        return surveyTitle;
+    }
+
+    public void setSurveyTitle(String surveyTitle) {
+        this.surveyTitle = surveyTitle;
+    }
+
+    public ArrayList<Option> getSurveyOptionList() {
+        System.out.println("get list" + surveyOptionList);
+        return surveyOptionList;
+    }
+
+    public void setSurveyOptionList(ArrayList<Option> surveyOptionList) {
+        this.surveyOptionList = surveyOptionList;
+    }
     // example constructor that takes a Parcel and gives you an object populated with it's values
     private Survey(Parcel in) {
         surveyID = in.readString();

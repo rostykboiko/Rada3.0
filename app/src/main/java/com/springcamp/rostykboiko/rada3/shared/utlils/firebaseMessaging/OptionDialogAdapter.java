@@ -44,12 +44,15 @@ class OptionDialogAdapter extends RecyclerView.Adapter<OptionDialogAdapter.ViewH
 
     @Override
     public void onBindViewHolder(final OptionDialogAdapter.ViewHolder holder, final int position) {
-            holder.optionItem.setText(optionsList.get(position).getOptiomTitle());
+            holder.optionItem.setText(optionsList.get(position).getOptionTitle());
 
     }
 
     @Override
     public int getItemCount() {
         return optionsList.size();
+    }
+
+    public ArrayList<Option> getOptionsList(){return optionsList;
     }
 }

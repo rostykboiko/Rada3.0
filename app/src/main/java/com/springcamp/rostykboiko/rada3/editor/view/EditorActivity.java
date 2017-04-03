@@ -309,6 +309,11 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     .child("Options")
                     .child("option" + (optionsList.indexOf(option) + 1))
                     .setValue(option);
+            surveyRef.child(generatedString)
+                    .child("Answers")
+                    .child("option" + (optionsList.indexOf(option) + 1))
+                    .setValue(0);
+
         }
 
         surveyRef.child(generatedString)
