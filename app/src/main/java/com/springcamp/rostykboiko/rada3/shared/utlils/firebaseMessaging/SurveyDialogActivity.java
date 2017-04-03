@@ -27,6 +27,7 @@ import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
+import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 
 import java.util.ArrayList;
 
@@ -38,6 +39,7 @@ public class SurveyDialogActivity extends AppCompatActivity {
     private Survey survey = new Survey();
     private Option option = new Option();
     private ArrayList<Option> optionsList = new ArrayList<>();
+    private ArrayList<String> answersList = new ArrayList<>();
     private RecyclerView usersListView;
     private OptionDialogAdapter optionDialogAdapter;
 
@@ -104,6 +106,12 @@ public class SurveyDialogActivity extends AppCompatActivity {
                                 survey.getSurveyOptionList().add(option);
                                 option = new Option();
                             }
+
+                            for (DataSnapshot child : dataSnapshot.child("Answers").getChildren()) {
+                                answersList.add(child.getValue().toString());
+                            }
+
+                            System.out.println("Answers " + answersList);
                             optionDialogAdapter.notifyDataSetChanged();
                         }
                     }
@@ -144,7 +152,7 @@ public class SurveyDialogActivity extends AppCompatActivity {
         outsideArea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                // finish();
             }
         });
 
@@ -152,6 +160,7 @@ public class SurveyDialogActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 submitAnswer();
+                finish();
             }
         });
 
@@ -162,20 +171,17 @@ public class SurveyDialogActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view, int position) {
                         if (optionsList.contains(
-                                optionDialogAdapter.getOptionsList().get(position))){
-                                optionsList.remove(
-                                        optionDialogAdapter.getOptionsList().get(position));
+                                optionDialogAdapter.getOptionsList().get(position))) {
+                            optionsList.remove(
+                                    optionDialogAdapter.getOptionsList().get(position));
                         } else {
                             optionsList.add(optionDialogAdapter
                                     .getOptionsList()
                                     .get(position));
                         }
 
-                        //System.out.println("Answer List" + optionsList);
-                        //System.out.println("Answer position " + position);
-
                         Toast.makeText(getApplicationContext(),
-                                "User Login Status: " +
+                                "Checked: " +
                                         optionDialogAdapter
                                                 .getOptionsList()
                                                 .get(position)
@@ -199,8 +205,10 @@ public class SurveyDialogActivity extends AppCompatActivity {
                 .child(surveyId)
                 .child("Answers");
 
-        for (Option option : optionsList){
-            mCurrentSurvey.child(option.getOptionKey()).setValue(1);
+        for (Option option : optionsList) {
+            mCurrentSurvey.child(option.getOptionKey())
+                    .child(GoogleAccountAdapter.getAccountID())
+                    .setValue(GoogleAccountAdapter.getAccountID());
             System.out.println("Key " + option.getOptionKey() + " option " + option);
         }
 
