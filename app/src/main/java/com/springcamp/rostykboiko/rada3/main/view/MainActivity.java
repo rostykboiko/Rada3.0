@@ -241,8 +241,13 @@ public class MainActivity extends AppCompatActivity
                             String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
                             survey.setSurveyTitle(surveyTitle);
 
-                            for (DataSnapshot child : dataSnapshot.child("Options").getChildren()) {
-                                option.setOptionTitle(child.getValue().toString());
+                            for (DataSnapshot optionSnapshot : dataSnapshot.child("Options").getChildren()) {
+                                option.setOptionTitle(optionSnapshot.getValue().toString());
+                                option.setAnswerCounter(dataSnapshot
+                                        .child("Answers")
+                                        .child(optionSnapshot.getKey())
+                                        .getChildrenCount() - 1);
+
                                 survey.getSurveyOptionList().add(option);
                                 option = new Option();
                             }

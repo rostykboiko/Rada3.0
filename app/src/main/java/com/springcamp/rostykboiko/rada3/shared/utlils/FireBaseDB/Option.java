@@ -3,7 +3,7 @@ package com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB;
 public class Option {
     private String optionKey;
     private String optionTitle;
-    private boolean checked;
+    private long answerCounter;
 
     public String getOptionTitle() {
         return optionTitle;
@@ -13,12 +13,12 @@ public class Option {
         this.optionTitle = optionTitle;
     }
 
-    public boolean isChecked() {
-        return checked;
+    public long getAnswerCounter() {
+        return answerCounter;
     }
 
-    public void setChecked(boolean checked) {
-        this.checked = checked;
+    public void setAnswerCounter(long answerCounter) {
+        this.answerCounter = answerCounter;
     }
 
     public String getOptionKey() {

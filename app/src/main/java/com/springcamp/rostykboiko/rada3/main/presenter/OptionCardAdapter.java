@@ -46,6 +46,16 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
     public void onBindViewHolder(OptionCardAdapter.ViewHolder holder, int position) {
         Option option = optionsList.get(position);
         holder.optionItem.setText(option.getOptionTitle());
+
+        holder.progressBar.setProgress(longToInt(option.getAnswerCounter()));
+    }
+
+    private static int longToInt(long answerCountLong) {
+        int answerCountInt = (int)answerCountLong;
+        if ((long)answerCountInt != answerCountLong) {
+            throw new IllegalArgumentException(answerCountLong + " cannot be cast to int without changing its value.");
+        }
+        return answerCountInt;
     }
 
     @Override
