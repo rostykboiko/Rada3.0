@@ -312,6 +312,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             surveyRef.child(generatedString)
                     .child("Answers")
                     .child("option" + (optionsList.indexOf(option) + 1))
+                    .child("0")
                     .setValue(0);
 
         }
@@ -333,12 +334,13 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         surveyRef.child(generatedString)
                 .child("color")
                 .setValue("#" + colorName);
-
+        /** Participants list */
         dataUserRef(database, generatedString, surveyTitle);
     }
 
     private void dataUserRef(FirebaseDatabase database, String generatedString, String surveyTitle){
         DatabaseReference userRef = database.getReference("User");
+        DatabaseReference surveyRef = database.getReference("Survey");
         int userCounter = participants.size();
 
         if (GoogleAccountAdapter.getAccountID() != null)
@@ -352,16 +354,27 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         for (String part : participants) {
             if (part != null) {
                 for (User user : userList) {
-                    if (!user.equals(null) && user.getDeviceToken().equals(part)){
+                    if (user != null && user.getDeviceToken().equals(part)){
                         userRef
                                 .child(user.getAccountID())
                                 .child("Surveys")
                                 .child(generatedString).setValue(userCounter);
+
+                        surveyRef
+                                .child(generatedString)
+                                .child("Participants")
+                                .child(user.getAccountID()).setValue(part);
+
                         sendMessage(part, generatedString, surveyTitle);
                     }
                 }
             }
         }
+
+        surveyRef
+                .child(generatedString)
+                .child("Creator")
+                .setValue(GoogleAccountAdapter.getAccountID());
     }
 
     public void sendMessage(String token, String surveyID, String surveyTitle) {

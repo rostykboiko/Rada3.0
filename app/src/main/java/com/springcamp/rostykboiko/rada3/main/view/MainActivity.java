@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity
     private Survey survey = new Survey();
     private RecyclerView cardRecyclerView;
     private ArrayList<Survey> surveyList = new ArrayList<>();
-
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private CardsAdaptor cardsAdaptor;
     private FloatingActionButton fab;
     private Drawer mDrawer = null;
@@ -118,18 +119,46 @@ public class MainActivity extends AppCompatActivity
                     }
 
                     @Override
-                    public void onLongClick(View view, int position) {
-                        FirebaseDatabase.getInstance().getReference()
+                    public void onLongClick(View view, final int position) {
+                        final String surveyId = surveyList.get(position).getSurveyID();
+
+                        database.getReference()
                                 .child("User")
                                 .child(GoogleAccountAdapter.getAccountID())
-                                .child("Surveys").child(surveyList.get(position).getSurveyID())
+                                .child("Surveys")
+                                .child(surveyList.get(position).getSurveyID())
                                 .removeValue();
 
-                    DatabaseReference databaseReference =
-                            FirebaseDatabase.getInstance().getReference()
-                            .child("Survey")
-                            .child(surveyList.get(position).getSurveyID());
-                        System.out.println("UserCounter" + databaseReference.toString());
+                        DatabaseReference mCurrentSurvey = FirebaseDatabase
+                                .getInstance()
+                                .getReference()
+                                .child("Survey")
+                                .child(surveyList.get(position).getSurveyID())
+                                .child("Creator");
+
+                        System.out.println("SurveyID surveyList " + surveyList);
+
+
+                        mCurrentSurvey.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                System.out.println("SurveyID getAccountID " + GoogleAccountAdapter
+                                        .getAccountID());
+                                System.out.println("SurveyID getValue " + dataSnapshot.getValue(String.class));
+
+                                if (dataSnapshot.getValue(String.class) != null && dataSnapshot.getValue(String.class)
+                                        .equals(GoogleAccountAdapter
+                                                .getAccountID())){
+                                    removeSurvey(surveyId);
+                                }
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
 
                         surveyList.remove(position);
                         cardsAdaptor.notifyDataSetChanged();
@@ -142,6 +171,15 @@ public class MainActivity extends AppCompatActivity
                 mDrawer.openDrawer();
             }
         });
+    }
+
+    private void removeSurvey(String surveyId){
+        System.out.println("SurveyID surveyList " + surveyId);
+
+        database.getReference()
+                .child("Survey")
+                .child(surveyId)
+                .removeValue();
     }
 
     /* List of Cards Start */
@@ -203,7 +241,7 @@ public class MainActivity extends AppCompatActivity
                             String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
                             survey.setSurveyTitle(surveyTitle);
 
-                            for (DataSnapshot child : dataSnapshot.child("Options").getChildren()){
+                            for (DataSnapshot child : dataSnapshot.child("Options").getChildren()) {
                                 option.setOptionTitle(child.getValue().toString());
                                 survey.getSurveyOptionList().add(option);
                                 option = new Option();
@@ -399,7 +437,8 @@ public class MainActivity extends AppCompatActivity
 
     private void addNewDrawerItem(int position) {
         mDrawer.getDrawerItem(position);
-        mDrawer.addItem(new PrimaryDrawerItem().withName("newItem").withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+        mDrawer.addItem(new PrimaryDrawerItem().withName("newItem")
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         mDrawer.removeItem(position);

@@ -211,7 +211,5 @@ public class SurveyDialogActivity extends AppCompatActivity {
                     .setValue(GoogleAccountAdapter.getAccountID());
             System.out.println("Key " + option.getOptionKey() + " option " + option);
         }
-
-
     }
 }
