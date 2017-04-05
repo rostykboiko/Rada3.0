@@ -83,4 +83,12 @@ public class Survey implements Parcelable {
     public void setSurveyID(String surveyID) {
         this.surveyID = surveyID;
     }
+
+    public int getParticipantsCount() {
+        return participantsCount;
+    }
+
+    public void setParticipantsCount(int participantsCount) {
+        this.participantsCount = participantsCount;
+    }
 }

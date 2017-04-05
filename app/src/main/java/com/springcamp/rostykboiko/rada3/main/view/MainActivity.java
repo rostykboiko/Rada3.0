@@ -54,6 +54,7 @@ import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.login.view.LoginActivity;
 import com.springcamp.rostykboiko.rada3.settings.view.SettingsActivity;
 import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
+import com.springcamp.rostykboiko.rada3.shared.utlils.Utils;
 
 import java.util.ArrayList;
 
@@ -252,6 +253,10 @@ public class MainActivity extends AppCompatActivity
                                 option = new Option();
                             }
 
+                            survey.setParticipantsCount(Utils.longToInt(dataSnapshot
+                                    .child("Participants")
+                                    .getChildrenCount()));
+
                             surveyList.add(survey);
                             cardsAdaptor.notifyDataSetChanged();
                             survey = new Survey();
@@ -279,6 +284,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
     }
+
 
     private void initCardView() {
         cardsAdaptor = new CardsAdaptor(this, surveyList);

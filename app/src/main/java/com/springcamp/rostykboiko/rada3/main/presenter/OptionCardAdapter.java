@@ -9,29 +9,33 @@ import android.widget.TextView;
 
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
+import com.springcamp.rostykboiko.rada3.shared.utlils.Utils;
 
 import java.util.ArrayList;
 
 class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolder> {
-
+    private int participantsCount;
     private ArrayList<Option> optionsList = new ArrayList<>();
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView optionItem;
+        private TextView answerCount;
         private ProgressBar progressBar;
 
         ViewHolder(View view) {
             super(view);
             progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
             optionItem = (TextView) view.findViewById(R.id.optionItemDialog);
+            answerCount = (TextView) view.findViewById(R.id.percentTv);
         }
     }
 
     OptionCardAdapter() {
     }
 
-    OptionCardAdapter(ArrayList<Option> optionsList) {
+    OptionCardAdapter(ArrayList<Option> optionsList, int participantsCount) {
         this.optionsList = optionsList;
+        this.participantsCount = participantsCount;
     }
 
     @Override
@@ -45,17 +49,12 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
     @Override
     public void onBindViewHolder(OptionCardAdapter.ViewHolder holder, int position) {
         Option option = optionsList.get(position);
+        double answersNumber = Utils.longToInt(option.getAnswerCounter());
+        int result = (int)(answersNumber/participantsCount*100);
+
         holder.optionItem.setText(option.getOptionTitle());
-
-        holder.progressBar.setProgress(longToInt(option.getAnswerCounter()));
-    }
-
-    private static int longToInt(long answerCountLong) {
-        int answerCountInt = (int)answerCountLong;
-        if ((long)answerCountInt != answerCountLong) {
-            throw new IllegalArgumentException(answerCountLong + " cannot be cast to int without changing its value.");
-        }
-        return answerCountInt;
+        holder.answerCount.setText(String.valueOf((int)answersNumber));
+        holder.progressBar.setProgress(result);
     }
 
     @Override

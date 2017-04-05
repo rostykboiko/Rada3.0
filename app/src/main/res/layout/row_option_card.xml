@@ -44,7 +44,7 @@
         android:padding="@dimen/margin_small"
         android:paddingStart="@dimen/margin_medium"
         android:paddingEnd="@dimen/margin_medium"
-        android:text="0%"
+        android:text="0"
         android:layout_alignTop="@+id/optionItemDialog"
         android:layout_above="@+id/progressBar" />
 

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 
@@ -55,7 +56,10 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
 
         holder.title.setText(survey.getSurveyTitle());
 
-        optionCardAdapter = new OptionCardAdapter(survey.getSurveyOptionList());
+        optionCardAdapter = new OptionCardAdapter(
+                survey.getSurveyOptionList(),
+                survey.getParticipantsCount());
+
         holder.optionsRecycler.setAdapter(optionCardAdapter);
     }
 
