@@ -38,6 +38,7 @@ import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 import com.springcamp.rostykboiko.rada3.login.presenter.LoginPresenter;
+import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,10 +50,10 @@ public class LoginActivity extends AppCompatActivity implements
     private ProgressDialog mProgressDialog;
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
+    private SessionManager session;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
 
     @Nullable
     LoginContract.Presenter presenter;
@@ -61,10 +62,11 @@ public class LoginActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         setStatusBarDim(true);
 
         presenter = new LoginPresenter(this);
+        session = new SessionManager(getApplicationContext());
+
         initFireBaseListener();
         clickListener();
     }
@@ -102,9 +104,9 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     private void clickListener() {
-                if (presenter != null) {
-                    presenter.logIn();
-                }
+        if (presenter != null) {
+            presenter.logIn();
+        }
     }
 
     @Override
@@ -143,32 +145,40 @@ public class LoginActivity extends AppCompatActivity implements
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
             if (acct != null && acct.getId() != null) {
-                GoogleAccountAdapter.setAccountID(acct.getId());
-                GoogleAccountAdapter.setUserName(acct.getDisplayName());
-                GoogleAccountAdapter.setUserEmail(acct.getEmail());
-                GoogleAccountAdapter.setProfileIcon(acct.getPhotoUrl());
-                GoogleAccountAdapter.setDeviceToken(FirebaseInstanceId.getInstance().getToken());
-
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference userList = database.getReference("User");
-
-                userList.child(acct.getId()).child("Email").setValue(acct.getEmail());
-                userList.child(acct.getId()).child("Name").setValue(acct.getDisplayName());
-                userList.child(acct.getId()).child("accountID").setValue(acct.getId());
-                userList.child(acct.getId()).child("ProfileIconUrl").setValue(acct.getPhotoUrl().toString());
-                userList.child(acct.getId()).child("deviceToken").setValue(FirebaseInstanceId.getInstance().getToken());
-                System.out.println("deviceToken " + FirebaseInstanceId.getInstance().getToken());
-
-
-
-                if (mAuth != null  && mAuth.getCurrentUser() != null) {
-                    userList.child(acct.getId()).child("Uid").setValue(mAuth.getCurrentUser().getUid());
-                    GoogleAccountAdapter.setUserID(mAuth.getCurrentUser().getUid());
-                }
+                getUserData(acct);
             }
             Log.d(TAG, "User name: " + GoogleAccountAdapter.getUserName());
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
+        }
+    }
+
+    private void getUserData(GoogleSignInAccount acct) {
+        GoogleAccountAdapter.setAccountID(acct.getId());
+        GoogleAccountAdapter.setUserName(acct.getDisplayName());
+        GoogleAccountAdapter.setUserEmail(acct.getEmail());
+        GoogleAccountAdapter.setProfileIcon(acct.getPhotoUrl().toString());
+        GoogleAccountAdapter.setDeviceToken(FirebaseInstanceId.getInstance().getToken());
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference userList = database.getReference("User");
+
+        userList.child(acct.getId()).child("Email").setValue(acct.getEmail());
+        userList.child(acct.getId()).child("Name").setValue(acct.getDisplayName());
+        userList.child(acct.getId()).child("accountID").setValue(acct.getId());
+        userList.child(acct.getId()).child("ProfileIconUrl").setValue(acct.getPhotoUrl().toString());
+        userList.child(acct.getId()).child("deviceToken").setValue(FirebaseInstanceId.getInstance().getToken());
+
+        if (mAuth != null && mAuth.getCurrentUser() != null) {
+            userList.child(acct.getId()).child("Uid").setValue(mAuth.getCurrentUser().getUid());
+            session.createLoginSession(
+                    acct.getDisplayName(),
+                    acct.getEmail(),
+                    acct.getId(),
+                    mAuth.getCurrentUser().getUid(),
+                    FirebaseInstanceId.getInstance().getToken(),
+                    acct.getPhotoUrl().toString());
+            GoogleAccountAdapter.setUserID(mAuth.getCurrentUser().getUid());
         }
     }
 

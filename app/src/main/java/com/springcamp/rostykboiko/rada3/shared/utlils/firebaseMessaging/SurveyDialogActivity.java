@@ -28,8 +28,10 @@ import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
+import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +42,7 @@ public class SurveyDialogActivity extends AppCompatActivity {
     private Option option = new Option();
     private ArrayList<Option> optionsList = new ArrayList<>();
     private ArrayList<String> answersList = new ArrayList<>();
+    private SessionManager session;
     private RecyclerView usersListView;
     private OptionDialogAdapter optionDialogAdapter;
 
@@ -57,6 +60,8 @@ public class SurveyDialogActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        session = new SessionManager(getApplicationContext());
+
         initRecyclerView();
         initClickListeners();
         setStatusBarDim(true);
@@ -70,6 +75,7 @@ public class SurveyDialogActivity extends AppCompatActivity {
             initSurveyById(surveyId);
         }
     }
+
 
     private void setStatusBarDim(boolean dim) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -198,6 +204,10 @@ public class SurveyDialogActivity extends AppCompatActivity {
     }
 
     private void submitAnswer() {
+        HashMap<String, String> user = session.getUserDetails();
+
+        //GoogleAccountAdapter.setAccountID(user.get(SessionManager.KEY_ACCOUNTID));
+
         DatabaseReference mCurrentSurvey = FirebaseDatabase
                 .getInstance()
                 .getReference()
@@ -207,8 +217,8 @@ public class SurveyDialogActivity extends AppCompatActivity {
 
         for (Option option : optionsList) {
             mCurrentSurvey.child(option.getOptionKey())
-                    .child(GoogleAccountAdapter.getAccountID())
-                    .setValue(GoogleAccountAdapter.getAccountID());
+                    .child(user.get(SessionManager.KEY_ACCOUNTID))
+                    .setValue(user.get(SessionManager.KEY_ACCOUNTID));
             System.out.println("Key " + option.getOptionKey() + " option " + option);
         }
     }

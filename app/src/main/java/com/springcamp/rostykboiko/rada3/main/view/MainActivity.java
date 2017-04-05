@@ -57,6 +57,7 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
 import com.springcamp.rostykboiko.rada3.shared.utlils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
@@ -81,10 +82,11 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         presenter = new MainPresenter(this);
-        session = new SessionManager(getApplicationContext());
 
-        Toast.makeText(getApplicationContext(), "User Login Status: "
-                + session.isLoggedIn(), Toast.LENGTH_LONG).show();
+        session = new SessionManager(getApplicationContext());
+        session.checkLogin();
+
+        initUserData();
 
         initNavDrawer();
         initViewItems();
@@ -93,6 +95,18 @@ public class MainActivity extends AppCompatActivity
         initClickListeners();
     }
 
+    private void initUserData(){
+        // get user data from session
+        HashMap<String, String> user = session.getUserDetails();
+
+        // name
+        GoogleAccountAdapter.setUserName(user.get(SessionManager.KEY_NAME));
+        GoogleAccountAdapter.setUserEmail(user.get(SessionManager.KEY_EMAIL));
+        GoogleAccountAdapter.setUserID(user.get(SessionManager.KEY_UID));
+        GoogleAccountAdapter.setAccountID(user.get(SessionManager.KEY_ACCOUNTID));
+        GoogleAccountAdapter.setDeviceToken(user.get(SessionManager.KEY_TOKEN));
+        GoogleAccountAdapter.setProfileIcon(user.get(SessionManager.KEY_ICON));
+    }
     private void initViewItems() {
         navDrawerBtn = (ImageView) findViewById(R.id.drawerBtn);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -149,7 +163,7 @@ public class MainActivity extends AppCompatActivity
 
                                 if (dataSnapshot.getValue(String.class) != null && dataSnapshot.getValue(String.class)
                                         .equals(GoogleAccountAdapter
-                                                .getAccountID())){
+                                                .getAccountID())) {
                                     removeSurvey(surveyId);
                                 }
 
@@ -174,7 +188,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    private void removeSurvey(String surveyId){
+    private void removeSurvey(String surveyId) {
         System.out.println("SurveyID surveyList " + surveyId);
 
         database.getReference()
@@ -284,7 +298,6 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
     }
-
 
     private void initCardView() {
         cardsAdaptor = new CardsAdaptor(this, surveyList);
@@ -424,8 +437,9 @@ public class MainActivity extends AppCompatActivity
                                         if (GoogleAccountAdapter.getUserEmail() == null)
                                             startActivity(new Intent(MainActivity.this, LoginActivity.class));
                                         else {
+                                            session.logoutUser();
+
                                             GoogleAccountAdapter.logOut();
-                                            //initNavDrawer();
                                             onResume();
                                         }
                                         return false;

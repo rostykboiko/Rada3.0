@@ -34,7 +34,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void showEditor(@NonNull Survey survey) {
-        if(view != null){
+        if (view != null) {
             view.showEditor(survey);
         }
     }

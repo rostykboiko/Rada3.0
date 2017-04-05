@@ -1,14 +1,12 @@
 package com.springcamp.rostykboiko.rada3.shared.utlils;
 
-import android.net.Uri;
-
 public class GoogleAccountAdapter {
     private static String userName = null;
     private static String userEmail = null;
     private static String accountID = null;
     private static String userID = null;
     private static String deviceToken = null;
-    private static Uri userProfileIcon;
+    private static String userProfileIcon = "";
 
     public static String getUserName() {
         return userName;
@@ -34,11 +32,11 @@ public class GoogleAccountAdapter {
         userID = userAuthID;
     }
 
-    public static void setProfileIcon(Uri userAuthIcon) {
+    public static void setProfileIcon(String userAuthIcon) {
         userProfileIcon = userAuthIcon;
     }
 
-    public static Uri getProfileIcon() {
+    public static String getProfileIcon() {
         return userProfileIcon;
     }
 
@@ -58,13 +56,6 @@ public class GoogleAccountAdapter {
         GoogleAccountAdapter.deviceToken = deviceToken;
     }
 
-    public static Uri getUserProfileIcon() {
-        return userProfileIcon;
-    }
-
-    public static void setUserProfileIcon(Uri userProfileIcon) {
-        GoogleAccountAdapter.userProfileIcon = userProfileIcon;
-    }
     public static void logOut() {
         userName = null;
         userEmail = null;

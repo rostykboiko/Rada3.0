@@ -9,12 +9,10 @@ public class Survey implements Parcelable {
     private String surveyID;
     private String surveyTitle;
     private ArrayList<Option> surveyOptionList = new ArrayList<>();
-    private ArrayList<String> surveyAnswersList = new ArrayList<>();
     private boolean surveySingleOption;
     private int duration;
     private int color;
     private int participantsCount;
-    private ArrayList<User> participantsEmailList;
 
     public Survey(){}
 
@@ -32,7 +30,6 @@ public class Survey implements Parcelable {
         out.writeByte((byte) (surveySingleOption ? 1 : 0));
         out.writeInt(duration);
         out.writeInt(color);
-        out.writeList(participantsEmailList);
         System.out.println("String array list " + surveyOptionList);
     }
 
@@ -47,7 +44,6 @@ public class Survey implements Parcelable {
         }
     };
 
-
     public String getSurveyTitle() {
         return surveyTitle;
     }
@@ -61,10 +57,6 @@ public class Survey implements Parcelable {
         return surveyOptionList;
     }
 
-    public void setSurveyOptionList(ArrayList<Option> surveyOptionList) {
-        this.surveyOptionList = surveyOptionList;
-    }
-    // example constructor that takes a Parcel and gives you an object populated with it's values
     private Survey(Parcel in) {
         surveyID = in.readString();
         surveyTitle = in.readString();
