@@ -6,7 +6,7 @@ public class GoogleAccountAdapter {
     private static String accountID = null;
     private static String userID = null;
     private static String deviceToken = null;
-    private static String userProfileIcon = "";
+    private static String userProfileIcon = null;
 
     public static String getUserName() {
         return userName;

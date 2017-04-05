@@ -18,16 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/drawerBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/desc_backBtn"
-                android:paddingEnd="@dimen/margin_large"
-                android:paddingStart="@dimen/margin_large"
-                android:paddingTop="@dimen/margin_large"
-                android:src="@drawable/ic_material_menu" />
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"

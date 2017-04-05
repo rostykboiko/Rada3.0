@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -71,7 +70,6 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton fab;
     private Drawer mDrawer = null;
     private Toolbar toolbar;
-    private ImageView navDrawerBtn;
 
     @Nullable
     MainContract.Presenter presenter;
@@ -84,15 +82,13 @@ public class MainActivity extends AppCompatActivity
         presenter = new MainPresenter(this);
 
         session = new SessionManager(getApplicationContext());
-        session.checkLogin();
 
         initUserData();
-
-        initNavDrawer();
         initViewItems();
         initCardView();
         initFireBase();
         initClickListeners();
+        initNavDrawer();
     }
 
     private void initUserData(){
@@ -105,10 +101,11 @@ public class MainActivity extends AppCompatActivity
         GoogleAccountAdapter.setUserID(user.get(SessionManager.KEY_UID));
         GoogleAccountAdapter.setAccountID(user.get(SessionManager.KEY_ACCOUNTID));
         GoogleAccountAdapter.setDeviceToken(user.get(SessionManager.KEY_TOKEN));
+        System.out.println("Icon " + user.get(SessionManager.KEY_ICON));
         GoogleAccountAdapter.setProfileIcon(user.get(SessionManager.KEY_ICON));
     }
+
     private void initViewItems() {
-        navDrawerBtn = (ImageView) findViewById(R.id.drawerBtn);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -166,7 +163,6 @@ public class MainActivity extends AppCompatActivity
                                                 .getAccountID())) {
                                     removeSurvey(surveyId);
                                 }
-
                             }
 
                             @Override
@@ -179,13 +175,6 @@ public class MainActivity extends AppCompatActivity
                         cardsAdaptor.notifyDataSetChanged();
                     }
                 }));
-
-        navDrawerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDrawer.openDrawer();
-            }
-        });
     }
 
     private void removeSurvey(String surveyId) {
@@ -340,6 +329,9 @@ public class MainActivity extends AppCompatActivity
             });
         }
 
+        String iconURL = "";
+        if(GoogleAccountAdapter.getProfileIcon() != null)
+           iconURL = GoogleAccountAdapter.getProfileIcon();
         return new AccountHeaderBuilder()
                 .withActivity(this)
                 .withCompactStyle(true)
@@ -350,7 +342,7 @@ public class MainActivity extends AppCompatActivity
                         new ProfileDrawerItem()
                                 .withName(GoogleAccountAdapter.getUserName())
                                 .withEmail(GoogleAccountAdapter.getUserEmail())
-                                .withIcon(GoogleAccountAdapter.getProfileIcon())
+                                .withIcon(iconURL)
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -438,9 +430,10 @@ public class MainActivity extends AppCompatActivity
                                             startActivity(new Intent(MainActivity.this, LoginActivity.class));
                                         else {
                                             session.logoutUser();
-
                                             GoogleAccountAdapter.logOut();
-                                            onResume();
+                                            surveyList.clear();
+                                            cardsAdaptor.notifyDataSetChanged();
+                                            initNavDrawer();
                                         }
                                         return false;
                                     }
