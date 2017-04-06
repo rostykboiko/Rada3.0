@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -46,7 +47,6 @@ import butterknife.ButterKnife;
 public class LoginActivity extends AppCompatActivity implements
         LoginContract.View,
         GoogleApiClient.OnConnectionFailedListener {
-
     private ProgressDialog mProgressDialog;
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
@@ -93,7 +93,6 @@ public class LoginActivity extends AppCompatActivity implements
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
@@ -105,6 +104,7 @@ public class LoginActivity extends AppCompatActivity implements
 
     private void clickListener() {
         if (presenter != null) {
+            showProgressDialog();
             presenter.logIn();
         }
     }
@@ -147,6 +147,7 @@ public class LoginActivity extends AppCompatActivity implements
             if (acct != null && acct.getId() != null) {
                 getUserData(acct);
             }
+            hideProgressDialog();
             Log.d(TAG, "User name: " + GoogleAccountAdapter.getUserName());
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
@@ -243,6 +244,22 @@ public class LoginActivity extends AppCompatActivity implements
         startActivity(intent);
         finish();
         super.onBackPressed();
+    }
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this, R.style.AppTheme_ProgressBar);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
     }
 }
 

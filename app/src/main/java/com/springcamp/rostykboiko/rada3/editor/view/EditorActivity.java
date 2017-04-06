@@ -64,40 +64,29 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     @Nullable
     private Survey survey;
-
     @Nullable
     private User user;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-
     @BindView(R.id.edTitle)
     EditText editTextTitle;
-
     @BindView(R.id.option_recycler_view)
     RecyclerView optionsListView;
-
     @BindView(R.id.rv_add_option)
     RelativeLayout addNewOption;
-
     @BindView(R.id.tv_duration_time)
     TextView durationTime;
-
     @BindView(R.id.duration_row)
     RelativeLayout durationBtn;
-
     @BindView(R.id.color_row)
     RelativeLayout colorBtn;
-
     @BindView(R.id.participants_row)
     RelativeLayout participantsBtn;
-
     @BindView(R.id.backBtn)
     ImageView backButton;
-
     @BindView(R.id.saveBtn)
     ImageView saveButton;
-
     @BindView(R.id.one_option_switch)
     Switch oneOptionSwitch;
 
@@ -121,7 +110,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         initParticipantsList();
     }
 
-    /** View init start */
+    /**
+     * View init start
+     */
     private void initClickListeners() {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -272,7 +263,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     /* View init end */
 
-    /** Sync with Firebase Start */
+    /**
+     * Sync with Firebase Start
+     */
     private void onSaveBtnPressed() {
         if (editTextTitle.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(),
@@ -292,7 +285,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         }
     }
 
-    private void dataSurveyReference(FirebaseDatabase database){
+    private void dataSurveyReference(FirebaseDatabase database) {
         String generatedString = generatedId();
         String surveyTitle = editTextTitle.getText().toString();
 
@@ -338,7 +331,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         dataUserRef(database, generatedString, surveyTitle);
     }
 
-    private void dataUserRef(FirebaseDatabase database, String generatedString, String surveyTitle){
+    private void dataUserRef(FirebaseDatabase database, String generatedString, String surveyTitle) {
         DatabaseReference userRef = database.getReference("User");
         DatabaseReference surveyRef = database.getReference("Survey");
         int userCounter = participants.size();
@@ -354,7 +347,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         for (String part : participants) {
             if (part != null) {
                 for (User user : userList) {
-                    if (user != null && user.getDeviceToken().equals(part)){
+                    if (user != null && user.getDeviceToken().equals(part)) {
                         userRef
                                 .child(user.getAccountID())
                                 .child("Surveys")
@@ -479,7 +472,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         }
     }
 
-    /** Presenter Methods */
+    /**
+     * Presenter Methods
+     */
     @Override
     public String getId() {
         return null;

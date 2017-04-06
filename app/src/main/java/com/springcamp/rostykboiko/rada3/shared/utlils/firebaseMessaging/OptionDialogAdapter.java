@@ -20,13 +20,11 @@ class OptionDialogAdapter extends RecyclerView.Adapter<OptionDialogAdapter.ViewH
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView optionItem;
         private CheckBox checkBox;
-        private Button okBtn;
 
         ViewHolder(View view) {
             super(view);
             optionItem = (TextView) view.findViewById(R.id.optionItemDialog);
             checkBox = (CheckBox) view.findViewById(R.id.checkbox);
-            okBtn = (Button) view.findViewById(R.id.button_ok);
         }
     }
 
@@ -44,8 +42,15 @@ class OptionDialogAdapter extends RecyclerView.Adapter<OptionDialogAdapter.ViewH
 
     @Override
     public void onBindViewHolder(final OptionDialogAdapter.ViewHolder holder, final int position) {
-            holder.optionItem.setText(optionsList.get(position).getOptionTitle());
-
+        holder.optionItem.setText(optionsList.get(position).getOptionTitle());
+        holder.checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.checkBox.isChecked())
+                    optionsList.get(position).setChecked(true);
+                else optionsList.get(position).setChecked(false);
+            }
+        });
     }
 
     @Override
@@ -53,6 +58,8 @@ class OptionDialogAdapter extends RecyclerView.Adapter<OptionDialogAdapter.ViewH
         return optionsList.size();
     }
 
-    public ArrayList<Option> getOptionsList(){return optionsList;
+    ArrayList<Option> getOptionsList() {
+        return optionsList;
     }
+
 }

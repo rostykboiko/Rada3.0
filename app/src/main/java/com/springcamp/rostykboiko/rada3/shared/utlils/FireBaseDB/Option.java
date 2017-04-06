@@ -1,6 +1,7 @@
 package com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB;
 
 public class Option {
+    private boolean checked;
     private String optionKey;
     private String optionTitle;
     private long answerCounter;
@@ -27,5 +28,13 @@ public class Option {
 
     public void setOptionKey(String optionKey) {
         this.optionKey = optionKey;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

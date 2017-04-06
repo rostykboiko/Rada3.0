@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         presenter = new MainPresenter(this);
-
         session = new SessionManager(getApplicationContext());
 
         initUserData();
@@ -92,10 +91,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initUserData(){
-        // get user data from session
         HashMap<String, String> user = session.getUserDetails();
 
-        // name
         GoogleAccountAdapter.setUserName(user.get(SessionManager.KEY_NAME));
         GoogleAccountAdapter.setUserEmail(user.get(SessionManager.KEY_EMAIL));
         GoogleAccountAdapter.setUserID(user.get(SessionManager.KEY_UID));

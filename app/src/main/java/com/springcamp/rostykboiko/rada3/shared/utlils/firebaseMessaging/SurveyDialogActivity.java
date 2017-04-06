@@ -1,5 +1,6 @@
 package com.springcamp.rostykboiko.rada3.shared.utlils.firebaseMessaging;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -15,8 +16,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +28,6 @@ import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
-import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
 
 import java.util.ArrayList;
@@ -37,6 +37,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SurveyDialogActivity extends AppCompatActivity {
+    ProgressBar progressBar;
+    private ProgressDialog mProgressDialog;
     private String surveyId;
     private Survey survey = new Survey();
     private Option option = new Option();
@@ -61,7 +63,10 @@ public class SurveyDialogActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         session = new SessionManager(getApplicationContext());
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
+        progressBar.setVisibility(ProgressBar.VISIBLE);
+        showProgressDialog();
         initRecyclerView();
         initClickListeners();
         setStatusBarDim(true);
@@ -142,6 +147,9 @@ public class SurveyDialogActivity extends AppCompatActivity {
 
                     }
                 });
+        progressBar.setVisibility(ProgressBar.GONE);
+
+        hideProgressDialog();
     }
 
     private void initRecyclerView() {
@@ -176,8 +184,7 @@ public class SurveyDialogActivity extends AppCompatActivity {
                 new RecyclerTouchListener.ClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        if (optionsList.contains(
-                                optionDialogAdapter.getOptionsList().get(position))) {
+                        if (optionDialogAdapter.getOptionsList().get(position).isChecked()) {
                             optionsList.remove(
                                     optionDialogAdapter.getOptionsList().get(position));
                         } else {
@@ -185,14 +192,6 @@ public class SurveyDialogActivity extends AppCompatActivity {
                                     .getOptionsList()
                                     .get(position));
                         }
-
-                        Toast.makeText(getApplicationContext(),
-                                "Checked: " +
-                                        optionDialogAdapter
-                                                .getOptionsList()
-                                                .get(position)
-                                                .getOptionTitle(),
-                                Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -206,8 +205,6 @@ public class SurveyDialogActivity extends AppCompatActivity {
     private void submitAnswer() {
         HashMap<String, String> user = session.getUserDetails();
 
-        //GoogleAccountAdapter.setAccountID(user.get(SessionManager.KEY_ACCOUNTID));
-
         DatabaseReference mCurrentSurvey = FirebaseDatabase
                 .getInstance()
                 .getReference()
@@ -220,6 +217,22 @@ public class SurveyDialogActivity extends AppCompatActivity {
                     .child(user.get(SessionManager.KEY_ACCOUNTID))
                     .setValue(user.get(SessionManager.KEY_ACCOUNTID));
             System.out.println("Key " + option.getOptionKey() + " option " + option);
+        }
+    }
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this, R.style.AppTheme_ProgressBar);
+            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
         }
     }
 }
