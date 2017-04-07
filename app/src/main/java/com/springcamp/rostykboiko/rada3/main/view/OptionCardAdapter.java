@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.main.presenter;
+package com.springcamp.rostykboiko.rada3.main.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,10 +50,10 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
     public void onBindViewHolder(OptionCardAdapter.ViewHolder holder, int position) {
         Option option = optionsList.get(position);
         double answersNumber = Utils.longToInt(option.getAnswerCounter());
-        int result = (int)(answersNumber/participantsCount*100);
+        int result = (int) (answersNumber / participantsCount * 100);
 
         holder.optionItem.setText(option.getOptionTitle());
-        holder.answerCount.setText(String.valueOf((int)answersNumber));
+        holder.answerCount.setText(String.valueOf((int) answersNumber));
         holder.progressBar.setProgress(result);
     }
 

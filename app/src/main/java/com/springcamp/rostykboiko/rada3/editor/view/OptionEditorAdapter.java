@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.editor.presenter;
+package com.springcamp.rostykboiko.rada3.editor.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -13,7 +13,7 @@ import com.springcamp.rostykboiko.rada3.R;
 
 import java.util.ArrayList;
 
-public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewHolder> {
+class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewHolder> {
 
     private ArrayList<String> optionsList = new ArrayList<>();
 
@@ -28,7 +28,7 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
         }
     }
 
-    public OptionEditorAdapter(ArrayList<String> optionsList) {
+    OptionEditorAdapter(ArrayList<String> optionsList) {
         this.optionsList = optionsList;
     }
 
@@ -44,22 +44,22 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
     public void onBindViewHolder(final OptionEditorAdapter.ViewHolder holder, final int position) {
         holder.optionItem.setHint(R.string.ed_option);
         if (holder.optionItem != null)
-        holder.optionItem.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            holder.optionItem.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                optionsList.set(position, holder.optionItem.getText().toString());
+                @Override
+                public void afterTextChanged(Editable s) {
+                    optionsList.set(position, holder.optionItem.getText().toString());
 
-            }
-        });
+                }
+            });
 
         holder.closeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +75,7 @@ public class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapte
         return optionsList.size();
     }
 
-    public void addNewItem(){
+    void addNewItem() {
         optionsList.add("Варіант відповіді");
     }
 }

@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.main.presenter;
+package com.springcamp.rostykboiko.rada3.main.view;
 
 import android.content.Context;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,7 +14,7 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 
 import java.util.ArrayList;
 
-public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHolder> {
+class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHolder> {
     private Context mContext;
     private ArrayList<Survey> surveyList = new ArrayList<>();
 
@@ -37,7 +37,7 @@ public class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHold
         }
     }
 
-    public CardsAdaptor(Context mContext, ArrayList<Survey> surveyList) {
+    CardsAdaptor(Context mContext, ArrayList<Survey> surveyList) {
         this.mContext = mContext;
         this.surveyList = surveyList;
     }

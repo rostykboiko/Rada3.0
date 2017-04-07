@@ -83,7 +83,6 @@ public class SurveyDialogActivity extends AppCompatActivity {
         }
     }
 
-
     private void setStatusBarDim(boolean dim) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(dim ? Color.TRANSPARENT :

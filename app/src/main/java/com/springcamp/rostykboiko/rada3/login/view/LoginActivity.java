@@ -1,6 +1,5 @@
 package com.springcamp.rostykboiko.rada3.login.view;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -12,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -20,10 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -41,19 +36,14 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 import com.springcamp.rostykboiko.rada3.login.presenter.LoginPresenter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class LoginActivity extends AppCompatActivity implements
         LoginContract.View,
         GoogleApiClient.OnConnectionFailedListener {
-    private ProgressDialog mProgressDialog;
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
     private SessionManager session;
 
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Nullable
     LoginContract.Presenter presenter;
@@ -87,15 +77,13 @@ public class LoginActivity extends AppCompatActivity implements
 
     private void initFireBaseListener() {
         mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
-                    // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
             }
@@ -104,7 +92,6 @@ public class LoginActivity extends AppCompatActivity implements
 
     private void clickListener() {
         if (presenter != null) {
-            showProgressDialog();
             presenter.logIn();
         }
     }
@@ -147,7 +134,6 @@ public class LoginActivity extends AppCompatActivity implements
             if (acct != null && acct.getId() != null) {
                 getUserData(acct);
             }
-            hideProgressDialog();
             Log.d(TAG, "User name: " + GoogleAccountAdapter.getUserName());
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
@@ -197,20 +183,6 @@ public class LoginActivity extends AppCompatActivity implements
 
     }
 
-    private void revokeAccess() {
-        // Firebase sign out
-        mAuth.signOut();
-
-        // Google revoke access
-        Auth.GoogleSignInApi.revokeAccess(getGoogleApiClient()).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(@NonNull Status status) {
-
-                    }
-                });
-    }
-
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -246,20 +218,5 @@ public class LoginActivity extends AppCompatActivity implements
         super.onBackPressed();
     }
 
-    private void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this, R.style.AppTheme_ProgressBar);
-            mProgressDialog.setMessage(getString(R.string.loading));
-            mProgressDialog.setIndeterminate(true);
-        }
-
-        mProgressDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.hide();
-        }
-    }
 }
 

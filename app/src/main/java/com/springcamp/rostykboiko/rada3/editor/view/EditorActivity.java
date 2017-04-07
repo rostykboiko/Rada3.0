@@ -24,10 +24,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.springcamp.rostykboiko.rada3.editor.EditorContract;
 import com.springcamp.rostykboiko.rada3.editor.presenter.BottomSheet;
-import com.springcamp.rostykboiko.rada3.editor.presenter.OptionEditorAdapter;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
@@ -62,8 +60,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     private OptionEditorAdapter optionsAdapter;
     private SecureRandom random = new SecureRandom();
 
-    @Nullable
-    private Survey survey;
     @Nullable
     private User user;
 
@@ -154,8 +150,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     }
 
     private void initOptionsListView() {
-        survey = getIntent().getExtras().getParcelable(SURVEY_KEY);
-
         optionsAdapter = new OptionEditorAdapter(optionsList);
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         optionsListView.setLayoutManager(mListManager);
@@ -168,8 +162,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 .child("User");
         mCurentUserRef.keepSynced(true);
 
-        Query mQueryUser = mCurentUserRef;
-        mQueryUser.addChildEventListener(new ChildEventListener() {
+        mCurentUserRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 user = new User();
@@ -291,12 +284,12 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
         DatabaseReference surveyRef = database.getReference("Survey");
 
-        /** Title */
+        /* Title */
         surveyRef.child(generatedString)
                 .child("Title")
                 .setValue(editTextTitle.getText().toString());
 
-        /** Options */
+        /* Options */
         for (String option : optionsList) {
             surveyRef.child(generatedString)
                     .child("Options")
@@ -314,7 +307,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 .child("One Positive Option")
                 .setValue(oneOptionSwitch.isChecked());
 
-        /** Duration */
+        /* Duration */
         if (separated != null)
             surveyRef.child(generatedString)
                     .child("duration")
@@ -323,11 +316,11 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 .child("duration")
                 .setValue(getString(R.string.tv_duration_2min));
 
-        /** Color */
+        /* Color */
         surveyRef.child(generatedString)
                 .child("color")
                 .setValue("#" + colorName);
-        /** Participants list */
+        /* Participants list */
         dataUserRef(database, generatedString, surveyTitle);
     }
 
@@ -422,9 +415,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 os.write(data.toString().getBytes());
                 os.close();
                 System.out.println("Response Code: " + con.getResponseCode());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
         }

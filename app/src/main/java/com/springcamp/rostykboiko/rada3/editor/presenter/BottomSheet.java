@@ -88,11 +88,9 @@ public class BottomSheet extends AppCompatActivity {
     private void initRecyclerView() {
         final RecyclerView usersListView = (RecyclerView) findViewById(R.id.users_recycler_view);
 
-        ParticipantsSheetAdapter participantsAdapter = new ParticipantsSheetAdapter(userList);
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         usersListView.setLayoutManager(mListManager);
         usersListView.setItemAnimator(new DefaultItemAnimator());
-        usersListView.setAdapter(participantsAdapter);
 
         usersListView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),
                 usersListView,
