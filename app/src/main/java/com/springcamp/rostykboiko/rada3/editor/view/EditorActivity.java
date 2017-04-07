@@ -252,13 +252,13 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     private void addOptionRow() {
         if (optionsAdapter.getItemCount() < 5) {
             optionsAdapter.addNewItem();
-            optionsAdapter.notifyDataSetChanged();
         } else {
-            addNewOption.setVisibility(View.GONE);
             Toast.makeText(getApplicationContext(),
                     "Максимально 5 варіантів відповіді",
                     Toast.LENGTH_SHORT).show();
         }
+        optionsAdapter.notifyDataSetChanged();
+
     }
 
     /* View init end */

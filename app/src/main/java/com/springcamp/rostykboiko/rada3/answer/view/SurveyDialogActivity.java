@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.shared.utlils.firebaseMessaging;
+package com.springcamp.rostykboiko.rada3.answer.view;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.AttrRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
@@ -35,6 +36,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SurveyDialogActivity extends AppCompatActivity {
     ProgressBar progressBar;
@@ -154,12 +156,27 @@ public class SurveyDialogActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
         usersListView = (RecyclerView) findViewById(R.id.option_list_view);
-        optionDialogAdapter = new OptionDialogAdapter(survey.getSurveyOptionList());
+        optionDialogAdapter = new OptionDialogAdapter(survey.getSurveyOptionList(), new OptionDialogAdapter.AnswerCheckCallback() {
+            @Override
+            public void onAnswerChecked(@NonNull Option option) {
+                if (option.isChecked()) {
+                    option.setChecked(true);
+                } else {
+                    option.setChecked(false);
+                }
+            }
+        });
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         usersListView.setLayoutManager(mListManager);
         usersListView.setItemAnimator(new DefaultItemAnimator());
         usersListView.setAdapter(optionDialogAdapter);
 
+    }
+
+    @OnClick(R.id.button_ok)
+    void okCkick() {
+        submitAnswer();
+        finish();
     }
 
     private void initClickListeners() {
@@ -173,8 +190,7 @@ public class SurveyDialogActivity extends AppCompatActivity {
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitAnswer();
-                finish();
+
             }
         });
 

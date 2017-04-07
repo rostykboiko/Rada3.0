@@ -12,6 +12,7 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.answer.view.SurveyDialogActivity;
 
 public class FCMMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
