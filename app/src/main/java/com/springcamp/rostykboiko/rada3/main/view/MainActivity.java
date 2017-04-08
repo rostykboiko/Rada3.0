@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity
         presenter = new MainPresenter(this);
         session = new SessionManager(getApplicationContext());
 
+        System.out.println("Google Sync main " + GoogleAccountAdapter.getUserID());
+
         initUserData();
         initViewItems();
         initCardView();

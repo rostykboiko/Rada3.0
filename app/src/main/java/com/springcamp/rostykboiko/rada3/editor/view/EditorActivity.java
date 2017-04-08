@@ -422,7 +422,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     }
 
     /* Sync with Firebase Start */
-
     @Override
     protected void onResume() {
         super.onResume();

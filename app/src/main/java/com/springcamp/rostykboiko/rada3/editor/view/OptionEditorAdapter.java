@@ -47,7 +47,6 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
             holder.optionItem.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
                 }
 
                 @Override
@@ -57,7 +56,6 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
                 @Override
                 public void afterTextChanged(Editable s) {
                     optionsList.set(position, holder.optionItem.getText().toString());
-
                 }
             });
 

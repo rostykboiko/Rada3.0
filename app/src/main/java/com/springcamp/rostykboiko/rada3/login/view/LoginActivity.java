@@ -135,6 +135,8 @@ public class LoginActivity extends AppCompatActivity implements
                 getUserData(acct);
             }
             Log.d(TAG, "User name: " + GoogleAccountAdapter.getUserName());
+            System.out.println("Google Sync login " + GoogleAccountAdapter.getUserID());
+
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
