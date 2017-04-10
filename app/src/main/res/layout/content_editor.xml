@@ -177,29 +177,6 @@
                         android:textSize="16sp" />
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/color_row"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/participants_row"
-                    android:layout_margin="@dimen/item_rl_row">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/item_icon_padding"
-                        android:src="@drawable/ic_material_palette" />
-
-                    <TextView
-                        android:id="@+id/Tv_color"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="@dimen/item_name_padding"
-                        android:paddingEnd="@dimen/item_name_end"
-                        android:paddingStart="@dimen/item_name_start"
-                        android:text="@string/tv_color"
-                        android:textSize="16sp" />
-                </RelativeLayout>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
     </RelativeLayout>

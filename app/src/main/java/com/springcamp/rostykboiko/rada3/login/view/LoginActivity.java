@@ -58,7 +58,10 @@ public class LoginActivity extends AppCompatActivity implements
         session = new SessionManager(getApplicationContext());
 
         initFireBaseListener();
-        clickListener();
+
+        if (presenter != null) {
+            presenter.logIn();
+        }
     }
 
     private void setStatusBarDim(boolean dim) {
@@ -88,12 +91,6 @@ public class LoginActivity extends AppCompatActivity implements
                 }
             }
         };
-    }
-
-    private void clickListener() {
-        if (presenter != null) {
-            presenter.logIn();
-        }
     }
 
     @Override
@@ -128,18 +125,25 @@ public class LoginActivity extends AppCompatActivity implements
         }
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
-        if (result.isSuccess()) {
-            GoogleSignInAccount acct = result.getSignInAccount();
-            if (acct != null && acct.getId() != null) {
-                getUserData(acct);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                handleSignInResult(result);
             }
-            Log.d(TAG, "User name: " + GoogleAccountAdapter.getUserName());
-            System.out.println("Google Sync login " + GoogleAccountAdapter.getUserID());
-
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
         }
+    }
+
+    private void handleSignInResult(GoogleSignInResult result) {
+        GoogleSignInAccount acct = result.getSignInAccount();
+        if (acct != null && acct.getId() != null) {
+            getUserData(acct);
+        }
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        finish();
+
     }
 
     private void getUserData(GoogleSignInAccount acct) {
@@ -156,7 +160,11 @@ public class LoginActivity extends AppCompatActivity implements
         userList.child(acct.getId()).child("Name").setValue(acct.getDisplayName());
         userList.child(acct.getId()).child("accountID").setValue(acct.getId());
         userList.child(acct.getId()).child("ProfileIconUrl").setValue(acct.getPhotoUrl().toString());
-        userList.child(acct.getId()).child("deviceToken").setValue(FirebaseInstanceId.getInstance().getToken());
+        userList.child(acct.getId()).child("deviceToken")
+                .setValue(FirebaseInstanceId.getInstance().getToken());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        mAuth.signInWithCredential(credential);
 
         if (mAuth != null && mAuth.getCurrentUser() != null) {
             userList.child(acct.getId()).child("Uid").setValue(mAuth.getCurrentUser().getUid());
@@ -167,40 +175,10 @@ public class LoginActivity extends AppCompatActivity implements
                     mAuth.getCurrentUser().getUid(),
                     FirebaseInstanceId.getInstance().getToken(),
                     acct.getPhotoUrl().toString());
+            System.out.println("Google Sync login " + mAuth.getCurrentUser().getUid());
+
             GoogleAccountAdapter.setUserID(mAuth.getCurrentUser().getUid());
         }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
-                GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
-            }
-            handleSignInResult(result);
-        }
-
-    }
-
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 
     @Override

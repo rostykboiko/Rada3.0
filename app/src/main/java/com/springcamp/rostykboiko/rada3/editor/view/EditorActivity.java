@@ -2,7 +2,6 @@ package com.springcamp.rostykboiko.rada3.editor.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -25,14 +24,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.springcamp.rostykboiko.rada3.editor.EditorContract;
-import com.springcamp.rostykboiko.rada3.editor.presenter.BottomSheet;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
-import com.thebluealliance.spectrum.SpectrumDialog;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -53,10 +50,9 @@ import org.json.JSONObject;
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
     private static final String SURVEY_KEY = "SURVEY_KEY";
     private String[] separated;
-    private String colorName;
     private ArrayList<String> optionsList = new ArrayList<>();
     private ArrayList<String> participants = new ArrayList<>();
-    private ArrayList<User> userList = new ArrayList<>();
+    private ArrayList<User> userList;
     private OptionEditorAdapter optionsAdapter;
     private SecureRandom random = new SecureRandom();
 
@@ -75,8 +71,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     TextView durationTime;
     @BindView(R.id.duration_row)
     RelativeLayout durationBtn;
-    @BindView(R.id.color_row)
-    RelativeLayout colorBtn;
     @BindView(R.id.participants_row)
     RelativeLayout participantsBtn;
     @BindView(R.id.backBtn)
@@ -99,11 +93,14 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
         ButterKnife.bind(this);
 
+        userList = new ArrayList<>();
+
         getOptionsList();
         initClickListeners();
         initOptionsListView();
         addOptionRow();
         initParticipantsList();
+
     }
 
     /**
@@ -141,12 +138,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                         .putParcelableArrayListExtra("UserList", userList));
             }
         });
-        colorBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                colorPicker();
-            }
-        });
+
     }
 
     private void initOptionsListView() {
@@ -158,17 +150,17 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     }
 
     private void initParticipantsList() {
-        DatabaseReference mCurentUserRef = FirebaseDatabase.getInstance().getReference()
+        DatabaseReference mCurrentUserRef = FirebaseDatabase.getInstance().getReference()
                 .child("User");
-        mCurentUserRef.keepSynced(true);
+        mCurrentUserRef.keepSynced(true);
 
-        mCurentUserRef.addChildEventListener(new ChildEventListener() {
+        mCurrentUserRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 user = new User();
+                user.setUserID(dataSnapshot.child("UID").getValue(String.class));
                 user.setUserName(dataSnapshot.child("Name").getValue(String.class));
                 user.setUserEmail(dataSnapshot.child("Email").getValue(String.class));
-                user.setUserID(dataSnapshot.child("UID").getValue(String.class));
                 user.setAccountID(dataSnapshot.child("accountID").getValue(String.class));
                 user.setDeviceToken(dataSnapshot.child("deviceToken").getValue(String.class));
                 user.setUserProfileIcon(dataSnapshot.child("ProfileIconUrl").getValue(String.class));
@@ -196,25 +188,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
             }
         });
-    }
-
-    private void colorPicker() {
-        new SpectrumDialog.Builder(this)
-                .setColors(R.array.demo_colors)
-                .setSelectedColorRes(R.color.md_blue_500)
-                .setDismissOnColorSelected(true)
-                .setOutlineWidth(2)
-                .setOnColorSelectedListener(new SpectrumDialog.OnColorSelectedListener() {
-                    @Override
-                    public void onColorSelected(boolean positiveResult, @ColorInt int color) {
-                        if (positiveResult) {
-                            colorName = Integer.toHexString(color).toUpperCase();
-                            Toast.makeText(EditorActivity.this, "Color selected: #" + Integer.toHexString(color).toUpperCase(), Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(EditorActivity.this, "Dialog cancelled", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }).build().show(getSupportFragmentManager(), "demo_dialog_1");
     }
 
     private void durationPicker() {
@@ -316,10 +289,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 .child("duration")
                 .setValue(getString(R.string.tv_duration_2min));
 
-        /* Color */
-        surveyRef.child(generatedString)
-                .child("color")
-                .setValue("#" + colorName);
         /* Participants list */
         dataUserRef(database, generatedString, surveyTitle);
     }
@@ -393,7 +362,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
                 // HTTP request header
                 con.setRequestProperty("Content-Type", "application/json");
-                con.setRequestProperty("Authorization", "key=AIzaSyCoKx1rrWKUcCf6QMIyB2viYed_l0RnxtQ");
+                con.setRequestProperty("Authorization", "key=" + getString(R.string.server_key));
                 con.setRequestMethod("POST");
                 con.connect();
 

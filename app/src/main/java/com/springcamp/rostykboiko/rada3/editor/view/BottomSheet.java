@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.editor.presenter;
+package com.springcamp.rostykboiko.rada3.editor.view;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -17,7 +17,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.springcamp.rostykboiko.rada3.R;
-import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 
@@ -41,6 +40,7 @@ public class BottomSheet extends AppCompatActivity {
         });
 
         userList = getIntent().getExtras().getParcelableArrayList("UserList");
+        System.out.println("userList sheet" + userList);
 
         initBehavior();
         initRecyclerView();

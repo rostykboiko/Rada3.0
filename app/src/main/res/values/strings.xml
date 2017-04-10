@@ -52,6 +52,8 @@
     <string name="dialog_ok_btn">OK</string>
 
 
+    <string name="server_key">AAAAd9NLRsU:APA91bFUCs_hI7ndUjAP80N4FMj1hrb9cmt8OJWErz1eSWWpxfXadq7npnQJQRSHAga5qGUUGnLBlktNdGgbH7bR7OHKua4KF-n6y-X0f0U6JMeLnx5wnHqWkhJ-F3vrg6FVnlOEjux9</string>
+
     <!-- Intro Res Start-->
     <string name="title_activity_welcome">Home Screen</string>
     <string name="next">NEXT</string>

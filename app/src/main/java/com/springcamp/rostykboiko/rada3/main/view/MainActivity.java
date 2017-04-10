@@ -81,8 +81,6 @@ public class MainActivity extends AppCompatActivity
         presenter = new MainPresenter(this);
         session = new SessionManager(getApplicationContext());
 
-        System.out.println("Google Sync main " + GoogleAccountAdapter.getUserID());
-
         initUserData();
         initViewItems();
         initCardView();
@@ -94,13 +92,14 @@ public class MainActivity extends AppCompatActivity
     private void initUserData(){
         HashMap<String, String> user = session.getUserDetails();
 
+        GoogleAccountAdapter.setUserID(user.get(SessionManager.KEY_UID));
         GoogleAccountAdapter.setUserName(user.get(SessionManager.KEY_NAME));
         GoogleAccountAdapter.setUserEmail(user.get(SessionManager.KEY_EMAIL));
-        GoogleAccountAdapter.setUserID(user.get(SessionManager.KEY_UID));
         GoogleAccountAdapter.setAccountID(user.get(SessionManager.KEY_ACCOUNTID));
         GoogleAccountAdapter.setDeviceToken(user.get(SessionManager.KEY_TOKEN));
-        System.out.println("Icon " + user.get(SessionManager.KEY_ICON));
         GoogleAccountAdapter.setProfileIcon(user.get(SessionManager.KEY_ICON));
+
+        System.out.println("Google Sync main " + GoogleAccountAdapter.getUserID());
     }
 
     private void initViewItems() {

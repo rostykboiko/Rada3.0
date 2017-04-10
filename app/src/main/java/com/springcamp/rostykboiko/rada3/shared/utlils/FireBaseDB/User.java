@@ -50,9 +50,6 @@ public class User implements Parcelable {
         this.userID = userID;
     }
 
-    public String getUserProfileIcon() {
-        return userProfileIcon;
-    }
 
     public void setUserProfileIcon(String userProfileIcon) {
         this.userProfileIcon = userProfileIcon;
