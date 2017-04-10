@@ -21,7 +21,7 @@ class AnswerViewHolder extends RecyclerView.ViewHolder {
     CheckBox checkBox;
 
     interface CheckAnswerCallback {
-        void onAnswerChecked(int postition);
+        void onAnswerChecked(int position);
     }
 
     @NonNull

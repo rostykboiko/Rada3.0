@@ -42,9 +42,7 @@ class OptionDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        AnswerViewHolder viewHolder = (AnswerViewHolder) holder;
-       // viewHolder.setOptionTitle(optionsList.get(position).getOptionTitle());
-
+        ((AnswerViewHolder) holder).optionItem.setText(optionsList.get(position).getOptionTitle());
     }
 
     @Override

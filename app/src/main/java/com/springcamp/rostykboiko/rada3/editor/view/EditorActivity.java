@@ -237,9 +237,15 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             Toast.makeText(getApplicationContext(),
                     "Дайте назву опитуванню",
                     Toast.LENGTH_SHORT).show();
-        } else if (optionsList.size() < 2) {
+        }
+        if (optionsList.size() < 2) {
             Toast.makeText(getApplicationContext(),
                     "Додайте варіант відповіді",
+                    Toast.LENGTH_SHORT).show();
+        }
+        if (participants.size() < 1){ // потрібно як мініум 2
+            Toast.makeText(getApplicationContext(),
+                    "Список кориситувачів пустий",
                     Toast.LENGTH_SHORT).show();
         } else {
             FirebaseDatabase database = FirebaseDatabase.getInstance();

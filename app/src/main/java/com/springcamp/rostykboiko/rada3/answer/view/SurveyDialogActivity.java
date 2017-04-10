@@ -40,7 +40,6 @@ import butterknife.OnClick;
 
 public class SurveyDialogActivity extends AppCompatActivity {
     ProgressBar progressBar;
-    private ProgressDialog mProgressDialog;
     private String surveyId;
     private Survey survey = new Survey();
     private Option option = new Option();
@@ -60,7 +59,7 @@ public class SurveyDialogActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_activity_survey);
+        setContentView(R.layout.activity_survey_dialog);
 
         ButterKnife.bind(this);
 
@@ -68,7 +67,6 @@ public class SurveyDialogActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         progressBar.setVisibility(ProgressBar.VISIBLE);
-        showProgressDialog();
         initRecyclerView();
         initClickListeners();
         setStatusBarDim(true);
@@ -149,12 +147,11 @@ public class SurveyDialogActivity extends AppCompatActivity {
                     }
                 });
         progressBar.setVisibility(ProgressBar.GONE);
-
-        hideProgressDialog();
     }
 
     private void initRecyclerView() {
         usersListView = (RecyclerView) findViewById(R.id.option_list_view);
+
         optionDialogAdapter = new OptionDialogAdapter(survey.getSurveyOptionList(), new OptionDialogAdapter.AnswerCheckCallback() {
             @Override
             public void onAnswerChecked(@NonNull Option option) {
@@ -172,24 +169,19 @@ public class SurveyDialogActivity extends AppCompatActivity {
 
     }
 
+// It doesn't work at all
     @OnClick(R.id.button_ok)
-    void okCkick() {
+    void okClick() {
         submitAnswer();
         finish();
     }
 
     private void initClickListeners() {
-        outsideArea.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // finish();
-            }
-        });
-
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                submitAnswer();
+                finish();
             }
         });
 
@@ -232,22 +224,6 @@ public class SurveyDialogActivity extends AppCompatActivity {
                     .child(user.get(SessionManager.KEY_ACCOUNTID))
                     .setValue(user.get(SessionManager.KEY_ACCOUNTID));
             System.out.println("Key " + option.getOptionKey() + " option " + option);
-        }
-    }
-
-    private void showProgressDialog() {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this, R.style.AppTheme_ProgressBar);
-            mProgressDialog.setMessage(getString(R.string.loading));
-            mProgressDialog.setIndeterminate(true);
-        }
-
-        mProgressDialog.show();
-    }
-
-    private void hideProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.hide();
         }
     }
 }
