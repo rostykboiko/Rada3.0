@@ -18,7 +18,6 @@ public class EditorPresenter implements EditorContract.Presenter {
         this.editorUseCase = new EditorInteractor();
     }
 
-
     @Override
     public void getSurvey() {
         editorUseCase.getSurvey(view.getSurveyTitle(), view.getOptionsList(), new EditorUseCase.EditorCallback() {

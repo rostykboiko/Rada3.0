@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".answer.view.SurveyDialogActivity"
+            android:name=".answer.view.AnswerDialogActivity"
             android:theme="@style/AppTheme.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

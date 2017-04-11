@@ -61,7 +61,7 @@
     <dimen name="item_icon_padding">16dp</dimen>
     <dimen name="item_switch_padding_end">10dp</dimen>
     <dimen name="item_switch_padding">20dp</dimen>
-    <dimen name="item_duration_time">28dp</dimen>
+    <dimen name="item_duration_time">16dp</dimen>
     <dimen name="item_rl_row">0dp</dimen>
 
 

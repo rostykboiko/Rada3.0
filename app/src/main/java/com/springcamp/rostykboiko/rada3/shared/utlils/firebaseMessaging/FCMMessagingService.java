@@ -13,7 +13,7 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.springcamp.rostykboiko.rada3.R;
-import com.springcamp.rostykboiko.rada3.answer.view.SurveyDialogActivity;
+import com.springcamp.rostykboiko.rada3.answer.view.AnswerDialogActivity;
 
 import java.util.List;
 
@@ -25,26 +25,26 @@ public class FCMMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         if (remoteMessage.getData().size() > 0) {
-            String messageID = remoteMessage.getData().get("surveyId");
+            String messageID = remoteMessage.getData().get("getSurveyId");
             String title = remoteMessage.getData().get("surveyTitle");
 
             if (Helper.isAppRunning(getApplicationContext(), "com.springcamp.rostykboiko.rada3")) {
                 System.out.println("AppChecker: app is running");
-                Intent intent = new Intent(this, SurveyDialogActivity.class);
+                Intent intent = new Intent(this, AnswerDialogActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("surveyID", messageID);
                 startActivity(intent);
             } else {
                 sendNotification(title , messageID);
                 System.out.println("AppChecker: app isn't running");
-            }
+           }
 
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
         }
     }
 
     public void sendNotification(String messageTitle, String messageBody) {
-        Intent intent = new Intent(this, SurveyDialogActivity.class);
+        Intent intent = new Intent(this, AnswerDialogActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         System.out.println("Message body, sendNoti " + messageBody);

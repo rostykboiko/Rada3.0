@@ -17,7 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.springcamp.rostykboiko.rada3.R;
-import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
+import com.springcamp.rostykboiko.rada3.main.view.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 
 import java.util.ArrayList;

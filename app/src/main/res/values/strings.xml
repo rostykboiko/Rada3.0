@@ -41,10 +41,10 @@
     <string name="ed_option">Варіант відповіді</string>
     <string name="tv_duration_min">хв</string>
     <string name="tv_duration_hour">год</string>
-    <string name="tv_duration_2min">2 хвилини</string>
-    <string name="tv_duration_10min">10 хвилин</string>
-    <string name="tv_duration_30min">30 хвилин</string>
-    <string name="tv_duration_1h">1 година</string>
+    <string name="tv_duration_2min">2 хв</string>
+    <string name="tv_duration_10min">10 хв</string>
+    <string name="tv_duration_30min">30 хв</string>
+    <string name="tv_duration_1h">1 год</string>
     <string name="tv_duration_pref">Налаштувати</string>
     <!--Editor Activity End-->
 

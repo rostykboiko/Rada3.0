@@ -203,11 +203,23 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         builder.setItems(mDurationOptions, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                separated = mDurationOptions[item].split(" ");
-                if (separated[1].equals("година"))
-                    durationTime.setText(separated[0] + getString(R.string.tv_duration_hour));
-                else
-                    durationTime.setText(separated[0] + getString(R.string.tv_duration_min));
+                switch (item) {
+                    case 0:
+                        durationTime.setText(R.string.tv_duration_2min);
+                        break;
+                    case 1:
+                        durationTime.setText(R.string.tv_duration_10min);
+                        break;
+                    case 2:
+                        durationTime.setText(R.string.tv_duration_30min);
+                        break;
+                    case 3:
+                        durationTime.setText(R.string.tv_duration_1h);
+                        break;
+                    case 4:
+                        durationTime.setText("custom");
+                        break;
+                }
             }
         });
 
@@ -382,7 +394,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 notificationFCM.put("sound", "default");
                 notificationFCM.put("priority", "high");
                 notificationFCM.put("surveyTitle", mSurveyTitle);
-                notificationFCM.put("surveyId", generatedString);
+                notificationFCM.put("getSurveyId", generatedString);
 
                 data.put("data", notificationFCM);
                 data.put("to", userToken);

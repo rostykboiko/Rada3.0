@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.main.presenter;
+package com.springcamp.rostykboiko.rada3.main.view;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

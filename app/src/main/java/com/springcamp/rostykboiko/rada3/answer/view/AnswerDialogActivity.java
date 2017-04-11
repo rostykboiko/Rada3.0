@@ -1,6 +1,5 @@
 package com.springcamp.rostykboiko.rada3.answer.view;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -26,20 +25,22 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.springcamp.rostykboiko.rada3.R;
-import com.springcamp.rostykboiko.rada3.main.presenter.RecyclerTouchListener;
+import com.springcamp.rostykboiko.rada3.answer.AnswerContract;
+import com.springcamp.rostykboiko.rada3.answer.presenter.AnswerDialogPresenter;
+import com.springcamp.rostykboiko.rada3.main.view.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SurveyDialogActivity extends AppCompatActivity {
+public class AnswerDialogActivity extends AppCompatActivity implements AnswerContract.View {
     ProgressBar progressBar;
+    int position;
     private String surveyId;
     private Survey survey = new Survey();
     private Option option = new Option();
@@ -53,8 +54,11 @@ public class SurveyDialogActivity extends AppCompatActivity {
     TextView titleView;
     @BindView(R.id.touch_outside)
     CoordinatorLayout outsideArea;
-    @BindView(R.id.button_ok)
+    @BindView(R.id.button_submit)
     Button okBtn;
+
+    @Nullable
+    AnswerContract.Presenter presenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +68,7 @@ public class SurveyDialogActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         session = new SessionManager(getApplicationContext());
+        presenter = new AnswerDialogPresenter(this);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         progressBar.setVisibility(ProgressBar.VISIBLE);
@@ -169,22 +174,13 @@ public class SurveyDialogActivity extends AppCompatActivity {
 
     }
 
-// It doesn't work at all
-    @OnClick(R.id.button_ok)
+    @OnClick(R.id.button_submit)
     void okClick() {
-        submitAnswer();
+        presenter.submitAnswer();
         finish();
     }
 
     private void initClickListeners() {
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitAnswer();
-                finish();
-            }
-        });
-
         usersListView.addOnItemTouchListener(new RecyclerTouchListener(
                 getApplicationContext(),
                 usersListView,
@@ -194,10 +190,15 @@ public class SurveyDialogActivity extends AppCompatActivity {
                         if (optionDialogAdapter.getOptionsList().get(position).isChecked()) {
                             optionsList.remove(
                                     optionDialogAdapter.getOptionsList().get(position));
+                            optionDialogAdapter.getOptionsList().get(position).setChecked(false);
+                            // presenter.deleteCheckedItem();
+                            System.out.println("optionDialog remove");
                         } else {
-                            optionsList.add(optionDialogAdapter
-                                    .getOptionsList()
-                                    .get(position));
+                            optionsList.add(
+                                    optionDialogAdapter.getOptionsList().get(position));
+                            optionDialogAdapter.getOptionsList().get(position).setChecked(true);
+                            System.out.println("optionDialog add");
+                            //presenter.addCheckedItem();
                         }
                     }
 
@@ -209,21 +210,28 @@ public class SurveyDialogActivity extends AppCompatActivity {
         );
     }
 
-    private void submitAnswer() {
-        HashMap<String, String> user = session.getUserDetails();
+    @Override
+    public SessionManager getSession() {
+        return session;
+    }
 
-        DatabaseReference mCurrentSurvey = FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .child("Survey")
-                .child(surveyId)
-                .child("Answers");
+    @Override
+    public int getPosition() {
+        return position;
+    }
 
-        for (Option option : optionsList) {
-            mCurrentSurvey.child(option.getOptionKey())
-                    .child(user.get(SessionManager.KEY_ACCOUNTID))
-                    .setValue(user.get(SessionManager.KEY_ACCOUNTID));
-            System.out.println("Key " + option.getOptionKey() + " option " + option);
-        }
+    @Override
+    public String getSurveyId() {
+        return surveyId;
+    }
+
+    @Override
+    public ArrayList<Option> getOptionsList() {
+        return optionsList;
+    }
+
+    @Override
+    public ArrayList<Option> getAdaptorOptionsList() {
+        return optionDialogAdapter.getOptionsList();
     }
 }

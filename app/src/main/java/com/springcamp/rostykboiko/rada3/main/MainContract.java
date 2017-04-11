@@ -1,6 +1,5 @@
 package com.springcamp.rostykboiko.rada3.main;
 
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
