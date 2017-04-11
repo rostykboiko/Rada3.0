@@ -68,7 +68,8 @@ class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHolder> {
 
         optionCardAdapter = new OptionCardAdapter(
                 survey.getSurveyOptionList(),
-                survey.getParticipantsCount());
+                survey.getParticipantsCount(),
+                survey.isSurveySingleOption());
 
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             final String surveyId = surveyList.get(position).getSurveyID();

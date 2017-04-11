@@ -83,4 +83,12 @@ public class Survey implements Parcelable {
     public void setParticipantsCount(int participantsCount) {
         this.participantsCount = participantsCount;
     }
+
+    public boolean isSurveySingleOption() {
+        return surveySingleOption;
+    }
+
+    public void setSurveySingleOption(boolean surveySingleOption) {
+        this.surveySingleOption = surveySingleOption;
+    }
 }

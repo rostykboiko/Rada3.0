@@ -50,7 +50,13 @@
     <dimen name="list_item_spacing">16dp</dimen>
     <dimen name="list_item_spacing_half">8dp</dimen>
 
+    <!-- Main -->
+    <dimen name="checkBoxStart">8dp</dimen>
+    <dimen name="checkBoxTop">12dp</dimen>
+
     <!-- Editor Activity-->
+    <dimen name="item_addBtn">14dp</dimen>
+    <dimen name="item_addBtnTop">4dp</dimen>
     <dimen name="item_radioBtn">14dp</dimen>
     <dimen name="item_name_start">72dp</dimen>
     <dimen name="item_name_end">16dp</dimen>
@@ -63,6 +69,5 @@
     <dimen name="item_switch_padding">20dp</dimen>
     <dimen name="item_duration_time">16dp</dimen>
     <dimen name="item_rl_row">0dp</dimen>
-
 
 </resources>

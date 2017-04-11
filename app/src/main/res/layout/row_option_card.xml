@@ -4,13 +4,13 @@
     android:layout_height="@dimen/row_small"
     android:orientation="vertical">
 
-    <RadioButton
+    <ImageView
         android:id="@+id/radioBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_normal"
-        android:layout_marginTop="@dimen/margin_normal"
-        android:clickable="false" />
+        android:layout_marginTop="@dimen/checkBoxTop"
+        android:src="@drawable/ic_material_checkbox_blank"/>
 
     <TextView
         android:id="@+id/optionItemDialog"
@@ -47,6 +47,4 @@
         android:text="0"
         android:layout_alignTop="@+id/optionItemDialog"
         android:layout_above="@+id/progressBar" />
-
-
 </RelativeLayout>

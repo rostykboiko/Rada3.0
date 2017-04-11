@@ -100,7 +100,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         initOptionsListView();
         addOptionRow();
         initParticipantsList();
-
     }
 
     /**
@@ -255,7 +254,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     "Додайте варіант відповіді",
                     Toast.LENGTH_SHORT).show();
         }
-        if (participants.size() < 1){ // потрібно як мініум 2
+        if (participants.size() < 1) { // потрібно як мініум 2
             Toast.makeText(getApplicationContext(),
                     "Список кориситувачів пустий",
                     Toast.LENGTH_SHORT).show();
@@ -291,7 +290,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     .child("option" + (optionsList.indexOf(option) + 1))
                     .child("0")
                     .setValue(0);
-
         }
 
         surveyRef.child(generatedString)

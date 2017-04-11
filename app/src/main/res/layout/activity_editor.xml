@@ -9,8 +9,6 @@
     app:theme="@style/AppTheme.NoActionBar"
     tools:context="com.springcamp.rostykboiko.rada3.editor.view.EditorActivity">
 
-    <include layout="@layout/content_editor" />
-
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,5 +69,7 @@
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_editor" />
 
 </android.support.design.widget.CoordinatorLayout>

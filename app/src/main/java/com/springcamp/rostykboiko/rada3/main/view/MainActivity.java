@@ -25,7 +25,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -56,18 +55,24 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
-    SessionManager session;
+    private SessionManager session;
     private Option option = new Option();
     private Survey survey = new Survey();
-    private RecyclerView cardRecyclerView;
     private ArrayList<Survey> surveyList = new ArrayList<>();
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private CardsAdaptor cardsAdaptor;
-    private FloatingActionButton fab;
     private Drawer mDrawer = null;
-    private Toolbar toolbar;
+
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Nullable
     MainContract.Presenter presenter;
@@ -77,18 +82,20 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+
         presenter = new MainPresenter(this);
         session = new SessionManager(getApplicationContext());
 
         initUserData();
-        initViewItems();
         initCardView();
         initFireBase();
-        initClickListeners();
         initNavDrawer();
     }
 
-    private void initUserData(){
+    private void initUserData() {
         HashMap<String, String> user = session.getUserDetails();
 
         GoogleAccountAdapter.setUserID(user.get(SessionManager.KEY_UID));
@@ -99,87 +106,6 @@ public class MainActivity extends AppCompatActivity
         GoogleAccountAdapter.setProfileIcon(user.get(SessionManager.KEY_ICON));
 
         System.out.println("Google Sync main " + GoogleAccountAdapter.getUserID());
-    }
-
-    private void initViewItems() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-    }
-
-    private void initClickListeners() {
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                survey = new Survey();
-                EditorActivity.launchActivity(MainActivity.this,
-                        survey);
-                finish();
-            }
-        });
-
-        cardRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(
-                getApplicationContext(),
-                cardRecyclerView,
-                new RecyclerTouchListener.ClickListener() {
-                    @Override
-                    public void onClick(View view, int position) {
-                    }
-
-                    @Override
-                    public void onLongClick(View view, final int position) {
-                        final String surveyId = surveyList.get(position).getSurveyID();
-
-                        database.getReference()
-                                .child("User")
-                                .child(GoogleAccountAdapter.getAccountID())
-                                .child("Surveys")
-                                .child(surveyList.get(position).getSurveyID())
-                                .removeValue();
-
-                        DatabaseReference mCurrentSurvey = FirebaseDatabase
-                                .getInstance()
-                                .getReference()
-                                .child("Survey")
-                                .child(surveyList.get(position).getSurveyID())
-                                .child("Creator");
-
-                        System.out.println("SurveyID surveyList " + surveyList);
-
-
-                        mCurrentSurvey.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                System.out.println("SurveyID getAccountID " + GoogleAccountAdapter
-                                        .getAccountID());
-                                System.out.println("SurveyID getValue " + dataSnapshot.getValue(String.class));
-
-                                if (dataSnapshot.getValue(String.class) != null && dataSnapshot.getValue(String.class)
-                                        .equals(GoogleAccountAdapter
-                                                .getAccountID())) {
-                                    removeSurvey(surveyId);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-
-                        surveyList.remove(position);
-                        cardsAdaptor.notifyDataSetChanged();
-                    }
-                }));
-    }
-
-    private void removeSurvey(String surveyId) {
-        System.out.println("SurveyID surveyList " + surveyId);
-
-        database.getReference()
-                .child("Survey")
-                .child(surveyId)
-                .removeValue();
     }
 
     /* List of Cards Start */
@@ -256,6 +182,10 @@ public class MainActivity extends AppCompatActivity
                                     .child("Participants")
                                     .getChildrenCount()));
 
+                            survey.setSurveySingleOption(dataSnapshot
+                                    .child("One Positive Option")
+                                    .getValue(Boolean.class));
+
                             surveyList.add(survey);
                             cardsAdaptor.notifyDataSetChanged();
                             survey = new Survey();
@@ -286,7 +216,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initCardView() {
         cardsAdaptor = new CardsAdaptor(this, surveyList);
-        cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
+        RecyclerView cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
 
         RecyclerView.LayoutManager mCardManager = new LinearLayoutManager(getApplicationContext());
         cardRecyclerView.setLayoutManager(mCardManager);
@@ -326,8 +256,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         String iconURL = "";
-        if(GoogleAccountAdapter.getProfileIcon() != null)
-           iconURL = GoogleAccountAdapter.getProfileIcon();
+        if (GoogleAccountAdapter.getProfileIcon() != null)
+            iconURL = GoogleAccountAdapter.getProfileIcon();
         return new AccountHeaderBuilder()
                 .withActivity(this)
                 .withCompactStyle(true)
@@ -497,4 +427,13 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @OnClick(R.id.fab)
+    void okClick() {
+        survey = new Survey();
+        EditorActivity.launchActivity(MainActivity.this,
+                survey);
+        finish();
+    }
+
 }
