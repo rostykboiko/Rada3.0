@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.editor.view;
+package com.springcamp.rostykboiko.rada3.bottomSheet.view;
 
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -14,33 +14,38 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 
 import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.main.view.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class BottomSheet extends AppCompatActivity {
     @Nullable
     private ArrayList<User> userList;
+
+    @BindView(R.id.search_view)
+    SearchView searchBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStatusBarDim(true);
-        setContentView(R.layout.bottom_sheet);
+        setContentView(R.layout.activity_bottom_sheet);
 
-        findViewById(R.id.touch_outside).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        ButterKnife.bind(this);
 
         userList = getIntent().getExtras().getParcelableArrayList("UserList");
         System.out.println("userList sheet" + userList);
+
+        searchBar.setFocusable(true);
 
         initBehavior();
         initRecyclerView();
@@ -87,10 +92,12 @@ public class BottomSheet extends AppCompatActivity {
 
     private void initRecyclerView() {
         final RecyclerView usersListView = (RecyclerView) findViewById(R.id.users_recycler_view);
+        ParticipantsSheetAdapter participantsSheetAdapter = new ParticipantsSheetAdapter(userList);
 
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         usersListView.setLayoutManager(mListManager);
         usersListView.setItemAnimator(new DefaultItemAnimator());
+        usersListView.setAdapter(participantsSheetAdapter);
 
         usersListView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),
                 usersListView,
@@ -102,7 +109,7 @@ public class BottomSheet extends AppCompatActivity {
                                         .get(position)
                                         .getDeviceToken())
                                 .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
-                    finish();
+                        finish();
                     }
 
                     @Override

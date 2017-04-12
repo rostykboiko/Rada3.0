@@ -70,4 +70,8 @@
     <dimen name="item_duration_time">16dp</dimen>
     <dimen name="item_rl_row">0dp</dimen>
 
+    <!-- Bottom Sheet -->
+    <dimen name="search_bar_margin">8dp</dimen>
+
+
 </resources>

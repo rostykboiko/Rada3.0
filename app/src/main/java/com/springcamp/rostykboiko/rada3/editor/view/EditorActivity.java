@@ -23,6 +23,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.springcamp.rostykboiko.rada3.bottomSheet.view.BottomSheet;
 import com.springcamp.rostykboiko.rada3.editor.EditorContract;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
@@ -49,10 +50,9 @@ import org.json.JSONObject;
 
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
     private static final String SURVEY_KEY = "SURVEY_KEY";
-    private String[] separated;
     private ArrayList<String> optionsList = new ArrayList<>();
     private ArrayList<String> participants = new ArrayList<>();
-    private ArrayList<User> userList;
+    private ArrayList<User> userList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
     private SecureRandom random = new SecureRandom();
 
@@ -165,6 +165,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 user.setUserProfileIcon(dataSnapshot.child("ProfileIconUrl").getValue(String.class));
 
                 userList.add(user);
+                System.out.println("User list " + userList);
             }
 
             @Override
@@ -296,17 +297,10 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 .child("One Positive Option")
                 .setValue(oneOptionSwitch.isChecked());
 
-        /* Duration */
-        if (separated != null)
-            surveyRef.child(generatedString)
-                    .child("duration")
-                    .setValue(separated[0] + " " + separated[1]);
-        else surveyRef.child(generatedString)
-                .child("duration")
-                .setValue(getString(R.string.tv_duration_2min));
-
         /* Participants list */
         dataUserRef(database, generatedString, surveyTitle);
+        System.out.println("userList editor" + userList);
+
     }
 
     private void dataUserRef(FirebaseDatabase database, String generatedString, String surveyTitle) {

@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.editor.view;
+package com.springcamp.rostykboiko.rada3.bottomSheet.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
