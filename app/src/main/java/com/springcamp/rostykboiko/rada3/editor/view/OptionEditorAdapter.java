@@ -10,12 +10,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 
 import java.util.ArrayList;
 
 class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewHolder> {
 
-    private ArrayList<String> optionsList = new ArrayList<>();
+    private ArrayList<Option> optionsList = new ArrayList<>();
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private EditText optionItem;
@@ -28,7 +29,7 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
         }
     }
 
-    OptionEditorAdapter(ArrayList<String> optionsList) {
+    OptionEditorAdapter(ArrayList<Option> optionsList) {
         this.optionsList = optionsList;
     }
 
@@ -55,7 +56,10 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    optionsList.set(position, holder.optionItem.getText().toString());
+                    Option option = new Option();
+
+                    option.setOptionTitle(holder.optionItem.getText().toString());
+                    optionsList.set(position, option);
                 }
             });
 
@@ -74,6 +78,8 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
     }
 
     void addNewItem() {
-        optionsList.add("Варіант відповіді");
+        Option option = new Option();
+        option.setOptionTitle("Варіант відповіді");
+        optionsList.add(option);
     }
 }

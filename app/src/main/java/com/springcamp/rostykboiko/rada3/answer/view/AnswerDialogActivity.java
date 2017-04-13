@@ -24,6 +24,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.answer.AnswerContract;
 import com.springcamp.rostykboiko.rada3.answer.presenter.AnswerDialogPresenter;
@@ -32,14 +34,21 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class AnswerDialogActivity extends AppCompatActivity implements AnswerContract.View {
-    ProgressBar progressBar;
     int position;
     private String surveyId;
     private Survey survey = new Survey();
@@ -69,9 +78,7 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
 
         session = new SessionManager(getApplicationContext());
         presenter = new AnswerDialogPresenter(this);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
-        progressBar.setVisibility(ProgressBar.VISIBLE);
         initRecyclerView();
         initClickListeners();
         setStatusBarDim(true);
@@ -80,78 +87,25 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
 
     private void messageReceiver() {
         Intent intent = getIntent();
+
         if (intent.getExtras() != null) {
-            surveyId = intent.getExtras().getString("surveyID");
-            initSurveyById(surveyId);
+            String surveyString = intent.getExtras().getString("survey");
+            try {
+                Gson gson = new Gson();
+                JSONObject surveyJson = new JSONObject(surveyString);
+                String jsonArray = surveyJson.get("Options").toString();
+
+                optionsList = gson.fromJson(jsonArray, new TypeToken<ArrayList<Option>>(){}.getType());
+
+                surveyId = surveyJson.get("SurveyID").toString();
+                titleView.setText(surveyJson.get("SurveyTitle").toString());
+
+                survey.setSurveyOptionList(optionsList);
+                optionDialogAdapter.notifyDataSetChanged();
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-    }
-
-    private void setStatusBarDim(boolean dim) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(dim ? Color.TRANSPARENT :
-                    ContextCompat.getColor(this, getThemedResId(R.attr.colorPrimaryDark)));
-        }
-    }
-
-    private int getThemedResId(@AttrRes int attr) {
-        TypedArray typedArray = getTheme().obtainStyledAttributes(new int[]{attr});
-        int resId = typedArray.getResourceId(0, 0);
-        typedArray.recycle();
-        return resId;
-    }
-
-    private void initSurveyById(final String surveyId) {
-        DatabaseReference mCurrentSurvey = FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .child("Survey");
-
-        mCurrentSurvey.addChildEventListener(
-                new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        if (dataSnapshot.getKey().equals(surveyId)) {
-                            String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
-                            survey.setSurveyTitle(surveyTitle);
-                            titleView.setText(surveyTitle);
-
-                            for (DataSnapshot child : dataSnapshot.child("Options").getChildren()) {
-                                option.setOptionTitle(child.getValue().toString());
-                                option.setOptionKey(child.getKey());
-                                survey.getSurveyOptionList().add(option);
-                                option = new Option();
-                            }
-
-                            for (DataSnapshot child : dataSnapshot.child("Answers").getChildren()) {
-                                answersList.add(child.getValue().toString());
-                            }
-
-                            System.out.println("Answers " + answersList);
-                            optionDialogAdapter.notifyDataSetChanged();
-                        }
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-        progressBar.setVisibility(ProgressBar.GONE);
     }
 
     private void initRecyclerView() {
@@ -208,6 +162,21 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
                     }
                 })
         );
+    }
+
+
+    private void setStatusBarDim(boolean dim) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(dim ? Color.TRANSPARENT :
+                    ContextCompat.getColor(this, getThemedResId(R.attr.colorPrimaryDark)));
+        }
+    }
+
+    private int getThemedResId(@AttrRes int attr) {
+        TypedArray typedArray = getTheme().obtainStyledAttributes(new int[]{attr});
+        int resId = typedArray.getResourceId(0, 0);
+        typedArray.recycle();
+        return resId;
     }
 
     @Override

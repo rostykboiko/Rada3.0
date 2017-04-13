@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BottomSheet extends AppCompatActivity {
+public class BottomSheet extends AppCompatActivity implements SearchView.OnQueryTextListener{
     @Nullable
     private ArrayList<User> userList;
 
@@ -92,7 +92,7 @@ public class BottomSheet extends AppCompatActivity {
 
     private void initRecyclerView() {
         final RecyclerView usersListView = (RecyclerView) findViewById(R.id.users_recycler_view);
-        ParticipantsSheetAdapter participantsSheetAdapter = new ParticipantsSheetAdapter(userList);
+        final ParticipantsSheetAdapter participantsSheetAdapter = new ParticipantsSheetAdapter(userList);
 
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         usersListView.setLayoutManager(mListManager);
@@ -116,5 +116,16 @@ public class BottomSheet extends AppCompatActivity {
                     public void onLongClick(View view, int position) {
                     }
                 }));
+    searchBar.setOnQueryTextListener(this);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }

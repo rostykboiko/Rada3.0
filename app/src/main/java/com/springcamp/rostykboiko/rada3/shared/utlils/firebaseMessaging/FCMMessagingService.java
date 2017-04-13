@@ -25,31 +25,32 @@ public class FCMMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         if (remoteMessage.getData().size() > 0) {
-            String messageID = remoteMessage.getData().get("getSurveyId");
-            String title = remoteMessage.getData().get("surveyTitle");
+            String surveyTitle = remoteMessage.getData().get("surveyTitle");
+            String surveyData = remoteMessage.getData().get("survey");
 
-            if (Helper.isAppRunning(getApplicationContext(), "com.springcamp.rostykboiko.rada3")) {
-                System.out.println("AppChecker: app is running");
-                Intent intent = new Intent(this, AnswerDialogActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("surveyID", messageID);
-                startActivity(intent);
-            } else {
-                sendNotification(title , messageID);
+            System.out.println("extraDATA " + remoteMessage.getData().get("survey"));
+
+//            if (Helper.isAppRunning(getApplicationContext(), "com.springcamp.rostykboiko.rada3")) {
+//                System.out.println("AppChecker: app is running");
+//                Intent intent = new Intent(this, AnswerDialogActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.putExtra("surveyID", messageID);
+//                startActivity(intent);
+//            } else {
+                sendNotification(surveyData, surveyTitle);
                 System.out.println("AppChecker: app isn't running");
-           }
+
 
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
         }
     }
 
-    public void sendNotification(String messageTitle, String messageBody) {
+    public void sendNotification(String surveyData, String messageTitle) {
         Intent intent = new Intent(this, AnswerDialogActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        System.out.println("Message body, sendNoti " + messageBody);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */,
-                intent.putExtra("surveyID", messageBody),
+                intent.putExtra("survey", surveyData),
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -57,7 +58,7 @@ public class FCMMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(messageTitle)
-                .setContentText(messageBody)
+                .setContentText("")
                 .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)

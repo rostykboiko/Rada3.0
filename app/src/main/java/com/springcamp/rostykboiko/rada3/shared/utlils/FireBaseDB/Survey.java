@@ -57,15 +57,16 @@ public class Survey implements Parcelable {
         return surveyOptionList;
     }
 
+    public void setSurveyOptionList(ArrayList<Option> surveyOptionList) {
+        this.surveyOptionList = surveyOptionList;
+    }
+
     private Survey(Parcel in) {
         surveyID = in.readString();
         surveyTitle = in.readString();
         color = in.readInt();
         duration = in.readInt();
         surveySingleOption = in.readByte() != 0;
-        //  in.readTypedList(surveyOptionList, CREATOR);
-//        surveyOptionList = in.readArrayList();
-//        participantsEmailList = in.readArrayList(null);
     }
 
     public String getSurveyID() {

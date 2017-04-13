@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,11 +24,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 import com.springcamp.rostykboiko.rada3.bottomSheet.view.BottomSheet;
 import com.springcamp.rostykboiko.rada3.editor.EditorContract;
 import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Question;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
@@ -42,6 +46,7 @@ import java.security.SecureRandom;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import android.widget.Toast;
 
@@ -50,7 +55,7 @@ import org.json.JSONObject;
 
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
     private static final String SURVEY_KEY = "SURVEY_KEY";
-    private ArrayList<String> optionsList = new ArrayList<>();
+    private ArrayList<Option> optionsList = new ArrayList<>();
     private ArrayList<String> participants = new ArrayList<>();
     private ArrayList<User> userList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
@@ -75,11 +80,16 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     RelativeLayout participantsBtn;
     @BindView(R.id.backBtn)
     ImageView backButton;
-    @BindView(R.id.saveBtn)
-    ImageView saveButton;
     @BindView(R.id.one_option_switch)
     Switch oneOptionSwitch;
 
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+
+    @OnClick(R.id.fab)
+    void okClick() {
+        onSaveBtnPressed();
+    }
     @Nullable
     EditorContract.Presenter presenter;
 
@@ -106,12 +116,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
      * View init start
      */
     private void initClickListeners() {
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onSaveBtnPressed();
-            }
-        });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -281,11 +285,11 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 .setValue(editTextTitle.getText().toString());
 
         /* Options */
-        for (String option : optionsList) {
+        for (Option option : optionsList) {
             surveyRef.child(generatedString)
                     .child("Options")
                     .child("option" + (optionsList.indexOf(option) + 1))
-                    .setValue(option);
+                    .setValue(option.getOptionTitle());
             surveyRef.child(generatedString)
                     .child("Answers")
                     .child("option" + (optionsList.indexOf(option) + 1))
@@ -299,7 +303,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
         /* Participants list */
         dataUserRef(database, generatedString, surveyTitle);
-        System.out.println("userList editor" + userList);
 
     }
 
@@ -314,7 +317,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     .child("Surveys")
                     .child(generatedString).setValue(userCounter);
 
-        sendMessage(GoogleAccountAdapter.getDeviceToken(), generatedString, surveyTitle);
+        sendMessage(GoogleAccountAdapter.getDeviceToken(), generatedString, surveyTitle, optionsList);
 
         for (String part : participants) {
             if (part != null) {
@@ -330,7 +333,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                                 .child("Participants")
                                 .child(user.getAccountID()).setValue(part);
 
-                        sendMessage(part, generatedString, surveyTitle);
+                        sendMessage(part, generatedString, surveyTitle, optionsList);
                     }
                 }
             }
@@ -342,10 +345,10 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 .setValue(GoogleAccountAdapter.getAccountID());
     }
 
-    public void sendMessage(String token, String surveyID, String surveyTitle) {
+    public void sendMessage(String token, String surveyID, String surveyTitle, ArrayList<Option> optionsList) {
         System.out.println("Thread Token: " + token);
 
-        Thread thread = new Thread(new OneShotTask(token, surveyID, surveyTitle));
+        Thread thread = new Thread(new OneShotTask(token, surveyID, surveyTitle, optionsList));
         thread.start();
     }
 
@@ -357,11 +360,16 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         String userToken;
         String mSurveyTitle;
         String generatedString;
+        ArrayList<Option> options;
 
-        OneShotTask(String tokenThread, String surveyID, String surveyTitle) {
+        OneShotTask(String tokenThread,
+                    String surveyID,
+                    String surveyTitle,
+                    ArrayList<Option> optionsList) {
             userToken = tokenThread;
             mSurveyTitle = surveyTitle;
             generatedString = surveyID;
+            options = optionsList;
         }
 
         public void run() {
@@ -380,13 +388,23 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 JSONObject data = new JSONObject();
                 JSONObject notificationFCM = new JSONObject();
 
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("SurveyID", generatedString);
+                jsonObject.put("SurveyTitle", mSurveyTitle);
+                jsonObject.put("Options", new Gson().toJson(options));
+
+             //   Question question = new Question(generatedString, mSurveyTitle, options,null,0);
+
+              //  jsonObject = gson.toJson(question);
+
                 System.out.println("Thread Token: " + userToken);
                 notificationFCM.put("body", "Message sent from device");
                 notificationFCM.put("title", "Survey");
                 notificationFCM.put("sound", "default");
                 notificationFCM.put("priority", "high");
-                notificationFCM.put("surveyTitle", mSurveyTitle);
                 notificationFCM.put("getSurveyId", generatedString);
+                notificationFCM.put("surveyTitle", mSurveyTitle);
+                notificationFCM.put("survey", jsonObject);
 
                 data.put("data", notificationFCM);
                 data.put("to", userToken);
