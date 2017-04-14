@@ -2,12 +2,14 @@ package com.springcamp.rostykboiko.rada3.main.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -25,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -39,10 +43,13 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerUIUtils;
+import com.springcamp.rostykboiko.rada3.answer.view.AnswerDialogActivity;
+import com.springcamp.rostykboiko.rada3.api.model.Question;
 import com.springcamp.rostykboiko.rada3.intro.view.MainIntroActivity;
 import com.springcamp.rostykboiko.rada3.main.presenter.MainPresenter;
 import com.springcamp.rostykboiko.rada3.main.MainContract;
 import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.receiver.QuestionReceiver;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
@@ -74,6 +81,9 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
+    @NonNull
+    private QuestionReceiver questionReceiver;
+
     @Nullable
     MainContract.Presenter presenter;
 
@@ -93,6 +103,26 @@ public class MainActivity extends AppCompatActivity
         initCardView();
         initFireBase();
         initNavDrawer();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        questionReceiver = new QuestionReceiver(new QuestionReceiver.QuestionReceivedCallback() {
+            @Override
+            public void onQuestionReceived(@NonNull Question question) {
+                if (presenter != null) {
+                    presenter.receivedQuestion();
+                }
+            }
+        });
+        LocalBroadcastManager.getInstance(this).registerReceiver(questionReceiver, new IntentFilter(QuestionReceiver.QUESTION_RECEIVED_FILTER));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(questionReceiver);
     }
 
     private void initUserData() {
@@ -120,11 +150,11 @@ public class MainActivity extends AppCompatActivity
             mQueryUser.orderByValue().addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    cardsAdaptor.notifyDataSetChanged();
 
                     System.out.println("surveysIDs " + dataSnapshot.getKey());
 
                     initSurveyById(dataSnapshot.getKey());
+                    cardsAdaptor.setSurveyList(surveyList);
                 }
 
                 @Override
@@ -146,10 +176,8 @@ public class MainActivity extends AppCompatActivity
                 public void onCancelled(DatabaseError databaseError) {
 
                 }
-
             });
         }
-
     }
 
     private void initSurveyById(final String surveyId) {
@@ -187,7 +215,7 @@ public class MainActivity extends AppCompatActivity
                                     .getValue(Boolean.class));
 
                             surveyList.add(survey);
-                            cardsAdaptor.notifyDataSetChanged();
+                            cardsAdaptor.setSurveyList(surveyList);
                             survey = new Survey();
                         }
                     }
@@ -215,7 +243,47 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initCardView() {
-        cardsAdaptor = new CardsAdaptor(this, surveyList);
+        cardsAdaptor = new CardsAdaptor(this, new CardsAdaptor.QuestionsCardCallback() {
+            @Override
+            public void onCardDeleted(@NonNull Survey survey) {
+                FirebaseDatabase.getInstance().getReference()
+                        .child("User")
+                        .child(GoogleAccountAdapter.getAccountID())
+                        .child("Surveys")
+                        .child(survey.getSurveyID())
+                        .removeValue();
+
+                DatabaseReference mCurrentSurvey = FirebaseDatabase
+                        .getInstance()
+                        .getReference()
+                        .child("Survey")
+                        .child(survey.getSurveyID())
+                        .child("Creator");
+
+                System.out.println("SurveyID surveyList " + surveyList);
+
+                mCurrentSurvey.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        System.out.println("SurveyID getAccountID " + GoogleAccountAdapter
+                                .getAccountID());
+                        System.out.println("SurveyID getValue " + dataSnapshot.getValue(String.class));
+                        if (dataSnapshot.getValue(String.class) != null && dataSnapshot.getValue(String.class)
+                                .equals(GoogleAccountAdapter
+                                        .getAccountID())) {
+//                            removeSurvey(surveyId);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+//                surveyList.remove(position);
+//                notifyItemRemoved(position);
+            }
+        });
         RecyclerView cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
 
         RecyclerView.LayoutManager mCardManager = new LinearLayoutManager(getApplicationContext());
@@ -401,6 +469,11 @@ public class MainActivity extends AppCompatActivity
     public void showEditor(@NonNull Survey survey) {
         EditorActivity.launchActivity(this, survey);
         finish();
+    }
+
+    @Override
+    public void showReceivedQuestion() {
+        AnswerDialogActivity.launchActivity(this);
     }
 
     @Override

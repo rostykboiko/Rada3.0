@@ -14,7 +14,8 @@ public class Survey implements Parcelable {
     private int color;
     private int participantsCount;
 
-    public Survey(){}
+    public Survey() {
+    }
 
     // Parcel
     @Override
@@ -91,5 +92,15 @@ public class Survey implements Parcelable {
 
     public void setSurveySingleOption(boolean surveySingleOption) {
         this.surveySingleOption = surveySingleOption;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.valueOf(surveyID);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return surveyID.equals(((Survey) obj).surveyID);
     }
 }

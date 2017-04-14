@@ -61,8 +61,10 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
 
     @BindView(R.id.title_survey_dialog)
     TextView titleView;
+
     @BindView(R.id.touch_outside)
     CoordinatorLayout outsideArea;
+
     @BindView(R.id.button_submit)
     Button okBtn;
 
@@ -95,14 +97,15 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
                 JSONObject surveyJson = new JSONObject(surveyString);
                 String jsonArray = surveyJson.get("Options").toString();
 
-                optionsList = gson.fromJson(jsonArray, new TypeToken<ArrayList<Option>>(){}.getType());
+                optionsList = gson.fromJson(jsonArray, new TypeToken<ArrayList<Option>>() {
+                }.getType());
 
                 surveyId = surveyJson.get("SurveyID").toString();
                 titleView.setText(surveyJson.get("SurveyTitle").toString());
 
                 survey.setSurveyOptionList(optionsList);
-                optionDialogAdapter.notifyDataSetChanged();
-            }catch (JSONException e) {
+                optionDialogAdapter.setOptionsList(optionsList);
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
@@ -110,8 +113,7 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
 
     private void initRecyclerView() {
         usersListView = (RecyclerView) findViewById(R.id.option_list_view);
-
-        optionDialogAdapter = new OptionDialogAdapter(survey.getSurveyOptionList(), new OptionDialogAdapter.AnswerCheckCallback() {
+        optionDialogAdapter = new OptionDialogAdapter(new OptionDialogAdapter.AnswerCheckCallback() {
             @Override
             public void onAnswerChecked(@NonNull Option option) {
                 if (option.isChecked()) {
@@ -130,7 +132,9 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
 
     @OnClick(R.id.button_submit)
     void okClick() {
-        presenter.submitAnswer();
+        if (presenter != null) {
+            presenter.submitAnswer();
+        }
         finish();
     }
 
@@ -202,5 +206,9 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
     @Override
     public ArrayList<Option> getAdaptorOptionsList() {
         return optionDialogAdapter.getOptionsList();
+    }
+
+    public static void launchActivity(@NonNull AppCompatActivity activity) {
+        activity.startActivity(new Intent(activity, AnswerDialogActivity.class));
     }
 }

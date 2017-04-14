@@ -41,5 +41,13 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void onStop() {
+        view = null;
+    }
+
+    @Override
+    public void receivedQuestion() {
+        if (view != null) {
+            view.showReceivedQuestion();
+        }
     }
 }

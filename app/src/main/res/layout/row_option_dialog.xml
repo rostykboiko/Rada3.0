@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/margin_large"
-    android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_large">
 
     <CheckBox
         android:id="@+id/checkbox"
@@ -11,17 +11,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_normal"
         android:layout_marginTop="@dimen/margin_normal"
-        android:clickable="true" />
+        android:clickable="true"/>
 
     <TextView
         android:id="@+id/optionItemDialog"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/row_text_height"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/desc_padding"
         android:layout_marginTop="@dimen/margin_normal"
         android:maxLength="25"
         android:padding="@dimen/margin_small"
         android:text="@string/title_activity_editor"
-        android:textSize="@dimen/text_size_standard" />
+        android:textSize="@dimen/text_size_standard"/>
 
 </RelativeLayout>

@@ -10,6 +10,7 @@ import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 
 import java.util.ArrayList;
+import java.util.List;
 
 class OptionDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -22,8 +23,7 @@ class OptionDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private ArrayList<Option> optionsList = new ArrayList<>();
 
-    OptionDialogAdapter(ArrayList<Option> optionsList, @NonNull AnswerCheckCallback callback) {
-        this.optionsList = optionsList;
+    OptionDialogAdapter(@NonNull AnswerCheckCallback callback) {
         this.callback = callback;
     }
 
@@ -31,7 +31,6 @@ class OptionDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_option_dialog, parent, false);
-
         return new AnswerViewHolder(itemView, new AnswerViewHolder.CheckAnswerCallback() {
             @Override
             public void onAnswerChecked(int postition) {
@@ -55,4 +54,8 @@ class OptionDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return optionsList;
     }
 
+    public void setOptionsList(@NonNull List<Option> options) {
+        this.optionsList.addAll(options);
+        notifyDataSetChanged();
+    }
 }

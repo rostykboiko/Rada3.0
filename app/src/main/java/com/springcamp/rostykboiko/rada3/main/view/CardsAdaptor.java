@@ -1,6 +1,7 @@
 package com.springcamp.rostykboiko.rada3.main.view;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,113 +21,50 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
-class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHolder> {
-    private Context mContext;
-    private ArrayList<Survey> surveyList = new ArrayList<>();
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+class CardsAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private OptionCardAdapter optionCardAdapter = new OptionCardAdapter();
-
-    class CardViewHolder extends RecyclerView.ViewHolder {
-        private TextView title;
-        private RecyclerView optionsRecycler;
-        private ImageView deleteBtn;
-
-        CardViewHolder(View view) {
-            super(view);
-
-            title = (TextView) view.findViewById(R.id.title);
-            optionsRecycler = (RecyclerView) view.findViewById(R.id.card_option_recycler);
-            deleteBtn = (ImageView) view.findViewById(R.id.close_icon);
-
-            RecyclerView.LayoutManager mListManager = new LinearLayoutManager(mContext.getApplicationContext());
-            optionsRecycler.setLayoutManager(mListManager);
-            optionsRecycler.setItemAnimator(new DefaultItemAnimator());
-            optionsRecycler.setAdapter(optionCardAdapter);
-        }
+    public interface QuestionsCardCallback {
+        void onCardDeleted(@NonNull Survey survey);
     }
 
-    CardsAdaptor(Context mContext, ArrayList<Survey> surveyList) {
+    @NonNull
+    private QuestionsCardCallback callback;
+
+    private Context mContext;
+
+    private ArrayList<Survey> surveyList = new ArrayList<>();
+
+    CardsAdaptor(Context mContext, @NonNull QuestionsCardCallback callback) {
         this.mContext = mContext;
-        this.surveyList = surveyList;
+        this.callback = callback;
     }
 
     @Override
     public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.survey_card, parent, false);
-
-        return new CardViewHolder(itemView);
+        return new CardViewHolder(itemView, parent.getContext(), new CardViewHolder.QuestionCardCallback() {
+            @Override
+            public void onDeleteCard(int position) {
+                callback.onCardDeleted(surveyList.get(position));
+            }
+        });
     }
 
     @Override
-    public void onBindViewHolder(final CardViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         Survey survey = surveyList.get(position);
-
-        holder.title.setText(survey.getSurveyTitle());
-
-        optionCardAdapter = new OptionCardAdapter(
-                survey.getSurveyOptionList(),
-                survey.getParticipantsCount(),
-                survey.isSurveySingleOption());
-
-        holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
-            final String surveyId = surveyList.get(position).getSurveyID();
-
-            @Override
-            public void onClick(View v) {
-
-                database.getReference()
-                        .child("User")
-                        .child(GoogleAccountAdapter.getAccountID())
-                        .child("Surveys")
-                        .child(surveyList.get(position).getSurveyID())
-                        .removeValue();
-
-                DatabaseReference mCurrentSurvey = FirebaseDatabase
-                        .getInstance()
-                        .getReference()
-                        .child("Survey")
-                        .child(surveyList.get(position).getSurveyID())
-                        .child("Creator");
-
-                System.out.println("SurveyID surveyList " + surveyList);
-
-
-                mCurrentSurvey.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        System.out.println("SurveyID getAccountID " + GoogleAccountAdapter
-                                .getAccountID());
-                        System.out.println("SurveyID getValue " + dataSnapshot.getValue(String.class));
-
-                        if (dataSnapshot.getValue(String.class) != null && dataSnapshot.getValue(String.class)
-                                .equals(GoogleAccountAdapter
-                                        .getAccountID())) {
-
-                            removeSurvey(surveyId);
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-                surveyList.remove(position);
-                notifyItemRemoved(position);
-            }
-        });
-
-        holder.optionsRecycler.setAdapter(optionCardAdapter);
+        CardViewHolder viewHolder = (CardViewHolder) holder;
+        viewHolder.setSurvayName(survey.getSurveyTitle());
+        viewHolder.setSurvey(survey);
     }
 
     private void removeSurvey(String surveyId) {
         System.out.println("SurveyID surveyList " + surveyId);
 
-        database.getReference()
+        FirebaseDatabase.getInstance().getReference()
                 .child("Survey")
                 .child(surveyId)
                 .removeValue();
@@ -135,5 +73,13 @@ class CardsAdaptor extends RecyclerView.Adapter<CardsAdaptor.CardViewHolder> {
     @Override
     public int getItemCount() {
         return surveyList.size();
+    }
+
+    public void setSurveyList(@NonNull List<Survey> surveyList) {
+        //TODO check if list contains other elements
+        if(!this.surveyList.containsAll(surveyList)) {
+            this.surveyList.addAll(surveyList);
+            notifyDataSetChanged();
+        }
     }
 }

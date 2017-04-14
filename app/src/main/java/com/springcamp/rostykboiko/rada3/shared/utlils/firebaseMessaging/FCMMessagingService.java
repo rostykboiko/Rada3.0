@@ -7,18 +7,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.answer.view.AnswerDialogActivity;
+import com.springcamp.rostykboiko.rada3.receiver.QuestionReceiver;
 
 import java.util.List;
 
 public class FCMMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
+
+    @NonNull
+    private QuestionReceiver questionReceiver;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -30,18 +36,16 @@ public class FCMMessagingService extends FirebaseMessagingService {
 
             System.out.println("extraDATA " + remoteMessage.getData().get("survey"));
 
-//            if (Helper.isAppRunning(getApplicationContext(), "com.springcamp.rostykboiko.rada3")) {
-//                System.out.println("AppChecker: app is running");
-//                Intent intent = new Intent(this, AnswerDialogActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                intent.putExtra("surveyID", messageID);
-//                startActivity(intent);
-//            } else {
+            if (Helper.isAppRunning(this, "com.springcamp.rostykboiko.rada3")) {
+                Intent intent = new Intent(QuestionReceiver.QUESTION_RECEIVED_FILTER);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("surveyID", surveyData);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+            } else {
                 sendNotification(surveyData, surveyTitle);
                 System.out.println("AppChecker: app isn't running");
-
-
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+                Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            }
         }
     }
 
@@ -53,7 +57,7 @@ public class FCMMessagingService extends FirebaseMessagingService {
                 intent.putExtra("survey", surveyData),
                 PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -75,8 +79,7 @@ public class FCMMessagingService extends FirebaseMessagingService {
         private static boolean isAppRunning(final Context context, final String packageName) {
             final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
             final List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
-            if (procInfos != null)
-            {
+            if (procInfos != null) {
                 for (final ActivityManager.RunningAppProcessInfo processInfo : procInfos) {
                     if (processInfo.processName.equals(packageName)) {
                         return true;

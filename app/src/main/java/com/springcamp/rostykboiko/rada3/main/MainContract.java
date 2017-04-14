@@ -10,6 +10,8 @@ public interface MainContract {
         void showProgress();
 
         void showEditor(@NonNull Survey survey);
+
+        void showReceivedQuestion();
     }
 
     interface Presenter {
@@ -19,5 +21,7 @@ public interface MainContract {
         void showEditor(@NonNull Survey survey);
 
         void onStop();
+
+        void receivedQuestion();
     }
 }
