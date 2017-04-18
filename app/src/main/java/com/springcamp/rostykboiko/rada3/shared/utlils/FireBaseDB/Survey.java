@@ -9,6 +9,7 @@ public class Survey {
     private boolean surveySingleOption;
     private int duration;
     private int participantsCount;
+    private String creatorId;
 
     public Survey() {
     }
@@ -52,6 +53,14 @@ public class Survey {
 
     public void setSurveySingleOption(boolean surveySingleOption) {
         this.surveySingleOption = surveySingleOption;
+    }
+
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
     }
 
     @Override

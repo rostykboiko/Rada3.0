@@ -210,6 +210,10 @@ public class MainActivity extends AppCompatActivity
                                     .child("One Positive Option")
                                     .getValue(Boolean.class));
 
+                            survey.setCreatorId(dataSnapshot
+                                    .child("Creator")
+                                    .getValue(String.class));
+
                             surveyList.add(survey);
                             cardsAdaptor.setSurveyList(surveyList);
 
@@ -225,7 +229,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        onChildAdded(dataSnapshot, null);
+                        cardsAdaptor.notifyDataSetChanged();
 
                     }
 
@@ -280,12 +284,13 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onCardClick(@NonNull Survey survey) {
-                System.out.println("onCardClick holder position " + survey.getSurveyID());
+                if (GoogleAccountAdapter.getAccountID().equals(survey.getCreatorId())){
                 Gson gson = new Gson();
                 String json = gson.toJson(survey);
 
                 startActivity(new Intent(MainActivity.this, EditorActivity.class)
                         .putExtra("surveyJson", json));
+                }
             }
         });
 
