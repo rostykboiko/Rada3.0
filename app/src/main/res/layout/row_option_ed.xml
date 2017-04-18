@@ -20,7 +20,7 @@
         android:layout_marginStart="@dimen/margin_tab"
         android:layout_marginTop="@dimen/margin_normal"
         android:background="@android:color/transparent"
-        android:hint="@string/title_activity_editor"
+        android:hint="@string/ed_option"
         android:inputType="textAutoCorrect"
         android:maxLength="25"
         android:padding="@dimen/margin_small"

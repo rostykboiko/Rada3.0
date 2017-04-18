@@ -27,11 +27,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.springcamp.rostykboiko.rada3.bottomSheet.view.BottomSheet;
 import com.springcamp.rostykboiko.rada3.editor.EditorContract;
-import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
-import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Question;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
@@ -55,6 +53,7 @@ import org.json.JSONObject;
 
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
     private static final String SURVEY_KEY = "SURVEY_KEY";
+    private Survey survey;
     private ArrayList<Option> optionsList = new ArrayList<>();
     private ArrayList<String> participants = new ArrayList<>();
     private ArrayList<User> userList = new ArrayList<>();
@@ -66,20 +65,28 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
     @BindView(R.id.edTitle)
     EditText editTextTitle;
+
     @BindView(R.id.option_recycler_view)
     RecyclerView optionsListView;
+
     @BindView(R.id.rv_add_option)
     RelativeLayout addNewOption;
+
     @BindView(R.id.tv_duration_time)
     TextView durationTime;
+
     @BindView(R.id.duration_row)
     RelativeLayout durationBtn;
+
     @BindView(R.id.participants_row)
     RelativeLayout participantsBtn;
+
     @BindView(R.id.backBtn)
     ImageView backButton;
+
     @BindView(R.id.one_option_switch)
     Switch oneOptionSwitch;
 
@@ -90,6 +97,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     void okClick() {
         onSaveBtnPressed();
     }
+
     @Nullable
     EditorContract.Presenter presenter;
 
@@ -105,16 +113,33 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
         userList = new ArrayList<>();
 
+        onSurveyEdit();
         getOptionsList();
         initClickListeners();
         initOptionsListView();
-        addOptionRow();
         initParticipantsList();
     }
 
     /**
      * View init start
      */
+    private void onSurveyEdit(){
+        if (getIntent().getExtras() != null && getIntent().getExtras().getString("surveyJson") != null) {
+            String json = getIntent().getExtras().getString("surveyJson");
+            Gson gson = new Gson();
+
+            survey = gson.fromJson(json, Survey.class);
+            System.out.println("Intent editor survey " + survey.getSurveyID());
+
+            editTextTitle.setText(survey.getSurveyTitle());
+            System.out.println("Intent editor optionsList " + survey.getSurveyOptionList());
+
+            optionsList = survey.getSurveyOptionList();
+            oneOptionSwitch.setChecked(survey.isSurveySingleOption());
+
+        }
+    }
+
     private void initClickListeners() {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,6 +171,11 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     private void initOptionsListView() {
         optionsAdapter = new OptionEditorAdapter(optionsList);
+
+        if (optionsList.isEmpty()) {
+            optionsAdapter.addNewItem();
+        }
+
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         optionsListView.setLayoutManager(mListManager);
         optionsListView.setItemAnimator(new DefaultItemAnimator());
@@ -253,13 +283,11 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             Toast.makeText(getApplicationContext(),
                     "Дайте назву опитуванню",
                     Toast.LENGTH_SHORT).show();
-        }
-        if (optionsList.size() < 2) {
+        } else if (optionsList.size() < 2) {
             Toast.makeText(getApplicationContext(),
                     "Додайте варіант відповіді",
                     Toast.LENGTH_SHORT).show();
-        }
-        if (participants.size() < 1) { // потрібно як мініум 2
+        } else if (participants.size() < 1) { // потрібно як мініум 2
             Toast.makeText(getApplicationContext(),
                     "Список кориситувачів пустий",
                     Toast.LENGTH_SHORT).show();
@@ -268,41 +296,43 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
             dataSurveyReference(database);
 
-            startActivity(new Intent(EditorActivity.this, MainActivity.class));
             finish();
         }
     }
 
     private void dataSurveyReference(FirebaseDatabase database) {
-        String generatedString = generatedId();
+        String surveyID = generatedId();
+        if (survey != null && survey.getSurveyID() != null) {
+            surveyID = survey.getSurveyID();
+        }
         String surveyTitle = editTextTitle.getText().toString();
 
         DatabaseReference surveyRef = database.getReference("Survey");
 
         /* Title */
-        surveyRef.child(generatedString)
+        surveyRef.child(surveyID)
                 .child("Title")
                 .setValue(editTextTitle.getText().toString());
 
         /* Options */
         for (Option option : optionsList) {
-            surveyRef.child(generatedString)
+            surveyRef.child(surveyID)
                     .child("Options")
                     .child("option" + (optionsList.indexOf(option) + 1))
                     .setValue(option.getOptionTitle());
-            surveyRef.child(generatedString)
+            surveyRef.child(surveyID)
                     .child("Answers")
                     .child("option" + (optionsList.indexOf(option) + 1))
                     .child("0")
                     .setValue(0);
         }
 
-        surveyRef.child(generatedString)
+        surveyRef.child(surveyID)
                 .child("One Positive Option")
                 .setValue(oneOptionSwitch.isChecked());
 
         /* Participants list */
-        dataUserRef(database, generatedString, surveyTitle);
+        dataUserRef(database, surveyID, surveyTitle);
 
     }
 
@@ -315,7 +345,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             userRef
                     .child(GoogleAccountAdapter.getAccountID())
                     .child("Surveys")
-                    .child(generatedString).setValue(userCounter);
+                    .child(generatedString).setValue(GoogleAccountAdapter.getAccountID());
 
         sendMessage(GoogleAccountAdapter.getDeviceToken(), generatedString, surveyTitle, optionsList);
 
@@ -353,7 +383,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     }
 
     public String generatedId() {
-        return new BigInteger(130, random).toString(32);
+        return new BigInteger(31, random).toString();
     }
 
     private class OneShotTask implements Runnable {
@@ -393,10 +423,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 jsonObject.put("SurveyTitle", mSurveyTitle);
                 jsonObject.put("Options", new Gson().toJson(options));
 
-             //   Question question = new Question(generatedString, mSurveyTitle, options,null,0);
-
-              //  jsonObject = gson.toJson(question);
-
                 System.out.println("Thread Token: " + userToken);
                 notificationFCM.put("body", "Message sent from device");
                 notificationFCM.put("title", "Survey");
@@ -423,7 +449,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     protected void onResume() {
         super.onResume();
         participants.add(getIntent().getStringExtra("Participant"));
-        System.out.println("Intent thread " + participants);
     }
 
     @Override
@@ -435,14 +460,12 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     @Override
     public void onBackPressed() {
         if (editTextTitle.getText().toString().equals("") || optionsList.size() < 2) {
-            startActivity(new Intent(EditorActivity.this, MainActivity.class));
             finish();
         } else {
             AlertDialog.Builder confirmDialog = new AlertDialog.Builder(EditorActivity.this);
             confirmDialog.setMessage("Дійсно скасувати"); // сообщение
             confirmDialog.setPositiveButton("Так", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int arg1) {
-                    startActivity(new Intent(EditorActivity.this, MainActivity.class));
                     finish();
                 }
             });
@@ -479,7 +502,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     public static void launchActivity(@NonNull AppCompatActivity activity, @NonNull Survey survey) {
         Intent intent = new Intent(activity, EditorActivity.class);
-        intent.putExtra(SURVEY_KEY, survey);
 
         activity.startActivity(intent);
     }

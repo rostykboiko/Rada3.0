@@ -43,7 +43,12 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
     @Override
     public void onBindViewHolder(final OptionEditorAdapter.ViewHolder holder, final int position) {
-        holder.optionItem.setHint(R.string.ed_option);
+        if (optionsList != null) {
+            holder.optionItem.setText(optionsList.get(position).getOptionTitle());
+        } else {
+            holder.optionItem.setHint(R.string.ed_option);
+        }
+
         if (holder.optionItem != null)
             holder.optionItem.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -79,7 +84,7 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
     void addNewItem() {
         Option option = new Option();
-        option.setOptionTitle("Варіант відповіді");
+        option.setOptionTitle("");
         optionsList.add(option);
     }
 }

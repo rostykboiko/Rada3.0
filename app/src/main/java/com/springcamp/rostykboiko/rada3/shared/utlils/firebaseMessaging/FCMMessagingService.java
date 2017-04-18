@@ -34,8 +34,6 @@ public class FCMMessagingService extends FirebaseMessagingService {
             String surveyTitle = remoteMessage.getData().get("surveyTitle");
             String surveyData = remoteMessage.getData().get("survey");
 
-            System.out.println("extraDATA " + remoteMessage.getData().get("survey"));
-
             if (Helper.isAppRunning(this, "com.springcamp.rostykboiko.rada3")) {
                 Intent intent = new Intent(QuestionReceiver.QUESTION_RECEIVED_FILTER);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -43,7 +41,6 @@ public class FCMMessagingService extends FirebaseMessagingService {
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             } else {
                 sendNotification(surveyData, surveyTitle);
-                System.out.println("AppChecker: app isn't running");
                 Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             }
         }

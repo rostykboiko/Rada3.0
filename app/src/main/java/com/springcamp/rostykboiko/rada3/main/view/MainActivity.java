@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -29,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -100,14 +100,15 @@ public class MainActivity extends AppCompatActivity
         session = new SessionManager(getApplicationContext());
 
         initUserData();
-        initCardView();
         initFireBase();
+        initCardView();
         initNavDrawer();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         questionReceiver = new QuestionReceiver(new QuestionReceiver.QuestionReceivedCallback() {
             @Override
             public void onQuestionReceived(@NonNull Question question) {
@@ -116,7 +117,8 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-        LocalBroadcastManager.getInstance(this).registerReceiver(questionReceiver, new IntentFilter(QuestionReceiver.QUESTION_RECEIVED_FILTER));
+        LocalBroadcastManager.getInstance(this).registerReceiver(questionReceiver,
+                new IntentFilter(QuestionReceiver.QUESTION_RECEIVED_FILTER));
     }
 
     @Override
@@ -134,8 +136,6 @@ public class MainActivity extends AppCompatActivity
         GoogleAccountAdapter.setAccountID(user.get(SessionManager.KEY_ACCOUNTID));
         GoogleAccountAdapter.setDeviceToken(user.get(SessionManager.KEY_TOKEN));
         GoogleAccountAdapter.setProfileIcon(user.get(SessionManager.KEY_ICON));
-
-        System.out.println("Google Sync main " + GoogleAccountAdapter.getUserID());
     }
 
     /* List of Cards Start */
@@ -144,27 +144,22 @@ public class MainActivity extends AppCompatActivity
         if (GoogleAccountAdapter.getUserID() != null) {
             mCurrentUserRef = FirebaseDatabase.getInstance().getReference()
                     .child("User").child(GoogleAccountAdapter.getAccountID()).child("Surveys");
-            System.out.println("UID " + GoogleAccountAdapter.getUserID());
 
             Query mQueryUser = mCurrentUserRef;
             mQueryUser.orderByValue().addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                    System.out.println("surveysIDs " + dataSnapshot.getKey());
-
                     initSurveyById(dataSnapshot.getKey());
-                    cardsAdaptor.setSurveyList(surveyList);
                 }
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                    initSurveyById(dataSnapshot.getKey());
                 }
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                    initSurveyById(dataSnapshot.getKey());
                 }
 
                 @Override
@@ -181,7 +176,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initSurveyById(final String surveyId) {
-        DatabaseReference mCurrentSurvey = FirebaseDatabase
+        final DatabaseReference mCurrentSurvey = FirebaseDatabase
                 .getInstance()
                 .getReference()
                 .child("Survey");
@@ -191,6 +186,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         if (dataSnapshot.getKey().equals(surveyId)) {
+                            surveyList = new ArrayList<>();
                             survey.setSurveyID(dataSnapshot.getKey());
                             String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
                             survey.setSurveyTitle(surveyTitle);
@@ -216,17 +212,20 @@ public class MainActivity extends AppCompatActivity
 
                             surveyList.add(survey);
                             cardsAdaptor.setSurveyList(surveyList);
+
                             survey = new Survey();
+                            cardsAdaptor.notifyDataSetChanged();
                         }
                     }
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
+                        onChildAdded(dataSnapshot, s);
                     }
 
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
+                        onChildAdded(dataSnapshot, null);
 
                     }
 
@@ -246,44 +245,50 @@ public class MainActivity extends AppCompatActivity
         cardsAdaptor = new CardsAdaptor(this, new CardsAdaptor.QuestionsCardCallback() {
             @Override
             public void onCardDeleted(@NonNull Survey survey) {
+                final String surveyId = survey.getSurveyID();
+
+                FirebaseDatabase.getInstance().getReference()
+                        .child("Survey")
+                        .child(surveyId)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                System.out.println("onBtn remove value: " + dataSnapshot.child("Creator").getValue());
+                                if (dataSnapshot.child("Creator").getValue() != null
+                                        &&
+                                        dataSnapshot.child("Creator")
+                                                .getValue().equals(GoogleAccountAdapter.getAccountID())) {
+                                    FirebaseDatabase.getInstance().getReference()
+                                            .child("Survey")
+                                            .child(surveyId)
+                                            .removeValue();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
                 FirebaseDatabase.getInstance().getReference()
                         .child("User")
                         .child(GoogleAccountAdapter.getAccountID())
                         .child("Surveys")
-                        .child(survey.getSurveyID())
+                        .child(surveyId)
                         .removeValue();
+            }
 
-                DatabaseReference mCurrentSurvey = FirebaseDatabase
-                        .getInstance()
-                        .getReference()
-                        .child("Survey")
-                        .child(survey.getSurveyID())
-                        .child("Creator");
+            @Override
+            public void onCardClick(@NonNull Survey survey) {
+                System.out.println("onCardClick holder position " + survey.getSurveyID());
+                Gson gson = new Gson();
+                String json = gson.toJson(survey);
 
-                System.out.println("SurveyID surveyList " + surveyList);
-
-                mCurrentSurvey.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        System.out.println("SurveyID getAccountID " + GoogleAccountAdapter
-                                .getAccountID());
-                        System.out.println("SurveyID getValue " + dataSnapshot.getValue(String.class));
-                        if (dataSnapshot.getValue(String.class) != null && dataSnapshot.getValue(String.class)
-                                .equals(GoogleAccountAdapter
-                                        .getAccountID())) {
-//                            removeSurvey(surveyId);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-//                surveyList.remove(position);
-//                notifyItemRemoved(position);
+                startActivity(new Intent(MainActivity.this, EditorActivity.class)
+                        .putExtra("surveyJson", json));
             }
         });
+
         RecyclerView cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
 
         RecyclerView.LayoutManager mCardManager = new LinearLayoutManager(getApplicationContext());
@@ -468,7 +473,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void showEditor(@NonNull Survey survey) {
         EditorActivity.launchActivity(this, survey);
-        finish();
     }
 
     @Override
@@ -504,9 +508,7 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.fab)
     void okClick() {
         survey = new Survey();
-        EditorActivity.launchActivity(MainActivity.this,
-                survey);
-        finish();
+        EditorActivity.launchActivity(MainActivity.this, survey);
     }
 
 }
