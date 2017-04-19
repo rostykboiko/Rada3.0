@@ -16,16 +16,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.answer.AnswerContract;
 import com.springcamp.rostykboiko.rada3.answer.presenter.AnswerDialogPresenter;
@@ -34,21 +27,15 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class AnswerDialogActivity extends AppCompatActivity implements AnswerContract.View {
+    private static final String SURVEY_KEY = "SURVEY_KEY";
+
     int position;
     private String surveyId;
     private Survey survey = new Survey();
@@ -88,26 +75,14 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
     }
 
     private void messageReceiver() {
+        System.out.println("Answer survey message received");
         Intent intent = getIntent();
-
         if (intent.getExtras() != null) {
-            String surveyString = intent.getExtras().getString("survey");
-            try {
-                Gson gson = new Gson();
-                JSONObject surveyJson = new JSONObject(surveyString);
-                String jsonArray = surveyJson.get("Options").toString();
+            String json = getIntent().getExtras().getString(SURVEY_KEY);
+            survey = new Gson().fromJson(json, Survey.class);
+            System.out.println("Answer survey title " + survey.getSurveyTitle());
+            optionDialogAdapter.setOptionsList(optionsList);
 
-                optionsList = gson.fromJson(jsonArray, new TypeToken<ArrayList<Option>>() {
-                }.getType());
-
-                surveyId = surveyJson.get("SurveyID").toString();
-                titleView.setText(surveyJson.get("SurveyTitle").toString());
-
-                survey.setSurveyOptionList(optionsList);
-                optionDialogAdapter.setOptionsList(optionsList);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -140,31 +115,31 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
 
     private void initClickListeners() {
         usersListView.addOnItemTouchListener(new RecyclerTouchListener(
-                getApplicationContext(),
-                usersListView,
-                new RecyclerTouchListener.ClickListener() {
-                    @Override
-                    public void onClick(View view, int position) {
-                        if (optionDialogAdapter.getOptionsList().get(position).isChecked()) {
-                            optionsList.remove(
-                                    optionDialogAdapter.getOptionsList().get(position));
-                            optionDialogAdapter.getOptionsList().get(position).setChecked(false);
-                            // presenter.deleteCheckedItem();
-                            System.out.println("optionDialog remove");
-                        } else {
-                            optionsList.add(
-                                    optionDialogAdapter.getOptionsList().get(position));
-                            optionDialogAdapter.getOptionsList().get(position).setChecked(true);
-                            System.out.println("optionDialog add");
-                            //presenter.addCheckedItem();
-                        }
-                    }
+                        getApplicationContext(),
+                        usersListView,
+                        new RecyclerTouchListener.ClickListener() {
+                            @Override
+                            public void onClick(View view, int position) {
+                                if (optionDialogAdapter.getOptionsList().get(position).isChecked()) {
+//                            optionsList.remove(
+//                                    optionDialogAdapter.getOptionsList().get(position));
+//                            optionDialogAdapter.getOptionsList().get(position).setChecked(false);
+                                    presenter.deleteCheckedItem();
+                                    System.out.println("optionDialog remove");
+                                } else {
+//                            optionsList.add(
+//                                    optionDialogAdapter.getOptionsList().get(position));
+//                            optionDialogAdapter.getOptionsList().get(position).setChecked(true);
+//                            System.out.println("optionDialog add");
+                                    presenter.addCheckedItem();
+                                }
+                            }
 
-                    @Override
-                    public void onLongClick(View view, int position) {
+                            @Override
+                            public void onLongClick(View view, int position) {
 
-                    }
-                })
+                            }
+                        })
         );
     }
 

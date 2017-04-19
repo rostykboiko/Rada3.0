@@ -68,6 +68,8 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
+    private static final String SURVEY_KEY = "SURVEY_KEY";
+
     private SessionManager session;
     private Option option = new Option();
     private Survey survey = new Survey();
@@ -119,6 +121,9 @@ public class MainActivity extends AppCompatActivity
         });
         LocalBroadcastManager.getInstance(this).registerReceiver(questionReceiver,
                 new IntentFilter(QuestionReceiver.QUESTION_RECEIVED_FILTER));
+
+        initFireBase();
+        cardsAdaptor.notifyDataSetChanged();
     }
 
     @Override
@@ -285,8 +290,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onCardClick(@NonNull Survey survey) {
                 if (GoogleAccountAdapter.getAccountID().equals(survey.getCreatorId())){
-                Gson gson = new Gson();
-                String json = gson.toJson(survey);
+                String json = new Gson().toJson(survey);
 
                 startActivity(new Intent(MainActivity.this, EditorActivity.class)
                         .putExtra("surveyJson", json));
@@ -482,7 +486,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void showReceivedQuestion() {
-        AnswerDialogActivity.launchActivity(this);
+        String json = new Gson().toJson(survey);
+        System.out.println("Answer survey title " + survey.getSurveyTitle());
+
+        startActivity(new Intent(MainActivity.this, AnswerDialogActivity.class)
+                .putExtra(SURVEY_KEY, json));
+        //AnswerDialogActivity.launchActivity(this);
     }
 
     @Override

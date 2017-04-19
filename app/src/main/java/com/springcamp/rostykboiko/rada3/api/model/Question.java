@@ -5,10 +5,6 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by rostykboiko on 13.04.2017.
- */
-
 public class Question {
 
     private  String title;

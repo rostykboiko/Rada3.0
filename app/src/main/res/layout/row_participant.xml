@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/row_small"
     android:layout_marginBottom="@dimen/margin_normal"
     android:orientation="vertical">
 
-    <RadioButton
-        android:id="@+id/radioBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/item_radioBtn"
+    <ImageView
+        android:id="@+id/profile_img_view"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
         android:layout_marginTop="@dimen/margin_normal"
-        android:clickable="false" />
+        android:layout_marginStart="@dimen/margin_medium" />
 
     <TextView
         android:id="@+id/userEmailItem"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/row_text_height"
         android:layout_marginStart="@dimen/margin_tab"
-        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_medium"
         android:padding="@dimen/margin_small"
         android:textSize="@dimen/text_size_standard" />
 

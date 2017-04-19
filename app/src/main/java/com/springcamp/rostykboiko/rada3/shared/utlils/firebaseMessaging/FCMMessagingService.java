@@ -22,6 +22,8 @@ import java.util.List;
 
 public class FCMMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
+    private static final String SURVEY_KEY = "SURVEY_KEY";
+
 
     @NonNull
     private QuestionReceiver questionReceiver;
@@ -32,27 +34,31 @@ public class FCMMessagingService extends FirebaseMessagingService {
 
         if (remoteMessage.getData().size() > 0) {
             String surveyTitle = remoteMessage.getData().get("surveyTitle");
-            String surveyData = remoteMessage.getData().get("survey");
+            String surveyJson = remoteMessage.getData().get("survey");
 
             if (Helper.isAppRunning(this, "com.springcamp.rostykboiko.rada3")) {
                 Intent intent = new Intent(QuestionReceiver.QUESTION_RECEIVED_FILTER);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("surveyID", surveyData);
+                intent.putExtra("surveyID", surveyJson);
+                System.out.println("Answer survey surveyJson " + surveyJson);
+
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             } else {
-                sendNotification(surveyData, surveyTitle);
+                sendNotification(surveyJson, surveyTitle);
                 Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             }
         }
     }
 
-    public void sendNotification(String surveyData, String messageTitle) {
+    public void sendNotification(String surveyJson, String messageTitle) {
         Intent intent = new Intent(this, AnswerDialogActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */,
-                intent.putExtra("survey", surveyData),
+                intent.putExtra(SURVEY_KEY, surveyJson),
                 PendingIntent.FLAG_ONE_SHOT);
+
+        System.out.println("Answer survey surveyJson " + surveyJson);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 

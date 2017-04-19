@@ -4,7 +4,6 @@
     android:id="@+id/participants_dialog"
     android:layout_width="match_parent"
     android:layout_height="250dp"
-    android:background="@android:color/holo_blue_bright"
     android:clipToPadding="true"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 

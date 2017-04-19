@@ -15,24 +15,31 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.view.Menu;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.main.view.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BottomSheet extends AppCompatActivity implements SearchView.OnQueryTextListener{
+public class BottomSheet extends AppCompatActivity implements SearchView.OnQueryTextListener {
     @Nullable
     private ArrayList<User> userList;
 
+    ArrayList<User> checkedUsers = new ArrayList<>();
     @BindView(R.id.search_view)
     SearchView searchBar;
+
+    private ParticipantsSheetAdapter participantsSheetAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +49,11 @@ public class BottomSheet extends AppCompatActivity implements SearchView.OnQuery
 
         ButterKnife.bind(this);
 
-        userList = getIntent().getExtras().getParcelableArrayList("UserList");
-        System.out.println("userList sheet" + userList);
+        String jsonUserList = getIntent().getExtras().getString("UserList");
+        Type type = new TypeToken<ArrayList<User>>() {
+        }.getType();
+
+        userList = new Gson().fromJson(jsonUserList, type);
 
         searchBar.setFocusable(true);
 
@@ -58,6 +68,10 @@ public class BottomSheet extends AppCompatActivity implements SearchView.OnQuery
                     public void onStateChanged(@NonNull View bottomSheet, int newState) {
                         switch (newState) {
                             case BottomSheetBehavior.STATE_HIDDEN:
+                                String jsonUserList = new Gson().toJson(userList);
+                                startActivity(new Intent(BottomSheet.this, EditorActivity.class)
+                                        .putExtra("ParticipantsList", jsonUserList)
+                                        .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
                                 finish();
                                 break;
                             case BottomSheetBehavior.STATE_EXPANDED:
@@ -91,8 +105,8 @@ public class BottomSheet extends AppCompatActivity implements SearchView.OnQuery
     }
 
     private void initRecyclerView() {
-        final RecyclerView usersListView = (RecyclerView) findViewById(R.id.users_recycler_view);
-        final ParticipantsSheetAdapter participantsSheetAdapter = new ParticipantsSheetAdapter(userList);
+        RecyclerView usersListView = (RecyclerView) findViewById(R.id.users_recycler_view);
+        participantsSheetAdapter = new ParticipantsSheetAdapter(userList);
 
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         usersListView.setLayoutManager(mListManager);
@@ -104,19 +118,18 @@ public class BottomSheet extends AppCompatActivity implements SearchView.OnQuery
                 new RecyclerTouchListener.ClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        startActivity(new Intent(BottomSheet.this, EditorActivity.class)
-                                .putExtra("Participant", userList
-                                        .get(position)
-                                        .getDeviceToken())
-                                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
-                        finish();
+                        if (checkedUsers.contains(userList.get(position)))
+                            checkedUsers.remove(userList.get(position));
+                        else
+                            checkedUsers.add(userList.get(position));
                     }
 
                     @Override
                     public void onLongClick(View view, int position) {
                     }
                 }));
-    searchBar.setOnQueryTextListener(this);
+
+        searchBar.setOnQueryTextListener(this);
     }
 
     @Override
@@ -126,6 +139,13 @@ public class BottomSheet extends AppCompatActivity implements SearchView.OnQuery
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        return false;
+        ArrayList<User> newList = new ArrayList<>();
+        for (User user : userList) {
+            if (user.getUserEmail().contains(newText))
+                newList.add(user);
+        }
+        participantsSheetAdapter.setFilter(newList);
+
+        return true;
     }
 }

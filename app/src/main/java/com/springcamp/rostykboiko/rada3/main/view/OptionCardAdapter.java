@@ -47,7 +47,7 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
             progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
             optionItem = (TextView) view.findViewById(R.id.optionItemDialog);
             answerCount = (TextView) view.findViewById(R.id.percentTv);
-            radioBtn = (ImageView) view.findViewById(R.id.radioBtn);
+            radioBtn = (ImageView) view.findViewById(R.id.checkBox);
         }
     }
 
