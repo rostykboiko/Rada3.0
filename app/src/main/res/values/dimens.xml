@@ -71,7 +71,12 @@
     <dimen name="item_rl_row">0dp</dimen>
 
     <!-- Bottom Sheet -->
+    <dimen name="profile_icon_width">40dp</dimen>
+    <dimen name="profile_icon_height">40dp</dimen>
     <dimen name="search_bar_margin">8dp</dimen>
+    <dimen name="checked_bckGround_Start">12dp</dimen>
+    <dimen name="checked_icon_Start">20dp</dimen>
+
 
 
 </resources>

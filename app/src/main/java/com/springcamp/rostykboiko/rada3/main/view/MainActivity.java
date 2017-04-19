@@ -159,12 +159,12 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    initSurveyById(dataSnapshot.getKey());
+                    cardsAdaptor.notifyDataSetChanged();
                 }
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    initSurveyById(dataSnapshot.getKey());
+                    cardsAdaptor.notifyDataSetChanged();
                 }
 
                 @Override
@@ -223,19 +223,20 @@ public class MainActivity extends AppCompatActivity
                             cardsAdaptor.setSurveyList(surveyList);
 
                             survey = new Survey();
-                            cardsAdaptor.notifyDataSetChanged();
                         }
+                        cardsAdaptor.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                         onChildAdded(dataSnapshot, s);
+                        cardsAdaptor.notifyDataSetChanged();
+
                     }
 
                     @Override
                     public void onChildRemoved(DataSnapshot dataSnapshot) {
                         cardsAdaptor.notifyDataSetChanged();
-
                     }
 
                     @Override

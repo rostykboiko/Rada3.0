@@ -1,9 +1,6 @@
 package com.springcamp.rostykboiko.rada3.bottomSheet.view;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
@@ -11,37 +8,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
-import com.mikepenz.materialdrawer.util.DrawerImageLoader;
-import com.mikepenz.materialdrawer.util.DrawerUIUtils;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
-import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 
 import java.util.ArrayList;
 
 class ParticipantsSheetAdapter extends RecyclerView.Adapter<ParticipantsSheetAdapter.ViewHolder> {
 
     private ArrayList<User> userList = new ArrayList<>();
+    private ArrayList<User> checkedUsers = new ArrayList<>();
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView userEmailItem;
         private ImageView profileImage;
+        private RelativeLayout checked;
 
         ViewHolder(View view) {
             super(view);
             userEmailItem = (TextView) view.findViewById(R.id.userEmailItem);
             profileImage = (ImageView) view.findViewById(R.id.profile_img_view);
+            checked = (RelativeLayout) view.findViewById(R.id.checked);
         }
     }
 
-    ParticipantsSheetAdapter(ArrayList<User> userList) {
+    ParticipantsSheetAdapter(ArrayList<User> userList, ArrayList<User> checkedUsers) {
         this.userList = userList;
+        this.checkedUsers = checkedUsers;
     }
 
     @Override
@@ -55,8 +52,6 @@ class ParticipantsSheetAdapter extends RecyclerView.Adapter<ParticipantsSheetAda
     @Override
     public void onBindViewHolder(final ParticipantsSheetAdapter.ViewHolder holder, int position) {
         holder.userEmailItem.setText(userList.get(position).getUserEmail());
-//        Glide.with(holder.profileImage.getContext())
-//                .load(userList.get(position).getUserProfileIcon()).into(holder.profileImage);
 
         Glide.with(holder.profileImage.getContext()).load(userList.get(position).getUserProfileIcon())
                 .asBitmap().into(new BitmapImageViewTarget(holder.profileImage) {
@@ -68,6 +63,12 @@ class ParticipantsSheetAdapter extends RecyclerView.Adapter<ParticipantsSheetAda
                 holder.profileImage.setImageDrawable(circularBitmapDrawable);
             }
         });
+
+        if (checkedUsers.contains(userList.get(position))){
+            holder.checked.setVisibility(View.VISIBLE);
+        } else {
+            holder.checked.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -79,21 +80,5 @@ class ParticipantsSheetAdapter extends RecyclerView.Adapter<ParticipantsSheetAda
         userList = new ArrayList<>();
         userList.addAll(newList);
         notifyDataSetChanged();
-    }
-
-    private void setProfileImage() {
-        if (GoogleAccountAdapter.getProfileIcon() != null) {
-            DrawerImageLoader.init(new AbstractDrawerImageLoader() {
-                @Override
-                public void set(ImageView imageView, Uri uri, Drawable placeholder, String tag) {
-                    Glide.with(imageView.getContext()).load(GoogleAccountAdapter.getProfileIcon()).into(imageView);
-                }
-
-                @Override
-                public void cancel(ImageView imageView) {
-                    Glide.clear(imageView);
-                }
-            });
-        }
     }
 }
