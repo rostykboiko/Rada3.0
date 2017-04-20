@@ -111,31 +111,31 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
 
     private void initClickListeners() {
         usersListView.addOnItemTouchListener(new RecyclerTouchListener(
-                        getApplicationContext(),
-                        usersListView,
-                        new RecyclerTouchListener.ClickListener() {
-                            @Override
-                            public void onClick(View view, int position) {
-                                if (optionDialogAdapter.getOptionsList().get(position).isChecked()) {
-//                            optionsList.remove(
+                getApplicationContext(),
+                usersListView,
+                new RecyclerTouchListener.ClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        if (optionDialogAdapter.getOptionsList().get(position).isChecked()) {
+//                            survey.getSurveyOptionList().remove(
 //                                    optionDialogAdapter.getOptionsList().get(position));
 //                            optionDialogAdapter.getOptionsList().get(position).setChecked(false);
-                                    presenter.deleteCheckedItem();
-                                    System.out.println("optionDialog remove");
-                                } else {
-//                            optionsList.add(
+                                 presenter.deleteCheckedItem();
+                            System.out.println("optionDialog remove");
+                        } else {
+                        //    survey.getSurveyOptionList().add(
 //                                    optionDialogAdapter.getOptionsList().get(position));
 //                            optionDialogAdapter.getOptionsList().get(position).setChecked(true);
 //                            System.out.println("optionDialog add");
-                                    presenter.addCheckedItem();
-                                }
-                            }
+                            presenter.addCheckedItem();
+                        }
+                    }
 
-                            @Override
-                            public void onLongClick(View view, int position) {
+                    @Override
+                    public void onLongClick(View view, int position) {
 
-                            }
-                        })
+                    }
+                })
         );
     }
 
@@ -160,23 +160,18 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
     }
 
     @Override
+    public ArrayList<Option> getCheckedOptionsList() {
+        return null;
+    }
+
+    @Override
     public int getPosition() {
         return position;
     }
 
     @Override
-    public String getSurveyId() {
-        return survey.getSurveyID();
-    }
-
-    @Override
-    public ArrayList<Option> getOptionsList() {
-        return survey.getSurveyOptionList();
-    }
-
-    @Override
-    public ArrayList<Option> getAdaptorOptionsList() {
-        return optionDialogAdapter.getOptionsList();
+    public Survey getSurvey() {
+        return survey;
     }
 
     public static void launchActivity(@NonNull AppCompatActivity activity) {

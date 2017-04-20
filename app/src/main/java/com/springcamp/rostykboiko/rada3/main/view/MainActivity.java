@@ -1,6 +1,5 @@
 package com.springcamp.rostykboiko.rada3.main.view;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -46,7 +45,6 @@ import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerUIUtils;
 import com.springcamp.rostykboiko.rada3.Rada3;
 import com.springcamp.rostykboiko.rada3.answer.view.AnswerDialogActivity;
-import com.springcamp.rostykboiko.rada3.api.model.Question;
 import com.springcamp.rostykboiko.rada3.intro.view.MainIntroActivity;
 import com.springcamp.rostykboiko.rada3.main.presenter.MainPresenter;
 import com.springcamp.rostykboiko.rada3.main.MainContract;
@@ -218,9 +216,12 @@ public class MainActivity extends AppCompatActivity
                                     .child("Participants")
                                     .getChildrenCount()));
 
-                            survey.setSurveySingleOption(dataSnapshot
+                            survey.setSurveySingleOption(
+                                    dataSnapshot
                                     .child("One Positive Option")
                                     .getValue(Boolean.class));
+
+                            System.out.println("dataSnap" + dataSnapshot);
 
                             survey.setCreatorId(dataSnapshot
                                     .child("Creator")

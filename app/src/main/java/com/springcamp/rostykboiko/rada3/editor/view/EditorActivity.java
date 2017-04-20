@@ -12,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -120,11 +121,23 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         initClickListeners();
         initOptionsListView();
         initUsersList();
+        isOptionsListEmpty();
     }
 
     /**
      * View init start
      */
+
+    private void isOptionsListEmpty() {
+        if (optionsList.isEmpty()) {
+            Option option = new Option();
+            option.setOptionTitle("");
+            option.setOptionKey("option" + optionsList.size());
+            optionsList.add(option);
+            optionsAdapter.notifyDataSetChanged();
+        }
+    }
+
     private void onSurveyEdit() {
         if (getIntent().getExtras() != null && getIntent().getExtras().getString("surveyJson") != null) {
             String json = getIntent().getExtras().getString("surveyJson");
@@ -141,7 +154,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
             optionsList = survey.getSurveyOptionList();
             oneOptionSwitch.setChecked(survey.isSurveySingleOption());
-
         }
     }
 
@@ -182,7 +194,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         optionsAdapter = new OptionEditorAdapter(this, optionsList, new OptionEditorAdapter.OptionItemsCallback() {
 
             @Override
-            public void onOptionDeleted(@NonNull int position) {
+            public void onOptionDeleted(int position) {
                 optionsList.remove(position);
                 optionsAdapter.notifyDataSetChanged();
             }
@@ -282,6 +294,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         if (optionsAdapter.getItemCount() < 5) {
             Option option = new Option();
             option.setOptionTitle("");
+            option.setOptionKey("option" + optionsList.size());
             optionsList.add(option);
             optionsAdapter.notifyDataSetChanged();
         } else {
@@ -289,8 +302,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     "Максимально 5 варіантів відповіді",
                     Toast.LENGTH_SHORT).show();
         }
-        optionsAdapter.notifyDataSetChanged();
-
     }
 
     /* View init end */
@@ -299,15 +310,21 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
      * Sync with Firebase Start
      */
     private void onSaveBtnPressed() {
+        int actualSize = optionsList.size();
+        for (Option option : optionsList) {
+            if (option.getOptionTitle().equals("")) {
+                actualSize -= 1;
+            }
+        }
         if (editTextTitle.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(),
                     "Дайте назву опитуванню",
                     Toast.LENGTH_SHORT).show();
-        } else if (optionsList.size() < 2) {
+        } else if (actualSize < 2) {
             Toast.makeText(getApplicationContext(),
                     "Додайте варіант відповіді",
                     Toast.LENGTH_SHORT).show();
-        } else if (participants != null && participants.size() < 1) { // потрібно як мініум 2
+        } else if (participants != null && participants.size() < 2) { // потрібно як мініум 2
             Toast.makeText(getApplicationContext(),
                     "Список кориситувачів пустий",
                     Toast.LENGTH_SHORT).show();
@@ -340,14 +357,16 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
         /* Options */
         for (Option option : optionsList) {
-            surveyRef.child(surveyID)
-                    .child("Options")
-                    .child("option" + (optionsList.indexOf(option) + 1))
-                    .setValue(option.getOptionTitle());
-            surveyRef.child(surveyID)
-                    .child("Answers")
-                    .child("option" + (optionsList.indexOf(option) + 1))
-                    .setValue(0);
+            if (!option.getOptionTitle().equals("")) {
+                surveyRef.child(surveyID)
+                        .child("Options")
+                        .child("option" + (optionsList.indexOf(option) + 1))
+                        .setValue(option.getOptionTitle());
+                surveyRef.child(surveyID)
+                        .child("Answers")
+                        .child("option" + (optionsList.indexOf(option) + 1))
+                        .setValue(0);
+            }
         }
 
         surveyRef.child(surveyID)
@@ -485,7 +504,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         if (editTextTitle.getText().toString().equals("") || optionsList.size() < 2) {
             finish();
         } else {
-            AlertDialog.Builder confirmDialog = new AlertDialog.Builder(EditorActivity.this);
+            AlertDialog.Builder confirmDialog = new AlertDialog.Builder(
+                    new ContextThemeWrapper(this, R.style.AlertDialogCustom));
             confirmDialog.setMessage("Дійсно скасувати"); // сообщение
             confirmDialog.setPositiveButton("Так", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int arg1) {

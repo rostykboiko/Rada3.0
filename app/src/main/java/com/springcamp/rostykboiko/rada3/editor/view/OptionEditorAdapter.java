@@ -50,7 +50,6 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
     @Override
     public void onBindViewHolder(final OptionEditorAdapter.ViewHolder holder, final int position) {
-
         if (optionsList != null) {
             holder.optionItem.setText(optionsList.get(position).getOptionTitle());
         } else {
@@ -93,7 +92,7 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
     interface OptionItemsCallback {
 
-        void onOptionDeleted(@NonNull int position);
+        void onOptionDeleted(int position);
 
         void onOptionChanged(@NonNull Option option, int position);
     }

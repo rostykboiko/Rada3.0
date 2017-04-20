@@ -8,9 +8,9 @@ import com.springcamp.rostykboiko.rada3.answer.AnswerContract;
 import com.springcamp.rostykboiko.rada3.answer.data.AnswerDialogInteractor;
 import com.springcamp.rostykboiko.rada3.answer.data.AnswerDialogUseCase;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AnswerDialogPresenter implements AnswerContract.Presenter {
@@ -28,24 +28,31 @@ public class AnswerDialogPresenter implements AnswerContract.Presenter {
 
     @Override
     public void submitAnswer() {
-        answerDialogUseCase.submitAnswer(view.getSession(), view.getSurveyId(), view.getOptionsList(),
+        answerDialogUseCase.submitAnswer(view.getSurvey(),
+                view.getSession(),
                 new AnswerDialogUseCase.AnswerCallBack() {
             @Override
             public void success() {
                 HashMap<String, String> user = view.getSession().getUserDetails();
 
+                Survey survey = view.getSurvey();
+
                 DatabaseReference mCurrentSurvey = FirebaseDatabase
                         .getInstance()
                         .getReference()
                         .child("Survey")
-                        .child(view.getSurveyId())
+                        .child(survey.getSurveyID())
                         .child("Answers");
-
-                for (Option option : view.getOptionsList()) {
-                    mCurrentSurvey.child(option.getOptionKey())
+                int index = 0;
+                for (Option option : survey.getSurveyOptionList()) {
+                    if (option.isChecked()){
+                    mCurrentSurvey
+                            .child("option" + (index + 1))
                             .child(user.get(SessionManager.KEY_ACCOUNTID))
                             .setValue(user.get(SessionManager.KEY_ACCOUNTID));
+                    }
                     System.out.println("Key " + option.getOptionKey() + " option " + option);
+                    index++;
                 }
             }
 
@@ -59,14 +66,13 @@ public class AnswerDialogPresenter implements AnswerContract.Presenter {
 
     @Override
     public void addCheckedItem() {
-        answerDialogUseCase.addCheckedItem(view.getPosition(),
-                view.getAdaptorOptionsList(),
-                view.getOptionsList(),
+        answerDialogUseCase.addCheckedItem(
+                view.getPosition(),
+                view.getSurvey(),
                 new AnswerDialogUseCase.AnswerCallBack() {
             @Override
             public void success() {
-                view.getAdaptorOptionsList().get(view.getPosition()).setChecked(true);
-                view.getOptionsList().add(view.getAdaptorOptionsList().get(view.getPosition()));
+                view.getSurvey().getSurveyOptionList().get(view.getPosition()).setChecked(true);
             }
 
             @Override
@@ -79,13 +85,11 @@ public class AnswerDialogPresenter implements AnswerContract.Presenter {
     @Override
     public void deleteCheckedItem() {
         answerDialogUseCase.addCheckedItem(view.getPosition(),
-                view.getOptionsList(),
-                view.getOptionsList(),
+                view.getSurvey(),
                 new AnswerDialogUseCase.AnswerCallBack() {
             @Override
             public void success() {
-                view.getAdaptorOptionsList().get(view.getPosition()).setChecked(false);
-                view.getOptionsList().remove(view.getAdaptorOptionsList().get(view.getPosition()));
+                view.getCheckedOptionsList().get(view.getPosition()).setChecked(false);
             }
 
             @Override
