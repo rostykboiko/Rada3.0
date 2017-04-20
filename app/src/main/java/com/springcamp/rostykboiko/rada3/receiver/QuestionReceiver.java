@@ -5,14 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
 import com.springcamp.rostykboiko.rada3.api.model.Question;
-
-/**
- * Created by rostykboiko on 13.04.2017.
- */
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 
 public class QuestionReceiver extends BroadcastReceiver {
-
+    private static final String SURVEY_KEY = "SURVEY_KEY";
     public static final String QUESTION_RECEIVED_FILTER = "QUESTION_RECEIVED_FILTER";
 
     @NonNull
@@ -24,10 +22,12 @@ public class QuestionReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        callback.onQuestionReceived(null);
+        String json = intent.getStringExtra(SURVEY_KEY);
+        Survey survey = new Gson().fromJson(json, Survey.class);
+        callback.onQuestionReceived(survey);
     }
 
     public interface QuestionReceivedCallback {
-        void onQuestionReceived(@NonNull Question question);
+        void onQuestionReceived(@NonNull Survey survey);
     }
 }

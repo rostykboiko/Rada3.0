@@ -119,7 +119,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         getOptionsList();
         initClickListeners();
         initOptionsListView();
-        initParticipantsList();
+        initUsersList();
     }
 
     /**
@@ -135,6 +135,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
             editTextTitle.setText(survey.getSurveyTitle());
             System.out.println("Intent editor optionsList " + survey.getSurveyOptionList());
+
+            participants = survey.getParticipantsList();
+            System.out.println("BottomSheet checked list " + participants);
 
             optionsList = survey.getSurveyOptionList();
             oneOptionSwitch.setChecked(survey.isSurveySingleOption());
@@ -165,19 +168,30 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             @Override
             public void onClick(View view) {
                 String jsonUserList = new Gson().toJson(userList);
+                System.out.println("BottomSheet checked intent " + participants);
+
+                String jsonParticipantsList = new Gson().toJson(participants);
                 startActivity(new Intent(EditorActivity.this, BottomSheet.class)
-                        .putExtra("UserList", jsonUserList));
+                        .putExtra("UserList", jsonUserList)
+                        .putExtra("ParticipantsList", jsonParticipantsList));
             }
         });
-
     }
 
     private void initOptionsListView() {
-        optionsAdapter = new OptionEditorAdapter(optionsList);
+        optionsAdapter = new OptionEditorAdapter(this, optionsList, new OptionEditorAdapter.OptionItemsCallback() {
 
-        if (optionsList.isEmpty()) {
-            optionsAdapter.addNewItem();
-        }
+            @Override
+            public void onOptionDeleted(@NonNull int position) {
+                optionsList.remove(position);
+                optionsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onOptionChanged(@NonNull Option option, int position) {
+                optionsList.set(position, option);
+            }
+        });
 
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         optionsListView.setLayoutManager(mListManager);
@@ -185,7 +199,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         optionsListView.setAdapter(optionsAdapter);
     }
 
-    private void initParticipantsList() {
+    private void initUsersList() {
         DatabaseReference mCurrentUserRef = FirebaseDatabase.getInstance().getReference()
                 .child("User");
         mCurrentUserRef.keepSynced(true);
@@ -266,7 +280,10 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     private void addOptionRow() {
         if (optionsAdapter.getItemCount() < 5) {
-            optionsAdapter.addNewItem();
+            Option option = new Option();
+            option.setOptionTitle("");
+            optionsList.add(option);
+            optionsAdapter.notifyDataSetChanged();
         } else {
             Toast.makeText(getApplicationContext(),
                     "Максимально 5 варіантів відповіді",
@@ -330,7 +347,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             surveyRef.child(surveyID)
                     .child("Answers")
                     .child("option" + (optionsList.indexOf(option) + 1))
-                    .child("0")
                     .setValue(0);
         }
 
@@ -338,12 +354,12 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 .child("One Positive Option")
                 .setValue(oneOptionSwitch.isChecked());
 
-        /* Participants list */
         survey.setSurveyID(surveyID);
         survey.setSurveyTitle(surveyTitle);
         survey.setSurveyOptionList(optionsList);
         survey.setCreatorId(GoogleAccountAdapter.getAccountID());
         survey.setSurveySingleOption(oneOptionSwitch.isChecked());
+        survey.setParticipantsList(participants);
         survey.setParticipantsCount(participants.size());
 
         dataUserRef(database, survey);
@@ -432,7 +448,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 notificationFCM.put("priority", "high");
                 notificationFCM.put("getSurveyId", survey.getSurveyID());
                 notificationFCM.put("surveyTitle", survey.getSurveyTitle());
-                notificationFCM.put("survey", new Gson().toJson(survey));
+                notificationFCM.put(SURVEY_KEY, new Gson().toJson(survey));
 
                 data.put("data", notificationFCM);
                 data.put("to", userToken);

@@ -1,5 +1,6 @@
 package com.springcamp.rostykboiko.rada3.main.view;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -43,6 +44,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerUIUtils;
+import com.springcamp.rostykboiko.rada3.Rada3;
 import com.springcamp.rostykboiko.rada3.answer.view.AnswerDialogActivity;
 import com.springcamp.rostykboiko.rada3.api.model.Question;
 import com.springcamp.rostykboiko.rada3.intro.view.MainIntroActivity;
@@ -52,6 +54,7 @@ import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.receiver.QuestionReceiver;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.login.view.LoginActivity;
@@ -110,12 +113,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        Rada3.activityResumed();
 
         questionReceiver = new QuestionReceiver(new QuestionReceiver.QuestionReceivedCallback() {
             @Override
-            public void onQuestionReceived(@NonNull Question question) {
+            public void onQuestionReceived(@NonNull Survey survey) {
+                System.out.println(SURVEY_KEY + " " + survey);
+
                 if (presenter != null) {
-                    presenter.receivedQuestion();
+                    presenter.receivedQuestion(survey);
                 }
             }
         });
@@ -129,6 +135,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
+        Rada3.activityPaused();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(questionReceiver);
     }
 
@@ -219,6 +226,17 @@ public class MainActivity extends AppCompatActivity
                                     .child("Creator")
                                     .getValue(String.class));
 
+                            User participant = new User();
+
+                            for (DataSnapshot partSnapshot : dataSnapshot.child("Participants").getChildren()) {
+                                participant.setAccountID(partSnapshot.child("accountID").getValue().toString());
+                                //          participant.setUserName(dataSnapshot.child("").getValue().toString());
+                                participant.setUserEmail(partSnapshot.child("userEmail").getValue().toString());
+                                participant.setUserProfileIcon(partSnapshot.child("userProfileIcon").getValue().toString());
+                                participant.setDeviceToken(partSnapshot.child("deviceToken").getValue().toString());
+                                survey.getParticipantsList().add(participant);
+                            }
+
                             surveyList.add(survey);
                             cardsAdaptor.setSurveyList(surveyList);
 
@@ -290,11 +308,11 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onCardClick(@NonNull Survey survey) {
-                if (GoogleAccountAdapter.getAccountID().equals(survey.getCreatorId())){
-                String json = new Gson().toJson(survey);
+                if (GoogleAccountAdapter.getAccountID().equals(survey.getCreatorId())) {
+                    String json = new Gson().toJson(survey);
 
-                startActivity(new Intent(MainActivity.this, EditorActivity.class)
-                        .putExtra("surveyJson", json));
+                    startActivity(new Intent(MainActivity.this, EditorActivity.class)
+                            .putExtra("surveyJson", json));
                 }
             }
         });
@@ -486,9 +504,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void showReceivedQuestion() {
+    public void showReceivedQuestion(@NonNull Survey survey) {
         String json = new Gson().toJson(survey);
-        System.out.println("Answer survey title " + survey.getSurveyTitle());
 
         startActivity(new Intent(MainActivity.this, AnswerDialogActivity.class)
                 .putExtra(SURVEY_KEY, json));

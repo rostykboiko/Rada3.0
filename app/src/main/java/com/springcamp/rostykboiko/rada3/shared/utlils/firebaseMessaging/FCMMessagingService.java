@@ -15,6 +15,7 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.Rada3;
 import com.springcamp.rostykboiko.rada3.answer.view.AnswerDialogActivity;
 import com.springcamp.rostykboiko.rada3.receiver.QuestionReceiver;
 
@@ -23,7 +24,6 @@ import java.util.List;
 public class FCMMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
     private static final String SURVEY_KEY = "SURVEY_KEY";
-
 
     @NonNull
     private QuestionReceiver questionReceiver;
@@ -34,13 +34,12 @@ public class FCMMessagingService extends FirebaseMessagingService {
 
         if (remoteMessage.getData().size() > 0) {
             String surveyTitle = remoteMessage.getData().get("surveyTitle");
-            String surveyJson = remoteMessage.getData().get("survey");
+            String surveyJson = remoteMessage.getData().get(SURVEY_KEY);
 
-            if (Helper.isAppRunning(this, "com.springcamp.rostykboiko.rada3")) {
+            if (Rada3.isActivityVisible()) {
                 Intent intent = new Intent(QuestionReceiver.QUESTION_RECEIVED_FILTER);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("surveyID", surveyJson);
-                System.out.println("Answer survey surveyJson " + surveyJson);
+                intent.putExtra(SURVEY_KEY, surveyJson);
 
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             } else {
@@ -58,7 +57,6 @@ public class FCMMessagingService extends FirebaseMessagingService {
                 intent.putExtra(SURVEY_KEY, surveyJson),
                 PendingIntent.FLAG_ONE_SHOT);
 
-        System.out.println("Answer survey surveyJson " + surveyJson);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
@@ -76,20 +74,4 @@ public class FCMMessagingService extends FirebaseMessagingService {
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
-
-    private static class Helper {
-
-        private static boolean isAppRunning(final Context context, final String packageName) {
-            final ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-            final List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
-            if (procInfos != null) {
-                for (final ActivityManager.RunningAppProcessInfo processInfo : procInfos) {
-                    if (processInfo.processName.equals(packageName)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
     }
-}

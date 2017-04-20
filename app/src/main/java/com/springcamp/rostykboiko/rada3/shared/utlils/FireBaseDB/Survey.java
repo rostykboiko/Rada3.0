@@ -6,12 +6,31 @@ public class Survey {
     private String surveyID;
     private String surveyTitle;
     private ArrayList<Option> surveyOptionList = new ArrayList<>();
+    private ArrayList<User> participantsList = new ArrayList<>();
     private boolean surveySingleOption;
     private int duration;
     private int participantsCount;
     private String creatorId;
 
     public Survey() {
+    }
+
+    public Survey(String surveyID,
+                  String surveyTitle,
+                  ArrayList<Option> surveyOptionList,
+                  ArrayList<User> participantsList,
+                  boolean surveySingleOption,
+                  int duration,
+                  int participantsCount,
+                  String creatorId) {
+        this.surveyID = surveyID;
+        this.surveyTitle = surveyTitle;
+        this.surveyOptionList = surveyOptionList;
+        this.participantsList = participantsList;
+        this.surveySingleOption = surveySingleOption;
+        this.duration = duration;
+        this.participantsCount = participantsCount;
+        this.creatorId = creatorId;
     }
 
     public String getSurveyTitle() {
@@ -29,6 +48,14 @@ public class Survey {
 
     public void setSurveyOptionList(ArrayList<Option> surveyOptionList) {
         this.surveyOptionList = surveyOptionList;
+    }
+
+    public ArrayList<User> getParticipantsList() {
+        return participantsList;
+    }
+
+    public void setParticipantsList(ArrayList<User> participantsList) {
+        this.participantsList = participantsList;
     }
 
     public String getSurveyID() {

@@ -50,9 +50,12 @@ public class BottomSheet extends AppCompatActivity implements SearchView.OnQuery
         ButterKnife.bind(this);
 
         String jsonUserList = getIntent().getExtras().getString("UserList");
-        Type type = new TypeToken<ArrayList<User>>() {}.getType();
+        String jsonParticipantsList = getIntent().getExtras().getString("ParticipantsList");
+        Type type = new TypeToken<ArrayList<User>>() {
+        }.getType();
 
         userList = new Gson().fromJson(jsonUserList, type);
+        checkedUsers = new Gson().fromJson(jsonParticipantsList, type);
 
         searchBar.setFocusable(true);
 
@@ -105,7 +108,10 @@ public class BottomSheet extends AppCompatActivity implements SearchView.OnQuery
 
     private void initRecyclerView() {
         RecyclerView usersListView = (RecyclerView) findViewById(R.id.users_recycler_view);
-        participantsSheetAdapter = new ParticipantsSheetAdapter(userList, checkedUsers);
+        for (User checkedUser : checkedUsers) {
+            System.out.println("bottomsheetlist Checked activity " + checkedUser.getAccountID());
+        }
+            participantsSheetAdapter = new ParticipantsSheetAdapter(userList, checkedUsers);
 
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         usersListView.setLayoutManager(mListManager);
@@ -119,7 +125,7 @@ public class BottomSheet extends AppCompatActivity implements SearchView.OnQuery
                     public void onClick(View view, int position) {
                         if (!checkedUsers.contains(userList.get(position))) {
                             checkedUsers.add(userList.get(position));
-                        } else if (checkedUsers.contains(userList.get(position))){
+                        } else if (checkedUsers.contains(userList.get(position))) {
                             System.out.println("Checked users " + checkedUsers.contains(userList.get(position)));
 
                             checkedUsers.remove(userList.get(position));

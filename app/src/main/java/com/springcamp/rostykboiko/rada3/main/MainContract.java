@@ -11,7 +11,7 @@ public interface MainContract {
 
         void showEditor(@NonNull Survey survey);
 
-        void showReceivedQuestion();
+        void showReceivedQuestion(@NonNull Survey survey);
     }
 
     interface Presenter {
@@ -22,6 +22,6 @@ public interface MainContract {
 
         void onStop();
 
-        void receivedQuestion();
+        void receivedQuestion(@NonNull Survey survey);
     }
 }

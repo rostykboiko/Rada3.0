@@ -7,10 +7,12 @@ public class User {
     private String accountID;
     private String deviceToken;
     private String userProfileIcon;
-    private boolean checked;
-
 
     public User() {
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public void setUserName(String userName) {
@@ -56,14 +58,6 @@ public class User {
 
     public void setAccountID(String accountID) {
         this.accountID = accountID;
-    }
-
-    public boolean isChecked() {
-        return checked;
-    }
-
-    public void setChecked(boolean checked) {
-        this.checked = checked;
     }
 
 }

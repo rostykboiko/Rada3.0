@@ -45,9 +45,9 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void receivedQuestion() {
+    public void receivedQuestion(Survey survey) {
         if (view != null) {
-            view.showReceivedQuestion();
+            view.showReceivedQuestion(survey);
         }
     }
 }

@@ -63,12 +63,24 @@ class ParticipantsSheetAdapter extends RecyclerView.Adapter<ParticipantsSheetAda
                 holder.profileImage.setImageDrawable(circularBitmapDrawable);
             }
         });
+        System.out.println("bottomsheetlist bool " + checkedUsers.contains(userList.get(position)));
 
-        if (checkedUsers.contains(userList.get(position))){
-            holder.checked.setVisibility(View.VISIBLE);
-        } else {
-            holder.checked.setVisibility(View.GONE);
+
+        userList.get(position).getAccountID();
+
+//        if (checkedUsers.contains(userList.get(position))){
+//            holder.checked.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.checked.setVisibility(View.GONE);
+//        }
+        for (User checkedUser : checkedUsers){
+            System.out.println("bottomsheetlist Checked adapter " + checkedUser.getAccountID());
+
+            if (checkedUser.getAccountID().equals(userList.get(position).getAccountID())){
+                holder.checked.setVisibility(View.VISIBLE);
+            }
         }
+
     }
 
     @Override

@@ -37,11 +37,7 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
     private static final String SURVEY_KEY = "SURVEY_KEY";
 
     int position;
-    private String surveyId;
     private Survey survey = new Survey();
-    private Option option = new Option();
-    private ArrayList<Option> optionsList = new ArrayList<>();
-    private ArrayList<String> answersList = new ArrayList<>();
     private SessionManager session;
     private RecyclerView usersListView;
     private OptionDialogAdapter optionDialogAdapter;
@@ -75,13 +71,13 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
     }
 
     private void messageReceiver() {
-        System.out.println("Answer survey message received");
         Intent intent = getIntent();
         if (intent.getExtras() != null) {
             String json = getIntent().getExtras().getString(SURVEY_KEY);
             survey = new Gson().fromJson(json, Survey.class);
-            System.out.println("Answer survey title " + survey.getSurveyTitle());
-            optionDialogAdapter.setOptionsList(optionsList);
+
+            titleView.setText(survey.getSurveyTitle());
+            optionDialogAdapter.setOptionsList(survey.getSurveyOptionList());
 
         }
     }
@@ -170,12 +166,12 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
 
     @Override
     public String getSurveyId() {
-        return surveyId;
+        return survey.getSurveyID();
     }
 
     @Override
     public ArrayList<Option> getOptionsList() {
-        return optionsList;
+        return survey.getSurveyOptionList();
     }
 
     @Override
@@ -185,5 +181,6 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
 
     public static void launchActivity(@NonNull AppCompatActivity activity) {
         activity.startActivity(new Intent(activity, AnswerDialogActivity.class));
+
     }
 }

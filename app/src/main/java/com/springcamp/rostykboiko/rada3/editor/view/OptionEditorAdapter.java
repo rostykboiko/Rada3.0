@@ -1,5 +1,7 @@
 package com.springcamp.rostykboiko.rada3.editor.view;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +17,9 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import java.util.ArrayList;
 
 class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewHolder> {
+    private Context mContext;
+    @NonNull
+    private OptionItemsCallback callback;
 
     private ArrayList<Option> optionsList = new ArrayList<>();
 
@@ -29,8 +34,10 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
         }
     }
 
-    OptionEditorAdapter(ArrayList<Option> optionsList) {
+    OptionEditorAdapter(Context mContext, ArrayList<Option> optionsList, @NonNull OptionEditorAdapter.OptionItemsCallback callback) {
+        this.mContext = mContext;
         this.optionsList = optionsList;
+        this.callback = callback;
     }
 
     @Override
@@ -43,6 +50,7 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
     @Override
     public void onBindViewHolder(final OptionEditorAdapter.ViewHolder holder, final int position) {
+
         if (optionsList != null) {
             holder.optionItem.setText(optionsList.get(position).getOptionTitle());
         } else {
@@ -62,16 +70,17 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
                 @Override
                 public void afterTextChanged(Editable s) {
                     Option option = new Option();
-
                     option.setOptionTitle(holder.optionItem.getText().toString());
-                    optionsList.set(position, option);
+                    option.setOptionKey("option" + (position + 1));
+
+                    callback.onOptionChanged(option, position);
                 }
             });
 
         holder.closeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                optionsList.remove(position);
+                callback.onOptionDeleted(position);
                 notifyItemRemoved(position);
             }
         });
@@ -82,9 +91,10 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
         return optionsList.size();
     }
 
-    void addNewItem() {
-        Option option = new Option();
-        option.setOptionTitle("");
-        optionsList.add(option);
+    interface OptionItemsCallback {
+
+        void onOptionDeleted(@NonNull int position);
+
+        void onOptionChanged(@NonNull Option option, int position);
     }
 }
