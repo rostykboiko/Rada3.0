@@ -192,7 +192,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     private void initOptionsListView() {
         optionsAdapter = new OptionEditorAdapter(this, optionsList, new OptionEditorAdapter.OptionItemsCallback() {
-
             @Override
             public void onOptionDeleted(int position) {
                 optionsList.remove(position);
@@ -200,8 +199,10 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             }
 
             @Override
-            public void onOptionChanged(@NonNull Option option, int position) {
-                optionsList.set(position, option);
+            public void onOptionChanged(@NonNull ArrayList<Option> options) {
+                System.out.println("FCK THIS SHIT");
+               // optionsList.clear();
+                optionsList = options;
             }
         });
 
@@ -294,7 +295,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         if (optionsAdapter.getItemCount() < 5) {
             Option option = new Option();
             option.setOptionTitle("");
-            option.setOptionKey("option" + optionsList.size());
+            option.setOptionKey("option" + (optionsList.size()+ 1));
             optionsList.add(option);
             optionsAdapter.notifyDataSetChanged();
         } else {

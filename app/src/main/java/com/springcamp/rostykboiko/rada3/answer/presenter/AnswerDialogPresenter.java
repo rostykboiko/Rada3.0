@@ -84,12 +84,15 @@ public class AnswerDialogPresenter implements AnswerContract.Presenter {
 
     @Override
     public void deleteCheckedItem() {
-        answerDialogUseCase.addCheckedItem(view.getPosition(),
+        answerDialogUseCase.deleteCheckedItem(
+                view.getPosition(),
                 view.getSurvey(),
                 new AnswerDialogUseCase.AnswerCallBack() {
             @Override
             public void success() {
-                view.getCheckedOptionsList().get(view.getPosition()).setChecked(false);
+                view.getSurvey().getSurveyOptionList().get(view.getPosition()).setChecked(false);
+
+               // view.getCheckedOptionsList().get(view.getPosition()).setChecked(false);
             }
 
             @Override

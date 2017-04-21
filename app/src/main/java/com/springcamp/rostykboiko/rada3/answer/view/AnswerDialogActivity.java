@@ -117,16 +117,9 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
                     @Override
                     public void onClick(View view, int position) {
                         if (optionDialogAdapter.getOptionsList().get(position).isChecked()) {
-//                            survey.getSurveyOptionList().remove(
-//                                    optionDialogAdapter.getOptionsList().get(position));
-//                            optionDialogAdapter.getOptionsList().get(position).setChecked(false);
-                                 presenter.deleteCheckedItem();
+                            presenter.deleteCheckedItem();
                             System.out.println("optionDialog remove");
                         } else {
-                        //    survey.getSurveyOptionList().add(
-//                                    optionDialogAdapter.getOptionsList().get(position));
-//                            optionDialogAdapter.getOptionsList().get(position).setChecked(true);
-//                            System.out.println("optionDialog add");
                             presenter.addCheckedItem();
                         }
                     }

@@ -22,20 +22,6 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
     private boolean onePositiveOption;
     private ArrayList<Option> optionsList = new ArrayList<>();
 
-    public void setOptions(@NonNull List<Option> optionsList) {
-        this.optionsList.clear();
-        this.optionsList.addAll(optionsList);
-        notifyDataSetChanged();
-    }
-
-    public void setParticipantsCount(int participantsCount) {
-        this.participantsCount = participantsCount;
-    }
-
-    public void setOnePositiveOption(boolean onePositiveOption) {
-        this.onePositiveOption = onePositiveOption;
-    }
-
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView optionItem;
         private TextView answerCount;
@@ -54,6 +40,20 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
     OptionCardAdapter() {
     }
 
+    void setOptions(@NonNull List<Option> optionsList) {
+        this.optionsList.clear();
+        this.optionsList.addAll(optionsList);
+        notifyDataSetChanged();
+    }
+
+    void setParticipantsCount(int participantsCount) {
+        this.participantsCount = participantsCount;
+    }
+
+    void setOnePositiveOption(boolean onePositiveOption) {
+        this.onePositiveOption = onePositiveOption;
+    }
+
     @Override
     public OptionCardAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -66,6 +66,8 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
     public void onBindViewHolder(OptionCardAdapter.ViewHolder holder, int position) {
         Option option = optionsList.get(position);
         double answersNumber = Utils.longToInt(option.getAnswerCounter());
+        System.out.println("answersNumber " + answersNumber);
+
         int result = (int) (answersNumber / participantsCount * 100);
 
         holder.optionItem.setText(option.getOptionTitle());

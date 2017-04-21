@@ -127,7 +127,9 @@ public class MainActivity extends AppCompatActivity
                 new IntentFilter(QuestionReceiver.QUESTION_RECEIVED_FILTER));
 
         initFireBase();
-        cardsAdaptor.notifyDataSetChanged();
+        initCardView();
+
+//        cardsAdaptor.notifyDataSetChanged();
     }
 
     @Override
@@ -206,7 +208,7 @@ public class MainActivity extends AppCompatActivity
                                 option.setAnswerCounter(dataSnapshot
                                         .child("Answers")
                                         .child(optionSnapshot.getKey())
-                                        .getChildrenCount() - 1);
+                                        .getChildrenCount());
 
                                 survey.getSurveyOptionList().add(option);
                                 option = new Option();
@@ -305,6 +307,7 @@ public class MainActivity extends AppCompatActivity
                         .child("Surveys")
                         .child(surveyId)
                         .removeValue();
+
             }
 
             @Override
@@ -515,26 +518,26 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+     //   getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_share:
-                break;
-            case R.id.action_settings:
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                break;
-            case R.id.action_delete:
-                startActivity(new Intent(MainActivity.this, MainIntroActivity.class));
-                break;
-            case R.id.action_profile:
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                break;
-        }
+//        int id = item.getItemId();
+//        switch (id) {
+//            case R.id.action_share:
+//                break;
+//            case R.id.action_settings:
+//                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+//                break;
+//            case R.id.action_delete:
+//                startActivity(new Intent(MainActivity.this, MainIntroActivity.class));
+//                break;
+//            case R.id.action_profile:
+//                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//                break;
+//        }
         return super.onOptionsItemSelected(item);
     }
 

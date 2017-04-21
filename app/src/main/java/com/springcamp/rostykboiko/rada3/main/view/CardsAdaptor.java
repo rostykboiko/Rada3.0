@@ -69,48 +69,12 @@ class CardsAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         });
     }
 
-    private void removeSurvey(final String surveyId) {
-//        FirebaseDatabase.getInstance().getReference()
-//                .child("Survey")
-//                .child(surveyId)
-//                .addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        System.out.println("onBtn remove value: " + dataSnapshot.child("Creator").getValue());
-//                        if (dataSnapshot.child("Creator").getValue() != null
-//                                &&
-//                                dataSnapshot.child("Creator")
-//                                        .getValue().equals(GoogleAccountAdapter.getAccountID())) {
-//                            FirebaseDatabase.getInstance().getReference()
-//                                    .child("Survey")
-//                                    .child(surveyId)
-//                                    .removeValue();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//
-//        FirebaseDatabase.getInstance().getReference()
-//                .child("User")
-//                .child(GoogleAccountAdapter.getAccountID())
-//                .child("Surveys")
-//                .child(surveyId)
-//                .removeValue();
-
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getItemCount() {
         return surveyList.size();
     }
 
     void setSurveyList(@NonNull List<Survey> surveyList) {
-        //TODO check if list contains other elements
         if (!this.surveyList.containsAll(surveyList)) {
             this.surveyList.addAll(surveyList);
         }

@@ -21,7 +21,8 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
     @NonNull
     private OptionItemsCallback callback;
 
-    private ArrayList<Option> optionsList = new ArrayList<>();
+    @NonNull
+    private ArrayList<Option> optionsList;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private EditText optionItem;
@@ -31,10 +32,29 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
             super(view);
             optionItem = (EditText) view.findViewById(R.id.optionItemDialog);
             closeIcon = (ImageView) view.findViewById(R.id.close_icon);
+
+            optionItem.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    optionsList.get(getAdapterPosition()).setOptionTitle(optionItem.getText().toString());
+                    optionsList.get(getAdapterPosition()).setOptionKey("option" + (getAdapterPosition() + 1));
+                    System.out.println("optionsList adapter " + optionsList.get(getAdapterPosition()).getOptionTitle());
+                    callback.onOptionChanged(optionsList);
+                }
+            });
         }
+
     }
 
-    OptionEditorAdapter(Context mContext, ArrayList<Option> optionsList, @NonNull OptionEditorAdapter.OptionItemsCallback callback) {
+    OptionEditorAdapter(Context mContext, @NonNull ArrayList<Option> optionsList, @NonNull OptionEditorAdapter.OptionItemsCallback callback) {
         this.mContext = mContext;
         this.optionsList = optionsList;
         this.callback = callback;
@@ -50,31 +70,7 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
     @Override
     public void onBindViewHolder(final OptionEditorAdapter.ViewHolder holder, final int position) {
-        if (optionsList != null) {
-            holder.optionItem.setText(optionsList.get(position).getOptionTitle());
-        } else {
-            holder.optionItem.setHint(R.string.ed_option);
-        }
-
-        if (holder.optionItem != null)
-            holder.optionItem.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    Option option = new Option();
-                    option.setOptionTitle(holder.optionItem.getText().toString());
-                    option.setOptionKey("option" + (position + 1));
-
-                    callback.onOptionChanged(option, position);
-                }
-            });
+        holder.optionItem.setText(optionsList.get(position).getOptionTitle());
 
         holder.closeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +90,6 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
         void onOptionDeleted(int position);
 
-        void onOptionChanged(@NonNull Option option, int position);
+        void onOptionChanged(@NonNull ArrayList<Option> options);
     }
 }
