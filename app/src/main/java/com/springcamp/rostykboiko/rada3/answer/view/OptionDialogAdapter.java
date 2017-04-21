@@ -54,7 +54,7 @@ class OptionDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return optionsList;
     }
 
-    public void setOptionsList(@NonNull List<Option> options) {
+    void setOptionsList(@NonNull List<Option> options) {
         this.optionsList.addAll(options);
         notifyDataSetChanged();
     }

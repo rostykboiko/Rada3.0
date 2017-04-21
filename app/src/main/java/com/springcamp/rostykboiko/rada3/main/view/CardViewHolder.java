@@ -45,7 +45,7 @@ class CardViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setSurvey(@NonNull Survey survey) {
-        optionCardAdapter.setOnePositiveOption(true);
+        optionCardAdapter.setOnePositiveOption(survey.isSurveySingleOption());
         optionCardAdapter.setParticipantsCount(survey.getParticipantsCount());
         optionCardAdapter.setOptions(survey.getSurveyOptionList());
     }

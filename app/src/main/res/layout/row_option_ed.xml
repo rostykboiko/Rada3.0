@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/item_radioBtn"
         android:src="@drawable/ic_material_checkbox_blank"
-         />
+        />
 
     <EditText
         android:id="@+id/optionItemDialog"

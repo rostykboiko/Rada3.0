@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity
                 new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        if (dataSnapshot.getKey().equals(surveyId)) {
+                        if (dataSnapshot != null && dataSnapshot.getKey().equals(surveyId)) {
                             surveyList = new ArrayList<>();
                             survey.setSurveyID(dataSnapshot.getKey());
                             String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
@@ -218,10 +218,11 @@ public class MainActivity extends AppCompatActivity
                                     .child("Participants")
                                     .getChildrenCount()));
 
-                            survey.setSurveySingleOption(
-                                    dataSnapshot
-                                    .child("One Positive Option")
-                                    .getValue(Boolean.class));
+                            if (dataSnapshot.child("One Positive Option").getValue() != null) {
+                                survey.setSurveySingleOption(dataSnapshot
+                                        .child("One Positive Option")
+                                        .getValue(Boolean.class));
+                            }
 
                             System.out.println("dataSnap" + dataSnapshot);
 
@@ -513,12 +514,11 @@ public class MainActivity extends AppCompatActivity
 
         startActivity(new Intent(MainActivity.this, AnswerDialogActivity.class)
                 .putExtra(SURVEY_KEY, json));
-        //AnswerDialogActivity.launchActivity(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-     //   getMenuInflater().inflate(R.menu.menu_main, menu);
+        //   getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 

@@ -117,10 +117,9 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
                     @Override
                     public void onClick(View view, int position) {
                         if (optionDialogAdapter.getOptionsList().get(position).isChecked()) {
-                            presenter.deleteCheckedItem();
-                            System.out.println("optionDialog remove");
+                            presenter.deleteCheckedItem(position, survey);
                         } else {
-                            presenter.addCheckedItem();
+                            presenter.addCheckedItem(position, survey);
                         }
                     }
 
@@ -150,11 +149,6 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
     @Override
     public SessionManager getSession() {
         return session;
-    }
-
-    @Override
-    public ArrayList<Option> getCheckedOptionsList() {
-        return null;
     }
 
     @Override

@@ -18,6 +18,8 @@ import java.util.ArrayList;
 
 class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewHolder> {
     private Context mContext;
+    private boolean oneOption;
+
     @NonNull
     private OptionItemsCallback callback;
 
@@ -27,11 +29,14 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
     class ViewHolder extends RecyclerView.ViewHolder {
         private EditText optionItem;
         private ImageView closeIcon;
+        private ImageView checkIcon;
 
         ViewHolder(View view) {
             super(view);
-            optionItem = (EditText) view.findViewById(R.id.optionItemDialog);
             closeIcon = (ImageView) view.findViewById(R.id.close_icon);
+            checkIcon = (ImageView) view.findViewById(R.id.checkBox);
+            optionItem = (EditText) view.findViewById(R.id.optionItemDialog);
+
 
             optionItem.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -46,7 +51,6 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
                 public void afterTextChanged(Editable s) {
                     optionsList.get(getAdapterPosition()).setOptionTitle(optionItem.getText().toString());
                     optionsList.get(getAdapterPosition()).setOptionKey("option" + (getAdapterPosition() + 1));
-                    System.out.println("optionsList adapter " + optionsList.get(getAdapterPosition()).getOptionTitle());
                     callback.onOptionChanged(optionsList);
                 }
             });
@@ -54,7 +58,9 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
     }
 
-    OptionEditorAdapter(Context mContext, @NonNull ArrayList<Option> optionsList, @NonNull OptionEditorAdapter.OptionItemsCallback callback) {
+    OptionEditorAdapter(Context mContext,
+                        @NonNull ArrayList<Option> optionsList,
+                        @NonNull OptionEditorAdapter.OptionItemsCallback callback) {
         this.mContext = mContext;
         this.optionsList = optionsList;
         this.callback = callback;
@@ -79,6 +85,13 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
                 notifyItemRemoved(position);
             }
         });
+
+        if (!callback.onOneOption()){
+            holder.checkIcon.setImageResource(R.drawable.ic_material_checkbox_blank);
+        } else {
+            holder.checkIcon.setImageResource(R.drawable.ic_material_radio_blank);
+        }
+
     }
 
     @Override
@@ -87,6 +100,8 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
     }
 
     interface OptionItemsCallback {
+
+        boolean onOneOption();
 
         void onOptionDeleted(int position);
 

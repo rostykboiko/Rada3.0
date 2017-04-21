@@ -1,5 +1,6 @@
 package com.springcamp.rostykboiko.rada3.answer.presenter;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DatabaseReference;
@@ -43,15 +44,14 @@ public class AnswerDialogPresenter implements AnswerContract.Presenter {
                         .child("Survey")
                         .child(survey.getSurveyID())
                         .child("Answers");
-                int index = 0;
+                int index = 1;
                 for (Option option : survey.getSurveyOptionList()) {
                     if (option.isChecked()){
                     mCurrentSurvey
-                            .child("option" + (index + 1))
+                            .child("option" + index)
                             .child(user.get(SessionManager.KEY_ACCOUNTID))
                             .setValue(user.get(SessionManager.KEY_ACCOUNTID));
                     }
-                    System.out.println("Key " + option.getOptionKey() + " option " + option);
                     index++;
                 }
             }
@@ -65,14 +65,14 @@ public class AnswerDialogPresenter implements AnswerContract.Presenter {
     }
 
     @Override
-    public void addCheckedItem() {
+    public void addCheckedItem(final int position, @NonNull final Survey survey) {
         answerDialogUseCase.addCheckedItem(
-                view.getPosition(),
-                view.getSurvey(),
+                position,
+                survey,
                 new AnswerDialogUseCase.AnswerCallBack() {
             @Override
             public void success() {
-                view.getSurvey().getSurveyOptionList().get(view.getPosition()).setChecked(true);
+                survey.getSurveyOptionList().get(position).setChecked(true);
             }
 
             @Override
@@ -83,7 +83,7 @@ public class AnswerDialogPresenter implements AnswerContract.Presenter {
     }
 
     @Override
-    public void deleteCheckedItem() {
+    public void deleteCheckedItem(int position, @NonNull Survey survey) {
         answerDialogUseCase.deleteCheckedItem(
                 view.getPosition(),
                 view.getSurvey(),
@@ -91,8 +91,6 @@ public class AnswerDialogPresenter implements AnswerContract.Presenter {
             @Override
             public void success() {
                 view.getSurvey().getSurveyOptionList().get(view.getPosition()).setChecked(false);
-
-               // view.getCheckedOptionsList().get(view.getPosition()).setChecked(false);
             }
 
             @Override

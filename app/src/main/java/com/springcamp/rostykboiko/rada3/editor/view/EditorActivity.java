@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextThemeWrapper;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -56,7 +57,7 @@ import org.json.JSONObject;
 
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
     private static final String SURVEY_KEY = "SURVEY_KEY";
-    private Survey survey;
+    private Survey survey = new Survey();
     private ArrayList<Option> optionsList = new ArrayList<>();
     private ArrayList<User> participants = new ArrayList<>();
     private ArrayList<User> userList = new ArrayList<>();
@@ -188,10 +189,22 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                         .putExtra("ParticipantsList", jsonParticipantsList));
             }
         });
+        oneOptionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                survey.setSurveySingleOption(isChecked);
+                optionsAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void initOptionsListView() {
         optionsAdapter = new OptionEditorAdapter(this, optionsList, new OptionEditorAdapter.OptionItemsCallback() {
+            @Override
+            public boolean onOneOption() {
+                return survey.isSurveySingleOption();
+            }
+
             @Override
             public void onOptionDeleted(int position) {
                 optionsList.remove(position);
@@ -200,8 +213,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
             @Override
             public void onOptionChanged(@NonNull ArrayList<Option> options) {
-                System.out.println("FCK THIS SHIT");
-               // optionsList.clear();
                 optionsList = options;
             }
         });
@@ -340,7 +351,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     private void dataSurveyReference(FirebaseDatabase database) {
         String surveyID;
-        if (survey != null) {
+        if (survey.getSurveyID() != null) {
             surveyID = survey.getSurveyID();
         } else {
             surveyID = generatedId();
@@ -350,6 +361,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         DatabaseReference surveyRef = database.getReference("Survey");
 
         String surveyTitle = editTextTitle.getText().toString();
+
+        surveyRef.child(surveyID).removeValue();
 
         /* Title */
         surveyRef.child(surveyID)
@@ -507,7 +520,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         } else {
             AlertDialog.Builder confirmDialog = new AlertDialog.Builder(
                     new ContextThemeWrapper(this, R.style.AlertDialogCustom));
-            confirmDialog.setMessage("Дійсно скасувати"); // сообщение
+            confirmDialog.setMessage("Дійсно скасувати");
             confirmDialog.setPositiveButton("Так", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int arg1) {
                     finish();

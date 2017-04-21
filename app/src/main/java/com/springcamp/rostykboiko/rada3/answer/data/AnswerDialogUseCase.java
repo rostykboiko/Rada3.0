@@ -10,7 +10,8 @@ import java.util.ArrayList;
 
 public interface AnswerDialogUseCase {
 
-    void submitAnswer(@Nullable Survey survey,
+    void submitAnswer(
+            @Nullable Survey survey,
             @Nullable SessionManager session,
             @Nullable AnswerCallBack callback);
 
