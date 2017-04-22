@@ -1,5 +1,6 @@
 package com.springcamp.rostykboiko.rada3.bottomSheet.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -15,8 +16,14 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.view.Menu;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -30,14 +37,20 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnTextChanged;
 
-public class BottomSheet extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class BottomSheet extends AppCompatActivity {
     @Nullable
     private ArrayList<User> userList;
 
-    ArrayList<User> checkedUsers = new ArrayList<>();
+    String surveyId;
+
     @BindView(R.id.search_view)
-    SearchView searchBar;
+    EditText searchBar;
+
+    private InputMethodManager inputMethodManager;
+
+    private BottomSheetBehavior bottomSheet;
 
     private ParticipantsSheetAdapter participantsSheetAdapter;
 
@@ -50,46 +63,128 @@ public class BottomSheet extends AppCompatActivity implements SearchView.OnQuery
         ButterKnife.bind(this);
 
         String jsonUserList = getIntent().getExtras().getString("UserList");
-        String jsonParticipantsList = getIntent().getExtras().getString("ParticipantsList");
         Type type = new TypeToken<ArrayList<User>>() {
         }.getType();
 
-        userList = new Gson().fromJson(jsonUserList, type);
-        checkedUsers = new Gson().fromJson(jsonParticipantsList, type);
+        bottomSheet = bottomSheet.from(findViewById(R.id.bottom_sheet));
 
-        searchBar.setFocusable(true);
+
+        surveyId = getIntent().getExtras().getString("surveyId");
+
+        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        userList = new Gson().fromJson(jsonUserList, type);
 
         initBehavior();
+        initSearchBar();
         initRecyclerView();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        inputMethodManager.toggleSoftInput(InputMethodManager.RESULT_UNCHANGED_HIDDEN, 0);
+
+    }
+
     private void initBehavior() {
-        BottomSheetBehavior.from(findViewById(R.id.bottom_sheet))
-                .setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheet.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        String jsonUserList = new Gson().toJson(userList);
+                        startActivity(new Intent(BottomSheet.this, EditorActivity.class)
+                                .putExtra("ParticipantsList", jsonUserList)
+                                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+
+                        inputMethodManager.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
+
+                        finish();
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        searchBar.setFocusable(true);
+                        searchBar.setFocusableInTouchMode(true);
+                        searchBar.requestFocus();
+
+                        inputMethodManager.toggleSoftInput(InputMethodManager.RESULT_SHOWN, 0);
+
+                        setStatusBarDim(false);
+                        break;
+                    default:
+                        setStatusBarDim(true);
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // no op
+            }
+        });
+    }
+
+    private void initSearchBar() {
+        searchBar.setFocusable(false);
+
+        searchBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheet.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable newText) {
+                ArrayList<User> newList = new ArrayList<>();
+                for (User user : userList) {
+                    if (user.getUserEmail().contains(newText) || user.getUserName().contains(newText))
+                        newList.add(user);
+                }
+                participantsSheetAdapter.setFilter(newList);
+            }
+        });
+    }
+
+    private void initRecyclerView() {
+        RecyclerView usersListView = (RecyclerView) findViewById(R.id.users_recycler_view);
+
+        participantsSheetAdapter = new ParticipantsSheetAdapter(surveyId, userList);
+
+        RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
+        usersListView.setLayoutManager(mListManager);
+        usersListView.setItemAnimator(new DefaultItemAnimator());
+        usersListView.setAdapter(participantsSheetAdapter);
+
+        usersListView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),
+                usersListView,
+                new RecyclerTouchListener.ClickListener() {
                     @Override
-                    public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                        switch (newState) {
-                            case BottomSheetBehavior.STATE_HIDDEN:
-                                String jsonUserList = new Gson().toJson(checkedUsers);
-                                startActivity(new Intent(BottomSheet.this, EditorActivity.class)
-                                        .putExtra("ParticipantsList", jsonUserList)
-                                        .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
-                                finish();
-                                break;
-                            case BottomSheetBehavior.STATE_EXPANDED:
-                                setStatusBarDim(false);
-                                break;
-                            default:
-                                setStatusBarDim(true);
-                                break;
+                    public void onClick(View view, int position) {
+                        if (!userList.get(position).getUserSurveys().contains(surveyId)) {
+                            userList.get(position).getUserSurveys().add(surveyId);
+
+                        } else if (userList.get(position).getUserSurveys().contains(surveyId)) {
+                            userList.get(position).getUserSurveys().remove(surveyId);
+
                         }
+                        participantsSheetAdapter.notifyDataSetChanged();
                     }
 
                     @Override
-                    public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                        // no op
+                    public void onLongClick(View view, int position) {
                     }
-                });
+                }));
     }
 
     private void setStatusBarDim(boolean dim) {
@@ -104,59 +199,6 @@ public class BottomSheet extends AppCompatActivity implements SearchView.OnQuery
         int resId = typedArray.getResourceId(0, 0);
         typedArray.recycle();
         return resId;
-    }
-
-    private void initRecyclerView() {
-        RecyclerView usersListView = (RecyclerView) findViewById(R.id.users_recycler_view);
-        for (User checkedUser : checkedUsers) {
-            System.out.println("bottomsheetlist Checked activity " + checkedUser.getAccountID());
-        }
-            participantsSheetAdapter = new ParticipantsSheetAdapter(userList, checkedUsers);
-
-        RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
-        usersListView.setLayoutManager(mListManager);
-        usersListView.setItemAnimator(new DefaultItemAnimator());
-        usersListView.setAdapter(participantsSheetAdapter);
-
-        usersListView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),
-                usersListView,
-                new RecyclerTouchListener.ClickListener() {
-                    @Override
-                    public void onClick(View view, int position) {
-                        if (!checkedUsers.contains(userList.get(position))) {
-                            checkedUsers.add(userList.get(position));
-                        } else if (checkedUsers.contains(userList.get(position))) {
-                            System.out.println("Checked users " + checkedUsers.contains(userList.get(position)));
-
-                            checkedUsers.remove(userList.get(position));
-                            System.out.println("Checked users " + checkedUsers);
-                        }
-                        participantsSheetAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onLongClick(View view, int position) {
-                    }
-                }));
-
-        searchBar.setOnQueryTextListener(this);
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        ArrayList<User> newList = new ArrayList<>();
-        for (User user : userList) {
-            if (user.getUserEmail().contains(newText))
-                newList.add(user);
-        }
-        participantsSheetAdapter.setFilter(newList);
-
-        return true;
     }
 
 

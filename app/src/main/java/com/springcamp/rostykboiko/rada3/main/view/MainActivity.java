@@ -128,8 +128,6 @@ public class MainActivity extends AppCompatActivity
 
         initFireBase();
         initCardView();
-
-//        cardsAdaptor.notifyDataSetChanged();
     }
 
     @Override
@@ -233,11 +231,12 @@ public class MainActivity extends AppCompatActivity
                             User participant = new User();
 
                             for (DataSnapshot partSnapshot : dataSnapshot.child("Participants").getChildren()) {
-                                participant.setAccountID(partSnapshot.child("accountID").getValue().toString());
-                                //          participant.setUserName(dataSnapshot.child("").getValue().toString());
-                                participant.setUserEmail(partSnapshot.child("userEmail").getValue().toString());
-                                participant.setUserProfileIcon(partSnapshot.child("userProfileIcon").getValue().toString());
-                                participant.setDeviceToken(partSnapshot.child("deviceToken").getValue().toString());
+                                participant.setAccountID(partSnapshot.child("accountID").getValue(String.class));
+                                participant.setUserName(dataSnapshot.child("userName").getValue(String.class));
+                                participant.setUserEmail(partSnapshot.child("userEmail").getValue(String.class));
+                                participant.setUserProfileIcon(partSnapshot.child("userProfileIcon").getValue(String.class));
+                                participant.setDeviceToken(partSnapshot.child("deviceToken").getValue(String.class));
+
                                 survey.getParticipantsList().add(participant);
                             }
 

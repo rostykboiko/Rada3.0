@@ -48,6 +48,11 @@
     <string name="tv_duration_pref">Налаштувати</string>
     <!--Editor Activity End-->
 
+    <!--BottomSheet Activity Start-->
+    <string name="bottomSheet_search_hint">Type a name or email</string>
+
+    <!--BottomSheet Activity End-->
+
     <!-- Dialog -->
     <string name="dialog_ok_btn">OK</string>
 

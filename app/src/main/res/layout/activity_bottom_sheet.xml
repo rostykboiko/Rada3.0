@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="900dp"
+        app:behavior_peekHeight="448dp"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
         app:theme="@style/AppTheme.TextItem">
 
@@ -20,29 +19,30 @@
             android:background="@color/cardview_light_background"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/card_view"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/search_bar_margin"
-                android:elevation="3dp"
-                card_view:cardCornerRadius="@dimen/card_album_radius">
+                android:paddingBottom="@dimen/margin_medium"
+                android:paddingEnd="@dimen/margin_large"
+                android:paddingStart="@dimen/margin_large"
+                android:paddingTop="@dimen/margin_medium">
 
-                <android.support.v7.widget.SearchView
+                <EditText
                     android:id="@+id/search_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true" />
-
-            </android.support.v7.widget.CardView>
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:elegantTextHeight="true"
+                    android:hint="@string/bottomSheet_search_hint"
+                    android:textColorHint="@color/colorSecondaryText"
+                    android:textSize="@dimen/text_size_standard" />
+            </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/users_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/grey_100"
                 android:scrollbars="vertical" />
         </LinearLayout>
 

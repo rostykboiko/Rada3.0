@@ -21,24 +21,26 @@ import java.util.ArrayList;
 class ParticipantsSheetAdapter extends RecyclerView.Adapter<ParticipantsSheetAdapter.ViewHolder> {
 
     private ArrayList<User> userList = new ArrayList<>();
-    private ArrayList<User> checkedUsers = new ArrayList<>();
+    private String surveyId;
 
     class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView userNameItem;
         private TextView userEmailItem;
         private ImageView profileImage;
         private RelativeLayout checked;
 
         ViewHolder(View view) {
             super(view);
+            userNameItem = (TextView) view.findViewById(R.id.userNameItem);
             userEmailItem = (TextView) view.findViewById(R.id.userEmailItem);
             profileImage = (ImageView) view.findViewById(R.id.profile_img_view);
             checked = (RelativeLayout) view.findViewById(R.id.checked);
         }
     }
 
-    ParticipantsSheetAdapter(ArrayList<User> userList, ArrayList<User> checkedUsers) {
+    ParticipantsSheetAdapter(String surveyId, ArrayList<User> userList) {
+        this.surveyId = surveyId;
         this.userList = userList;
-        this.checkedUsers = checkedUsers;
     }
 
     @Override
@@ -51,6 +53,7 @@ class ParticipantsSheetAdapter extends RecyclerView.Adapter<ParticipantsSheetAda
 
     @Override
     public void onBindViewHolder(final ParticipantsSheetAdapter.ViewHolder holder, int position) {
+        holder.userNameItem.setText(userList.get(position).getUserName());
         holder.userEmailItem.setText(userList.get(position).getUserEmail());
 
         Glide.with(holder.profileImage.getContext()).load(userList.get(position).getUserProfileIcon())
@@ -63,24 +66,16 @@ class ParticipantsSheetAdapter extends RecyclerView.Adapter<ParticipantsSheetAda
                 holder.profileImage.setImageDrawable(circularBitmapDrawable);
             }
         });
-        System.out.println("bottomsheetlist bool " + checkedUsers.contains(userList.get(position)));
 
+        System.out.println("PartAdapter " + userList.get(position).getUserName()
+                + " usersSurveys " + userList.get(position).getUserSurveys());
 
-        userList.get(position).getAccountID();
+        if (userList.get(position).getUserSurveys().contains(surveyId)) {
+            holder.checked.setVisibility(View.VISIBLE);
 
-//        if (checkedUsers.contains(userList.get(position))){
-//            holder.checked.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.checked.setVisibility(View.GONE);
-//        }
-        for (User checkedUser : checkedUsers){
-            System.out.println("bottomsheetlist Checked adapter " + checkedUser.getAccountID());
-
-            if (checkedUser.getAccountID().equals(userList.get(position).getAccountID())){
-                holder.checked.setVisibility(View.VISIBLE);
-            }
+        } else {
+            holder.checked.setVisibility(View.GONE);
         }
-
     }
 
     @Override

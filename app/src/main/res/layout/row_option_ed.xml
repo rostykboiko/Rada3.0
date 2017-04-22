@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/row_small"
-    android:layout_marginBottom="@dimen/margin_normal"
+    android:layout_marginBottom="@dimen/margin_small"
     android:orientation="vertical">
 
     <ImageView
@@ -10,28 +10,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/item_radioBtn"
-        android:src="@drawable/ic_material_checkbox_blank"
-        />
+        android:src="@drawable/ic_material_checkbox_blank" />
 
     <EditText
         android:id="@+id/optionItemDialog"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/row_text_height"
-        android:layout_marginStart="@dimen/margin_tab"
-        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
         android:background="@android:color/transparent"
         android:hint="@string/ed_option"
         android:inputType="textAutoCorrect"
-        android:maxLength="25"
+        android:maxLength="30"
         android:padding="@dimen/margin_small"
-        android:textSize="@dimen/text_size_standard" />
+        android:textSize="@dimen/text_size_standard"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/checkBox" />
 
     <ImageView
         android:id="@+id/close_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:padding="@dimen/item_close_padding"
-        android:paddingEnd="@dimen/item_close_paddingEnd"
+        android:padding="@dimen/item_close_paddingEnd"
         android:src="@drawable/ic_material_close" />
 </RelativeLayout>

@@ -17,8 +17,6 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import java.util.ArrayList;
 
 class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewHolder> {
-    private Context mContext;
-    private boolean oneOption;
 
     @NonNull
     private OptionItemsCallback callback;
@@ -58,10 +56,8 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
     }
 
-    OptionEditorAdapter(Context mContext,
-                        @NonNull ArrayList<Option> optionsList,
+    OptionEditorAdapter(@NonNull ArrayList<Option> optionsList,
                         @NonNull OptionEditorAdapter.OptionItemsCallback callback) {
-        this.mContext = mContext;
         this.optionsList = optionsList;
         this.callback = callback;
     }

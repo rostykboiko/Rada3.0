@@ -3,6 +3,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_size_standard">16sp</dimen>
+    <dimen name="text_size_secondary">14sp</dimen>
     <dimen name="text_size_large">24sp</dimen>
     <dimen name="field_width_standard">160dp</dimen>
     <dimen name="zero">0dp</dimen>
@@ -38,6 +39,7 @@
     <dimen name="card_album_radius">2dp</dimen>
     <dimen name="card_row_text_height">28dp</dimen>
     <!-- Item Dimens -->
+    <dimen name="row_list">64dp</dimen>
     <dimen name="row_height">72dp</dimen>
     <dimen name="row_text_height">32dp</dimen>
     <dimen name="row_small">56dp</dimen>
@@ -55,9 +57,9 @@
     <dimen name="checkBoxTop">12dp</dimen>
 
     <!-- Editor Activity-->
-    <dimen name="item_addBtn">14dp</dimen>
+    <dimen name="item_addBtn">16dp</dimen>
     <dimen name="item_addBtnTop">4dp</dimen>
-    <dimen name="item_radioBtn">14dp</dimen>
+    <dimen name="item_radioBtn">16dp</dimen>
     <dimen name="item_name_start">72dp</dimen>
     <dimen name="item_name_end">16dp</dimen>
     <dimen name="item_close_padding">12dp</dimen>
@@ -74,8 +76,11 @@
     <dimen name="profile_icon_width">40dp</dimen>
     <dimen name="profile_icon_height">40dp</dimen>
     <dimen name="search_bar_margin">8dp</dimen>
-    <dimen name="checked_bckGround_Start">12dp</dimen>
-    <dimen name="checked_icon_Start">20dp</dimen>
+    <dimen name="checked_bckGround_Start">16dp</dimen>
+    <dimen name="checked_icon_top">20dp</dimen>
+    <dimen name="checked_icon_start">24dp</dimen>
+
+
 
 
 

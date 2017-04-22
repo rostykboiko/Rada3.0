@@ -1,12 +1,14 @@
 package com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB;
 
+import java.util.ArrayList;
+
 public class User {
     private String userName;
     private String userEmail;
-    private String userID;
     private String accountID;
     private String deviceToken;
     private String userProfileIcon;
+    private ArrayList<String> userSurveys;
 
     public User() {
     }
@@ -26,15 +28,6 @@ public class User {
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
     }
-
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
-
 
     public void setUserProfileIcon(String userProfileIcon) {
         this.userProfileIcon = userProfileIcon;
@@ -58,6 +51,14 @@ public class User {
 
     public void setAccountID(String accountID) {
         this.accountID = accountID;
+    }
+
+    public ArrayList<String> getUserSurveys() {
+        return userSurveys;
+    }
+
+    public void setUserSurveys(ArrayList<String> userSurveys) {
+        this.userSurveys = userSurveys;
     }
 
 }
