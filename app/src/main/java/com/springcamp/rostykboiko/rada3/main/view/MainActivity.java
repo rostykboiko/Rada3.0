@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity
                                 participant.setUserProfileIcon(partSnapshot.child("userProfileIcon").getValue(String.class));
                                 participant.setDeviceToken(partSnapshot.child("deviceToken").getValue(String.class));
 
-                                survey.getParticipantsList().add(participant);
+                                survey.getParticipantsList().add(participant.getAccountID());
                             }
 
                             surveyList.add(survey);

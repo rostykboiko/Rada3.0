@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.springcamp.rostykboiko.rada3.R;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 class ParticipantsSheetAdapter extends RecyclerView.Adapter<ParticipantsSheetAdapter.ViewHolder> {
 
     private ArrayList<User> userList = new ArrayList<>();
-    private String surveyId;
+    private Survey survey;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView userNameItem;
@@ -38,8 +39,8 @@ class ParticipantsSheetAdapter extends RecyclerView.Adapter<ParticipantsSheetAda
         }
     }
 
-    ParticipantsSheetAdapter(String surveyId, ArrayList<User> userList) {
-        this.surveyId = surveyId;
+    ParticipantsSheetAdapter(Survey surveyId, ArrayList<User> userList) {
+        this.survey = surveyId;
         this.userList = userList;
     }
 
@@ -67,10 +68,9 @@ class ParticipantsSheetAdapter extends RecyclerView.Adapter<ParticipantsSheetAda
             }
         });
 
-        System.out.println("PartAdapter " + userList.get(position).getUserName()
-                + " usersSurveys " + userList.get(position).getUserSurveys());
-
-        if (userList.get(position).getUserSurveys().contains(surveyId)) {
+        System.out.println("StateCheck accID " + userList.get(position).getAccountID()
+                + " part " + survey.getParticipantsList());
+        if (survey.getParticipantsList().contains(userList.get(position).getAccountID())) {
             holder.checked.setVisibility(View.VISIBLE);
 
         } else {

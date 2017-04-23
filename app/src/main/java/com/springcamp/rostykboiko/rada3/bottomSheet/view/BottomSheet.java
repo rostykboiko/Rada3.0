@@ -24,12 +24,15 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.main.view.RecyclerTouchListener;
+import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 
 import java.lang.reflect.Type;
@@ -37,6 +40,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnTextChanged;
 
 public class BottomSheet extends AppCompatActivity {
@@ -45,8 +49,19 @@ public class BottomSheet extends AppCompatActivity {
 
     String surveyId;
 
+    @Nullable
+    private Survey survey;
+
     @BindView(R.id.search_view)
     EditText searchBar;
+
+    @BindView(R.id.toolbar)
+    LinearLayout toolbar;
+
+    @OnClick(R.id.backBtn)
+    void okClick() {
+        onBackPressed();
+    }
 
     private InputMethodManager inputMethodManager;
 
@@ -65,15 +80,18 @@ public class BottomSheet extends AppCompatActivity {
         String jsonUserList = getIntent().getExtras().getString("UserList");
         Type type = new TypeToken<ArrayList<User>>() {
         }.getType();
+        userList = new Gson().fromJson(jsonUserList, type);
+
+        String jsonSurvey = getIntent().getExtras().getString("Survey");
+        type = new TypeToken<Survey>() {
+        }.getType();
+        survey = new Gson().fromJson(jsonSurvey, type);
+        surveyId = survey.getSurveyID();
 
         bottomSheet = bottomSheet.from(findViewById(R.id.bottom_sheet));
 
-
-        surveyId = getIntent().getExtras().getString("surveyId");
-
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        userList = new Gson().fromJson(jsonUserList, type);
 
         initBehavior();
         initSearchBar();
@@ -81,8 +99,21 @@ public class BottomSheet extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        inputMethodManager.toggleSoftInput(InputMethodManager.RESULT_UNCHANGED_HIDDEN, 0);
+
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
+        inputMethodManager.toggleSoftInput(InputMethodManager.RESULT_UNCHANGED_HIDDEN, 0);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         inputMethodManager.toggleSoftInput(InputMethodManager.RESULT_UNCHANGED_HIDDEN, 0);
 
     }
@@ -98,6 +129,7 @@ public class BottomSheet extends AppCompatActivity {
                                 .putExtra("ParticipantsList", jsonUserList)
                                 .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
 
+                        toolbar.setVisibility(View.GONE);
                         inputMethodManager.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
 
                         finish();
@@ -107,11 +139,13 @@ public class BottomSheet extends AppCompatActivity {
                         searchBar.setFocusableInTouchMode(true);
                         searchBar.requestFocus();
 
+                        toolbar.setVisibility(View.VISIBLE);
                         inputMethodManager.toggleSoftInput(InputMethodManager.RESULT_SHOWN, 0);
 
                         setStatusBarDim(false);
                         break;
                     default:
+                        toolbar.setVisibility(View.GONE);
                         setStatusBarDim(true);
                         break;
                 }
@@ -159,7 +193,7 @@ public class BottomSheet extends AppCompatActivity {
     private void initRecyclerView() {
         RecyclerView usersListView = (RecyclerView) findViewById(R.id.users_recycler_view);
 
-        participantsSheetAdapter = new ParticipantsSheetAdapter(surveyId, userList);
+        participantsSheetAdapter = new ParticipantsSheetAdapter(survey, userList);
 
         RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
         usersListView.setLayoutManager(mListManager);
@@ -171,11 +205,13 @@ public class BottomSheet extends AppCompatActivity {
                 new RecyclerTouchListener.ClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        if (!userList.get(position).getUserSurveys().contains(surveyId)) {
+                        if (!survey.getParticipantsList().contains(userList.get(position).getAccountID())) {
                             userList.get(position).getUserSurveys().add(surveyId);
+                            survey.getParticipantsList().add(userList.get(position).getAccountID());
 
-                        } else if (userList.get(position).getUserSurveys().contains(surveyId)) {
+                        } else if (survey.getParticipantsList().contains(userList.get(position).getAccountID())) {
                             userList.get(position).getUserSurveys().remove(surveyId);
+                            survey.getParticipantsList().remove(userList.get(position).getAccountID());
 
                         }
                         participantsSheetAdapter.notifyDataSetChanged();
@@ -185,12 +221,14 @@ public class BottomSheet extends AppCompatActivity {
                     public void onLongClick(View view, int position) {
                     }
                 }));
+
+        System.out.println("StateCheck " + survey.getParticipantsList());
+
     }
 
     private void setStatusBarDim(boolean dim) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(dim ? Color.TRANSPARENT :
-                    ContextCompat.getColor(this, getThemedResId(R.attr.colorPrimaryDark)));
+            getWindow().setStatusBarColor(dim ? Color.TRANSPARENT : getColor(R.color.colorAccentSecond));
         }
     }
 
@@ -200,6 +238,4 @@ public class BottomSheet extends AppCompatActivity {
         typedArray.recycle();
         return resId;
     }
-
-
 }

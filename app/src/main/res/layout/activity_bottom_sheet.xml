@@ -4,10 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccentSecond"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:src="@drawable/ic_arrow_left_white" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="Title"
+            android:textSize="@dimen/text_size_title" />
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="28dp"
         app:behavior_hideable="true"
         app:behavior_peekHeight="448dp"
         app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
@@ -27,6 +52,13 @@
                 android:paddingStart="@dimen/margin_large"
                 android:paddingTop="@dimen/margin_medium">
 
+                <TextView
+                    android:id="@+id/to_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="To"
+                    android:textSize="@dimen/text_size_standard" />
+
                 <EditText
                     android:id="@+id/search_view"
                     android:layout_width="match_parent"
@@ -34,6 +66,8 @@
                     android:background="@android:color/transparent"
                     android:elegantTextHeight="true"
                     android:hint="@string/bottomSheet_search_hint"
+                    android:paddingEnd="@dimen/margin_small"
+                    android:paddingStart="@dimen/margin_normal"
                     android:textColorHint="@color/colorSecondaryText"
                     android:textSize="@dimen/text_size_standard" />
             </LinearLayout>

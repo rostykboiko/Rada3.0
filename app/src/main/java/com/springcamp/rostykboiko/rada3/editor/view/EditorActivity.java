@@ -4,14 +4,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -60,16 +58,13 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     private String surveyID;
     private Survey survey = new Survey();
     private ArrayList<Option> optionsList = new ArrayList<>();
-    private ArrayList<User> participants = new ArrayList<>();
+    private ArrayList<String> participants = new ArrayList<>();
     private ArrayList<User> userList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
     private SecureRandom random = new SecureRandom();
 
     @Nullable
     private User user;
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
 
     @BindView(R.id.edTitle)
     EditText editTextTitle;
@@ -95,9 +90,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     @BindView(R.id.one_option_switch)
     Switch oneOptionSwitch;
 
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
-
     @OnClick(R.id.fab)
     void okClick() {
         onSaveBtnPressed();
@@ -112,10 +104,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         setContentView(R.layout.activity_editor);
 
         presenter = new EditorPresenter(this);
-        setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
-
 
         userList = new ArrayList<>();
 
@@ -183,11 +174,10 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             @Override
             public void onClick(View view) {
                 String jsonUserList = new Gson().toJson(userList);
-
-                System.out.println("surveyId intent " + survey.getSurveyID());
+                String jsonSurvey = new Gson().toJson(survey);
 
                 startActivity(new Intent(EditorActivity.this, BottomSheet.class)
-                        .putExtra("surveyId", survey.getSurveyID())
+                        .putExtra("Survey", jsonSurvey)
                         .putExtra("UserList", jsonUserList));
             }
         });
@@ -525,6 +515,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     @Override
     protected void onResume() {
         super.onResume();
+
+        onSurveyEdit();
+
         String jsonParticipantsList = getIntent().getStringExtra("ParticipantsList");
         if (jsonParticipantsList != null) {
             Type type = new TypeToken<ArrayList<User>>() {

@@ -20,6 +20,7 @@
     <color name="iron">#CCCCCC</color>
     <color name="base">#DDDDDD</color>
     <color name="white">#FFFFFF</color>
+    <color name="whiteBasic">#FFFFFF</color>
 
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>

@@ -6,7 +6,7 @@ public class Survey {
     private String surveyID;
     private String surveyTitle;
     private ArrayList<Option> surveyOptionList = new ArrayList<>();
-    private ArrayList<User> participantsList = new ArrayList<>();
+    private ArrayList<String> participantsList = new ArrayList<>();
     private boolean surveySingleOption;
     private int duration;
     private int participantsCount;
@@ -18,7 +18,7 @@ public class Survey {
     public Survey(String surveyID,
                   String surveyTitle,
                   ArrayList<Option> surveyOptionList,
-                  ArrayList<User> participantsList,
+                  ArrayList<String> participantsList,
                   boolean surveySingleOption,
                   int duration,
                   int participantsCount,
@@ -50,11 +50,11 @@ public class Survey {
         this.surveyOptionList = surveyOptionList;
     }
 
-    public ArrayList<User> getParticipantsList() {
+    public ArrayList<String> getParticipantsList() {
         return participantsList;
     }
 
-    public void setParticipantsList(ArrayList<User> participantsList) {
+    public void setParticipantsList(ArrayList<String> participantsList) {
         this.participantsList = participantsList;
     }
 
