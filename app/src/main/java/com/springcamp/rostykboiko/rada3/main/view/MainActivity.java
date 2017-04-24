@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -45,14 +44,12 @@ import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerUIUtils;
 import com.springcamp.rostykboiko.rada3.Rada3;
 import com.springcamp.rostykboiko.rada3.answer.view.AnswerDialogActivity;
-import com.springcamp.rostykboiko.rada3.intro.view.MainIntroActivity;
 import com.springcamp.rostykboiko.rada3.main.presenter.MainPresenter;
 import com.springcamp.rostykboiko.rada3.main.MainContract;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.receiver.QuestionReceiver;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
-import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 import com.springcamp.rostykboiko.rada3.login.view.LoginActivity;
@@ -78,17 +75,19 @@ public class MainActivity extends AppCompatActivity
     private CardsAdaptor cardsAdaptor;
     private Drawer mDrawer = null;
 
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @NonNull
-    private QuestionReceiver questionReceiver;
+    public QuestionReceiver questionReceiver;
 
     @Nullable
     MainContract.Presenter presenter;
+
+    @OnClick(R.id.fab)
+    void okClick() {
+        survey = new Survey();
+        EditorActivity.launchActivity(MainActivity.this, survey);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,8 +115,6 @@ public class MainActivity extends AppCompatActivity
         questionReceiver = new QuestionReceiver(new QuestionReceiver.QuestionReceivedCallback() {
             @Override
             public void onQuestionReceived(@NonNull Survey survey) {
-                System.out.println(SURVEY_KEY + " " + survey);
-
                 if (presenter != null) {
                     presenter.receivedQuestion(survey);
                 }
@@ -222,22 +219,12 @@ public class MainActivity extends AppCompatActivity
                                         .getValue(Boolean.class));
                             }
 
-                            System.out.println("dataSnap" + dataSnapshot);
-
                             survey.setCreatorId(dataSnapshot
                                     .child("Creator")
                                     .getValue(String.class));
 
-                            User participant = new User();
-
                             for (DataSnapshot partSnapshot : dataSnapshot.child("Participants").getChildren()) {
-                                participant.setAccountID(partSnapshot.child("accountID").getValue(String.class));
-                                participant.setUserName(dataSnapshot.child("userName").getValue(String.class));
-                                participant.setUserEmail(partSnapshot.child("userEmail").getValue(String.class));
-                                participant.setUserProfileIcon(partSnapshot.child("userProfileIcon").getValue(String.class));
-                                participant.setDeviceToken(partSnapshot.child("deviceToken").getValue(String.class));
-
-                                survey.getParticipantsList().add(participant.getAccountID());
+                                survey.getParticipantsList().add(partSnapshot.getKey());
                             }
 
                             surveyList.add(survey);
@@ -284,7 +271,6 @@ public class MainActivity extends AppCompatActivity
                         .addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                System.out.println("onBtn remove value: " + dataSnapshot.child("Creator").getValue());
                                 if (dataSnapshot.child("Creator").getValue() != null
                                         &&
                                         dataSnapshot.child("Creator")
@@ -539,11 +525,4 @@ public class MainActivity extends AppCompatActivity
 //        }
         return super.onOptionsItemSelected(item);
     }
-
-    @OnClick(R.id.fab)
-    void okClick() {
-        survey = new Survey();
-        EditorActivity.launchActivity(MainActivity.this, survey);
-    }
-
 }

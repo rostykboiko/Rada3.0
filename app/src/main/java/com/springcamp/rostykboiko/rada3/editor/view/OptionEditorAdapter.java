@@ -35,7 +35,6 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
             checkIcon = (ImageView) view.findViewById(R.id.checkBox);
             optionItem = (EditText) view.findViewById(R.id.optionItemDialog);
 
-
             optionItem.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -58,6 +57,9 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
     OptionEditorAdapter(@NonNull ArrayList<Option> optionsList,
                         @NonNull OptionEditorAdapter.OptionItemsCallback callback) {
+
+        System.out.println("EditoronOptionChanged OptionEditorAdapter " + optionsList);
+
         this.optionsList = optionsList;
         this.callback = callback;
     }

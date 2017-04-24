@@ -1,6 +1,5 @@
 package com.springcamp.rostykboiko.rada3.shared.utlils.firebaseMessaging;
 
-import android.app.ActivityManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -18,8 +17,6 @@ import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.Rada3;
 import com.springcamp.rostykboiko.rada3.answer.view.AnswerDialogActivity;
 import com.springcamp.rostykboiko.rada3.receiver.QuestionReceiver;
-
-import java.util.List;
 
 public class FCMMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";

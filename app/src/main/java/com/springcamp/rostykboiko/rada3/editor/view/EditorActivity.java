@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -55,9 +57,7 @@ import org.json.JSONObject;
 
 public class EditorActivity extends AppCompatActivity implements EditorContract.View {
     private static final String SURVEY_KEY = "SURVEY_KEY";
-    private String surveyID;
     private Survey survey = new Survey();
-    private ArrayList<Option> optionsList = new ArrayList<>();
     private ArrayList<String> participants = new ArrayList<>();
     private ArrayList<User> userList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
@@ -104,11 +104,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         setContentView(R.layout.activity_editor);
 
         presenter = new EditorPresenter(this);
-        //setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
-
-        userList = new ArrayList<>();
 
         onSurveyEdit();
         getOptionsList();
@@ -122,36 +119,52 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
      * View init start
      */
 
-    private void isOptionsListEmpty() {
-        if (optionsList.isEmpty()) {
-            Option option = new Option();
-            option.setOptionTitle("");
-            option.setOptionKey("option" + optionsList.size());
-            optionsList.add(option);
-            optionsAdapter.notifyDataSetChanged();
-        }
-    }
-
     private void onSurveyEdit() {
-        if (getIntent().getExtras() != null && getIntent().getExtras().getString("surveyJson") != null) {
+        if (getIntent().getExtras() != null &&
+                getIntent().getExtras().getString("surveyJson") != null) {
             String json = getIntent().getExtras().getString("surveyJson");
             Gson gson = new Gson();
 
             survey = gson.fromJson(json, Survey.class);
             editTextTitle.setText(survey.getSurveyTitle());
 
-            surveyID = survey.getSurveyID();
             participants = survey.getParticipantsList();
+            System.out.println("dataUserRef: here your list: " + survey.getParticipantsList());
 
-            optionsList = survey.getSurveyOptionList();
             oneOptionSwitch.setChecked(survey.isSurveySingleOption());
+
         } else {
-            surveyID = generatedId();
+            survey.setSurveyID(generatedId());
         }
     }
 
+    private void isOptionsListEmpty() {
+        if (survey != null && survey.getSurveyOptionList().isEmpty()) {
+            Option option = new Option();
+            option.setOptionTitle("");
+            option.setOptionKey("option" + survey.getSurveyOptionList().size());
+            survey.getSurveyOptionList().add(option);
+            optionsAdapter.notifyDataSetChanged();
+        }
+    }
 
     private void initClickListeners() {
+        editTextTitle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                survey.setSurveyTitle(s.toString());
+            }
+        });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,7 +190,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 String jsonSurvey = new Gson().toJson(survey);
 
                 startActivity(new Intent(EditorActivity.this, BottomSheet.class)
-                        .putExtra("Survey", jsonSurvey)
+                        .putExtra("surveyJson", jsonSurvey)
                         .putExtra("UserList", jsonUserList));
             }
         });
@@ -191,7 +204,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     }
 
     private void initOptionsListView() {
-        optionsAdapter = new OptionEditorAdapter(optionsList, new OptionEditorAdapter.OptionItemsCallback() {
+        optionsAdapter = new OptionEditorAdapter(survey.getSurveyOptionList(), new OptionEditorAdapter.OptionItemsCallback() {
             @Override
             public boolean onOneOption() {
                 return survey.isSurveySingleOption();
@@ -199,13 +212,13 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
             @Override
             public void onOptionDeleted(int position) {
-                optionsList.remove(position);
+                survey.getSurveyOptionList().remove(position);
                 optionsAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onOptionChanged(@NonNull ArrayList<Option> options) {
-                optionsList = options;
+                survey.setSurveyOptionList(options);
             }
         });
 
@@ -330,8 +343,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         if (optionsAdapter.getItemCount() < 5) {
             Option option = new Option();
             option.setOptionTitle("");
-            option.setOptionKey("option" + (optionsList.size() + 1));
-            optionsList.add(option);
+            option.setOptionKey("option" + (survey.getSurveyOptionList().size() + 1));
+            survey.getSurveyOptionList().add(option);
             optionsAdapter.notifyDataSetChanged();
         } else {
             Toast.makeText(getApplicationContext(),
@@ -346,8 +359,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
      * Sync with Firebase Start
      */
     private void onSaveBtnPressed() {
-        int actualSize = optionsList.size();
-        for (Option option : optionsList) {
+        int actualSize = survey.getSurveyOptionList().size();
+        for (Option option : survey.getSurveyOptionList()) {
             if (option.getOptionTitle().equals("")) {
                 actualSize -= 1;
             }
@@ -374,41 +387,41 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     }
 
     private void dataSurveyReference(FirebaseDatabase database) {
-
         DatabaseReference surveyRef = database.getReference("Survey");
+
+        if (surveyRef.child(survey.getSurveyID()).getKey() != null)
+            surveyRef.child(survey.getSurveyID()).removeValue();
 
         String surveyTitle = editTextTitle.getText().toString();
 
-        System.out.println("surveyId editor " + surveyID);
-
-        surveyRef.child(surveyID).removeValue();
+        System.out.println("surveyId editor " + survey.getSurveyID());
 
         /* Title */
-        surveyRef.child(surveyID)
+        surveyRef.child(survey.getSurveyID())
                 .child("Title")
                 .setValue(surveyTitle);
 
         /* Options */
-        for (Option option : optionsList) {
+        for (Option option : survey.getSurveyOptionList()) {
             if (!option.getOptionTitle().equals("")) {
-                surveyRef.child(surveyID)
+                surveyRef.child(survey.getSurveyID())
                         .child("Options")
-                        .child("option" + (optionsList.indexOf(option) + 1))
+                        .child("option" + (survey.getSurveyOptionList().indexOf(option) + 1))
                         .setValue(option.getOptionTitle());
-                surveyRef.child(surveyID)
+                surveyRef.child(survey.getSurveyID())
                         .child("Answers")
-                        .child("option" + (optionsList.indexOf(option) + 1))
+                        .child("option" + (survey.getSurveyOptionList().indexOf(option) + 1))
                         .setValue(0);
             }
         }
 
-        surveyRef.child(surveyID)
+        surveyRef.child(survey.getSurveyID())
                 .child("One Positive Option")
                 .setValue(oneOptionSwitch.isChecked());
 
-        survey.setSurveyID(surveyID);
+        survey.setSurveyID(survey.getSurveyID());
         survey.setSurveyTitle(surveyTitle);
-        survey.setSurveyOptionList(optionsList);
+        survey.setSurveyOptionList(survey.getSurveyOptionList());
         survey.setCreatorId(GoogleAccountAdapter.getAccountID());
         survey.setSurveySingleOption(oneOptionSwitch.isChecked());
         survey.setParticipantsList(participants);
@@ -421,7 +434,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     private void dataUserRef(FirebaseDatabase database, Survey survey) {
         DatabaseReference userRef = database.getReference("User");
         DatabaseReference surveyRef = database.getReference("Survey");
-        int userCounter = participants.size();
 
         if (GoogleAccountAdapter.getAccountID() != null)
             userRef
@@ -431,23 +443,28 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
         sendMessage(survey, GoogleAccountAdapter.getDeviceToken());
 
+        for (String participant : survey.getParticipantsList()) {
+            if (participant != null) {
+                for (User user : userList) {
+                    if (user != null && user.getAccountID().contains(participant)) {
+                        System.out.println("dataUserRef: here your token: " + user.getDeviceToken());
 
-        for (User user : userList) {
-            if (user != null && user.getUserSurveys().contains(surveyID)) {
-                userRef
-                        .child(user.getAccountID())
-                        .child("Surveys")
-                        .child(survey.getSurveyID()).setValue(userCounter);
+                        surveyRef
+                                .child(survey.getSurveyID())
+                                .child("Participants")
+                                .child(participant)
+                                .setValue(user.getDeviceToken());
 
-                surveyRef
-                        .child(survey.getSurveyID())
-                        .child("Participants")
-                        .child(user.getAccountID())
-                        .setValue(user);
+                        user.getUserSurveys().add(survey.getSurveyID());
 
-                sendMessage(survey, user.getDeviceToken());
+                        userRef.child(user.getAccountID())
+                                .child("Surveys")
+                                .child(survey.getSurveyID())
+                                .setValue(survey.getCreatorId());
 
-
+                        sendMessage(survey, user.getDeviceToken());
+                    }
+                }
             }
         }
 
@@ -491,24 +508,32 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 JSONObject data = new JSONObject();
                 JSONObject notificationFCM = new JSONObject();
 
+                String jsonSurvey = new Gson().toJson(survey);
+
                 notificationFCM.put("body", "Message sent from device");
                 notificationFCM.put("title", "Survey");
                 notificationFCM.put("sound", "default");
                 notificationFCM.put("priority", "high");
                 notificationFCM.put("getSurveyId", survey.getSurveyID());
                 notificationFCM.put("surveyTitle", survey.getSurveyTitle());
-                notificationFCM.put(SURVEY_KEY, new Gson().toJson(survey));
+                notificationFCM.put(SURVEY_KEY, jsonSurvey);
 
                 data.put("data", notificationFCM);
                 data.put("to", userToken);
+
                 OutputStream os = con.getOutputStream();
                 os.write(data.toString().getBytes());
                 os.close();
+
+                System.out.println("Response Code : "
+                        + con.getResponseCode());
+
             } catch (IOException | JSONException e) {
+                System.out.println("Push error: " + e.getMessage());
+
                 e.printStackTrace();
             }
         }
-
     }
 
     /* Sync with Firebase Start */
@@ -534,7 +559,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     @Override
     public void onBackPressed() {
-        if (editTextTitle.getText().toString().equals("") || optionsList.size() < 2) {
+        if (editTextTitle.getText().toString().equals("") || survey.getSurveyOptionList().size() < 2) {
             finish();
         } else {
             AlertDialog.Builder confirmDialog = new AlertDialog.Builder(

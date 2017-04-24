@@ -10,21 +10,15 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
@@ -41,13 +35,10 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnTextChanged;
 
 public class BottomSheet extends AppCompatActivity {
     @Nullable
     private ArrayList<User> userList;
-
-    String surveyId;
 
     @Nullable
     private Survey survey;
@@ -77,22 +68,11 @@ public class BottomSheet extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        String jsonUserList = getIntent().getExtras().getString("UserList");
-        Type type = new TypeToken<ArrayList<User>>() {
-        }.getType();
-        userList = new Gson().fromJson(jsonUserList, type);
-
-        String jsonSurvey = getIntent().getExtras().getString("Survey");
-        type = new TypeToken<Survey>() {
-        }.getType();
-        survey = new Gson().fromJson(jsonSurvey, type);
-        surveyId = survey.getSurveyID();
-
-        bottomSheet = bottomSheet.from(findViewById(R.id.bottom_sheet));
+        bottomSheet = BottomSheetBehavior.from(findViewById(R.id.bottom_sheet));
 
         inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-
+        getIntentJson();
         initBehavior();
         initSearchBar();
         initRecyclerView();
@@ -118,15 +98,28 @@ public class BottomSheet extends AppCompatActivity {
 
     }
 
+    private void getIntentJson(){
+        String jsonUserList = getIntent().getExtras().getString("UserList");
+        Type type = new TypeToken<ArrayList<User>>() {
+        }.getType();
+        userList = new Gson().fromJson(jsonUserList, type);
+
+        String jsonSurvey = getIntent().getExtras().getString("surveyJson");
+        type = new TypeToken<Survey>() {
+        }.getType();
+        survey = new Gson().fromJson(jsonSurvey, type);
+    }
+
     private void initBehavior() {
         bottomSheet.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_HIDDEN:
-                        String jsonUserList = new Gson().toJson(userList);
+                        String jsonSurvey = new Gson().toJson(survey);
+
                         startActivity(new Intent(BottomSheet.this, EditorActivity.class)
-                                .putExtra("ParticipantsList", jsonUserList)
+                                .putExtra("surveyJson", jsonSurvey)
                                 .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
 
                         toolbar.setVisibility(View.GONE);
@@ -206,11 +199,11 @@ public class BottomSheet extends AppCompatActivity {
                     @Override
                     public void onClick(View view, int position) {
                         if (!survey.getParticipantsList().contains(userList.get(position).getAccountID())) {
-                            userList.get(position).getUserSurveys().add(surveyId);
+                            userList.get(position).getUserSurveys().add(survey.getSurveyID());
                             survey.getParticipantsList().add(userList.get(position).getAccountID());
 
                         } else if (survey.getParticipantsList().contains(userList.get(position).getAccountID())) {
-                            userList.get(position).getUserSurveys().remove(surveyId);
+                            userList.get(position).getUserSurveys().remove(survey.getSurveyID());
                             survey.getParticipantsList().remove(userList.get(position).getAccountID());
 
                         }
@@ -221,21 +214,15 @@ public class BottomSheet extends AppCompatActivity {
                     public void onLongClick(View view, int position) {
                     }
                 }));
-
-        System.out.println("StateCheck " + survey.getParticipantsList());
-
     }
 
     private void setStatusBarDim(boolean dim) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(dim ? Color.TRANSPARENT : getColor(R.color.colorAccentSecond));
+            if (dim) {
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
+            } else {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.colorAccentSecond));
+            }
         }
-    }
-
-    private int getThemedResId(@AttrRes int attr) {
-        TypedArray typedArray = getTheme().obtainStyledAttributes(new int[]{attr});
-        int resId = typedArray.getResourceId(0, 0);
-        typedArray.recycle();
-        return resId;
     }
 }
