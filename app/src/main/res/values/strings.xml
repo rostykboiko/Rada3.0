@@ -45,7 +45,9 @@
     <string name="tv_duration_10min">10 хв</string>
     <string name="tv_duration_30min">30 хв</string>
     <string name="tv_duration_1h">1 год</string>
-    <string name="tv_duration_pref">Налаштувати</string>
+    <string name="tv_duration_custom">Custom</string>
+    <string name="ok_btn">OK</string>
+
     <!--Editor Activity End-->
 
     <!--BottomSheet Activity Start-->

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_editor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/margin_toolbar"
+    app:theme="@style/AlertDialogCustom"
     app:elevation="@dimen/margin_small"
     tools:context="com.springcamp.rostykboiko.rada3.editor.view.EditorActivity"
     tools:showIn="@layout/activity_main">
@@ -14,12 +14,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/desc_backBtn"
+                android:padding="16dp"
+                android:src="@drawable/ic_arrow_left" />
+            <EditText
+                android:id="@+id/edTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="@string/title_activity_editor"
+                android:inputType="textMultiLine"
+                android:paddingStart="@dimen/margin_large"
+                android:paddingEnd="@dimen/margin_normal"
+                android:paddingTop="@dimen/margin_medium"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
         <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/options_card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_below="@+id/toolbar"
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_medium"
             app:theme="@style/AppTheme.TextItem"
@@ -177,4 +207,4 @@
         </android.support.v7.widget.CardView>
     </RelativeLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

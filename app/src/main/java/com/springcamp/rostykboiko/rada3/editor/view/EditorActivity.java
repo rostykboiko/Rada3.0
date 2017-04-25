@@ -30,6 +30,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.springcamp.rostykboiko.rada3.bottomSheet.view.BottomSheet;
+import com.springcamp.rostykboiko.rada3.duration.view.DurationDialogActivity;
 import com.springcamp.rostykboiko.rada3.editor.EditorContract;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
@@ -333,7 +334,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                         durationTime.setText(R.string.tv_duration_1h);
                         break;
                     case 4:
-                        durationTime.setText("custom");
+                        startActivity(new Intent(EditorActivity.this, DurationDialogActivity.class));
+                        durationTime.setText(R.string.tv_duration_custom);
                         break;
                 }
             }
