@@ -39,7 +39,7 @@ public class FCMMessagingService extends FirebaseMessagingService {
                 intent.putExtra(SURVEY_KEY, surveyJson);
 
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-            } else {
+            } else if (!Rada3.isActivityVisible()){
                 sendNotification(surveyJson, surveyTitle);
                 Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             }

@@ -134,6 +134,14 @@ public class MainActivity extends AppCompatActivity
         LocalBroadcastManager.getInstance(this).unregisterReceiver(questionReceiver);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Rada3.activityPaused();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(questionReceiver);
+
+    }
+
     private void initUserData() {
         HashMap<String, String> user = session.getUserDetails();
 
@@ -146,6 +154,41 @@ public class MainActivity extends AppCompatActivity
     }
 
     /* List of Cards Start */
+    private void keepAnswersSynced(String surveyId) {
+        DatabaseReference mCurrentSurvey;
+
+        mCurrentSurvey = FirebaseDatabase.getInstance().getReference("Survey/" + surveyId + "/Answers");
+
+        mCurrentSurvey.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        System.out.println("AnswerSync " + dataSnapshot.getKey() + " " + dataSnapshot.getValue());
+                        cardsAdaptor.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        cardsAdaptor.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+        mCurrentSurvey.keepSynced(true);
+    }
+
     private void initFireBase() {
         DatabaseReference mCurrentUserRef;
         if (GoogleAccountAdapter.getUserID() != null) {
@@ -185,9 +228,10 @@ public class MainActivity extends AppCompatActivity
     private void initSurveyById(final String surveyId) {
         final DatabaseReference mCurrentSurvey = FirebaseDatabase
                 .getInstance()
-                .getReference()
-                .child("Survey");
+                .getReference("Survey/");
 
+        keepAnswersSynced(surveyId);
+        mCurrentSurvey.keepSynced(true);
         mCurrentSurvey.addChildEventListener(
                 new ChildEventListener() {
                     @Override
@@ -272,8 +316,7 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.child("Creator").getValue() != null
-                                        &&
-                                        dataSnapshot.child("Creator")
+                                        && dataSnapshot.child("Creator")
                                                 .getValue().equals(GoogleAccountAdapter.getAccountID())) {
                                     FirebaseDatabase.getInstance().getReference()
                                             .child("Survey")
@@ -297,7 +340,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onCardClick(@NonNull Survey survey) {
+            public void onEditClick(@NonNull Survey survey) {
                 if (GoogleAccountAdapter.getAccountID().equals(survey.getCreatorId())) {
                     String json = new Gson().toJson(survey);
 

@@ -2,10 +2,11 @@ package com.springcamp.rostykboiko.rada3.main.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,27 +15,27 @@ import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 
 class CardViewHolder extends RecyclerView.ViewHolder {
-
+    private Context context;
     private OptionCardAdapter optionCardAdapter = new OptionCardAdapter();
     private TextView title;
+    private ImageView deleteBtn;
 
-    CardViewHolder(View view, @NonNull Context context, @NonNull final QuestionCardCallback callback) {
+    private QuestionCardCallback callback;
+
+    CardViewHolder(final View view, @NonNull Context context, @NonNull QuestionCardCallback callback) {
         super(view);
+        this.context = context;
+        this.callback = callback;
+
         title = (TextView) view.findViewById(R.id.title);
+
         RecyclerView optionsRecycler = (RecyclerView) view.findViewById(R.id.card_option_recycler);
-        ImageView deleteBtn = (ImageView) view.findViewById(R.id.close_icon);
+        deleteBtn = (ImageView) view.findViewById(R.id.close_icon);
 
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callback.onDeleteCard(getAdapterPosition());
-            }
-        });
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callback.onCardClick(getAdapterPosition());
+                showPopupMenu(deleteBtn, getAdapterPosition());
             }
         });
 
@@ -57,8 +58,17 @@ class CardViewHolder extends RecyclerView.ViewHolder {
     interface QuestionCardCallback {
         void onDeleteCard(int position);
 
-        void onCardClick(int position);
+        void onEditClick(int position);
 
+    }
+
+    private void showPopupMenu(View view, int position) {
+        PopupMenu popup = new PopupMenu(context, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_card, popup.getMenu());
+        popup.getMenu().findItem(R.id.action_edit).setVisible(true);
+        popup.setOnMenuItemClickListener(new MenuItemClickListener(position, callback));
+        popup.show();
     }
 
 }

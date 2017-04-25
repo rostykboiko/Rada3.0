@@ -1,5 +1,6 @@
 package com.springcamp.rostykboiko.rada3.editor.view;
 
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -189,9 +190,12 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 String jsonUserList = new Gson().toJson(userList);
                 String jsonSurvey = new Gson().toJson(survey);
 
+                ActivityOptions options =
+                        ActivityOptions.makeCustomAnimation(EditorActivity.this, R.anim.fade_in, R.anim.fade_out);
+
                 startActivity(new Intent(EditorActivity.this, BottomSheet.class)
                         .putExtra("surveyJson", jsonSurvey)
-                        .putExtra("UserList", jsonUserList));
+                        .putExtra("UserList", jsonUserList), options.toBundle());
             }
         });
         oneOptionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
