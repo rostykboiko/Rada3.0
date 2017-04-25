@@ -5,8 +5,8 @@
     android:id="@+id/content_editor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:theme="@style/AlertDialogCustom"
     app:elevation="@dimen/margin_small"
+    app:theme="@style/AlertDialogCustom"
     tools:context="com.springcamp.rostykboiko.rada3.editor.view.EditorActivity"
     tools:showIn="@layout/activity_main">
 
@@ -14,12 +14,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
             android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/saveBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:padding="@dimen/margin_large"
+                android:text="SAVE"
+                android:textSize="@dimen/text_size_standard"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="@string/title_activity_editor"
+                android:inputType="textMultiLine"
+                android:paddingEnd="@dimen/margin_large"
+                android:paddingStart="@dimen/margin_tab"
+                android:paddingTop="@dimen/margin_medium"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/backBtn"
@@ -28,28 +51,16 @@
                 android:contentDescription="@string/desc_backBtn"
                 android:padding="16dp"
                 android:src="@drawable/ic_arrow_left" />
-            <EditText
-                android:id="@+id/edTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:hint="@string/title_activity_editor"
-                android:inputType="textMultiLine"
-                android:paddingStart="@dimen/margin_large"
-                android:paddingEnd="@dimen/margin_normal"
-                android:paddingTop="@dimen/margin_medium"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-        </LinearLayout>
 
+        </RelativeLayout>
 
         <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/options_card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_below="@+id/toolbar"
+            android:layout_gravity="center"
             android:layout_marginBottom="@dimen/margin_small"
             android:layout_marginTop="@dimen/margin_medium"
             app:theme="@style/AppTheme.TextItem"
@@ -77,8 +88,8 @@
                         android:id="@+id/btn_add_option"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingStart="@dimen/item_addBtn"
                         android:paddingEnd="@dimen/item_addBtn"
+                        android:paddingStart="@dimen/item_addBtn"
                         android:paddingTop="@dimen/item_addBtnTop"
                         android:src="@drawable/ic_material_plus" />
 
@@ -201,6 +212,13 @@
                         android:paddingStart="@dimen/item_name_start"
                         android:text="@string/tv_participants"
                         android:textSize="16sp" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/users_icon_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical" />
+
                 </RelativeLayout>
 
             </RelativeLayout>

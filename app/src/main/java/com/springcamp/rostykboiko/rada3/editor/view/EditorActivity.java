@@ -92,7 +92,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     @BindView(R.id.one_option_switch)
     Switch oneOptionSwitch;
 
-    @OnClick(R.id.fab)
+    @OnClick(R.id.saveBtn)
     void okClick() {
         onSaveBtnPressed();
     }
@@ -274,6 +274,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             }
         });
     }
+
 
     private ArrayList<String> userSurveys(DatabaseReference databaseReference, String accountID) {
         final ArrayList<String> arrayList = new ArrayList<>();
