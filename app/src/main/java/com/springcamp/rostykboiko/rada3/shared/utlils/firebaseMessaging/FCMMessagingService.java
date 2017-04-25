@@ -39,7 +39,7 @@ public class FCMMessagingService extends FirebaseMessagingService {
                 intent.putExtra(SURVEY_KEY, surveyJson);
 
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-            } else if (!Rada3.isActivityVisible()){
+            } else {
                 sendNotification(surveyJson, surveyTitle);
                 Log.d(TAG, "Message data payload: " + remoteMessage.getData());
             }
@@ -53,7 +53,6 @@ public class FCMMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */,
                 intent.putExtra(SURVEY_KEY, surveyJson),
                 PendingIntent.FLAG_ONE_SHOT);
-
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 

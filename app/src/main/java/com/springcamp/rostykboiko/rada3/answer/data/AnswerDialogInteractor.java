@@ -31,4 +31,11 @@ public class AnswerDialogInteractor implements AnswerDialogUseCase {
                                   @Nullable AnswerCallBack callback) {
         callback.success();
     }
+
+    @Override
+    public void radioChecked(@Nullable int position,
+                             @Nullable Survey survey,
+                             @Nullable AnswerCallBack callBack) {
+        callBack.success();
+    }
 }

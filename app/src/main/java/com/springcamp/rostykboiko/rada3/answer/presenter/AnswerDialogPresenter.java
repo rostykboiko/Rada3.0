@@ -26,7 +26,6 @@ public class AnswerDialogPresenter implements AnswerContract.Presenter {
         this.answerDialogUseCase = new AnswerDialogInteractor();
     }
 
-
     @Override
     public void submitAnswer() {
         answerDialogUseCase.submitAnswer(view.getSurvey(),
@@ -83,14 +82,14 @@ public class AnswerDialogPresenter implements AnswerContract.Presenter {
     }
 
     @Override
-    public void deleteCheckedItem(int position, @NonNull Survey survey) {
+    public void deleteCheckedItem(final int position, @NonNull final Survey survey) {
         answerDialogUseCase.deleteCheckedItem(
-                view.getPosition(),
-                view.getSurvey(),
+                position,
+                survey,
                 new AnswerDialogUseCase.AnswerCallBack() {
             @Override
             public void success() {
-                view.getSurvey().getSurveyOptionList().get(view.getPosition()).setChecked(false);
+                survey.getSurveyOptionList().get(position).setChecked(false);
             }
 
             @Override
@@ -98,6 +97,30 @@ public class AnswerDialogPresenter implements AnswerContract.Presenter {
 
             }
         });
+    }
+
+    @Override
+    public void radioChecked(@Nullable final int position, @Nullable final Survey survey) {
+        answerDialogUseCase.radioChecked(
+                position,
+                survey,
+                new AnswerDialogUseCase.AnswerCallBack(){
+                    @Override
+                    public void success() {
+                        System.out.println("sloooowwww " + position);
+
+                        for (Option option : view.getSurvey().getSurveyOptionList()){
+                            option.setChecked(false);
+                        }
+
+                        survey.getSurveyOptionList().get(position).setChecked(true);
+                    }
+
+                    @Override
+                    public void error() {
+
+                    }
+                });
     }
 
     @Override

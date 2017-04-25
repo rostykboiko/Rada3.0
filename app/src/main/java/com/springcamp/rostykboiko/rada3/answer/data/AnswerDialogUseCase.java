@@ -23,6 +23,10 @@ public interface AnswerDialogUseCase {
                            @Nullable Survey survey,
                            @Nullable AnswerCallBack callback);
 
+    void radioChecked(@Nullable int position,
+                      @Nullable Survey survey,
+                      @Nullable AnswerCallBack callBack);
+
     interface AnswerCallBack{
         void success();
 

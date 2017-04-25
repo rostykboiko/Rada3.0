@@ -37,7 +37,7 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
     private static final String SURVEY_KEY = "SURVEY_KEY";
 
     int position;
-    private Survey survey = new Survey();
+    private Survey survey;
     private SessionManager session;
     private RecyclerView usersListView;
     private OptionDialogAdapter optionDialogAdapter;
@@ -65,40 +65,9 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
         presenter = new AnswerDialogPresenter(this);
 
         initRecyclerView();
+        messageReceiver();
         initClickListeners();
         setStatusBarDim(true);
-        messageReceiver();
-    }
-
-    private void messageReceiver() {
-        Intent intent = getIntent();
-        if (intent.getExtras() != null) {
-            String json = getIntent().getExtras().getString(SURVEY_KEY);
-            survey = new Gson().fromJson(json, Survey.class);
-
-            titleView.setText(survey.getSurveyTitle());
-            optionDialogAdapter.setOptionsList(survey.getSurveyOptionList());
-
-        }
-    }
-
-    private void initRecyclerView() {
-        usersListView = (RecyclerView) findViewById(R.id.option_list_view);
-        optionDialogAdapter = new OptionDialogAdapter(new OptionDialogAdapter.AnswerCheckCallback() {
-            @Override
-            public void onAnswerChecked(@NonNull Option option) {
-                if (option.isChecked()) {
-                    option.setChecked(true);
-                } else {
-                    option.setChecked(false);
-                }
-            }
-        });
-        RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
-        usersListView.setLayoutManager(mListManager);
-        usersListView.setItemAnimator(new DefaultItemAnimator());
-        usersListView.setAdapter(optionDialogAdapter);
-
     }
 
     @OnClick(R.id.button_submit)
@@ -109,6 +78,46 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
         finish();
     }
 
+    private void messageReceiver() {
+        Intent intent = getIntent();
+        if (intent.getExtras() != null) {
+            String json = getIntent().getExtras().getString(SURVEY_KEY);
+            survey = new Gson().fromJson(json, Survey.class);
+
+            System.out.println("SingleOption messageReceiver " + survey.isSurveySingleOption());
+
+            titleView.setText(survey.getSurveyTitle());
+
+            initRecyclerView();
+            optionDialogAdapter.setOptionsList(survey.getSurveyOptionList());
+            optionDialogAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void initRecyclerView() {
+        usersListView = (RecyclerView) findViewById(R.id.option_list_view);
+        if (survey == null) {
+            survey = new Survey();
+        }
+
+        optionDialogAdapter = new OptionDialogAdapter(survey.isSurveySingleOption(), new OptionDialogAdapter.AnswerCheckCallback() {
+            @Override
+            public void onAnswerChecked(@NonNull Option option) {
+                if (option.isChecked()) {
+                    option.setChecked(true);
+                } else {
+                    option.setChecked(false);
+                }
+            }
+        });
+
+        RecyclerView.LayoutManager mListManager = new LinearLayoutManager(getApplicationContext());
+        usersListView.setLayoutManager(mListManager);
+        usersListView.setItemAnimator(new DefaultItemAnimator());
+        usersListView.setAdapter(optionDialogAdapter);
+
+    }
+
     private void initClickListeners() {
         usersListView.addOnItemTouchListener(new RecyclerTouchListener(
                 getApplicationContext(),
@@ -116,10 +125,15 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
                 new RecyclerTouchListener.ClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        if (optionDialogAdapter.getOptionsList().get(position).isChecked()) {
-                            presenter.deleteCheckedItem(position, survey);
+                        System.out.println("SingleOption dialog " + survey.isSurveySingleOption());
+                        if (survey.isSurveySingleOption()) {
+                            presenter.radioChecked(position, survey);
                         } else {
-                            presenter.addCheckedItem(position, survey);
+                            if (optionDialogAdapter.getOptionsList().get(position).isChecked()) {
+                                presenter.deleteCheckedItem(position, survey);
+                            } else {
+                                presenter.addCheckedItem(position, survey);
+                            }
                         }
                     }
 
@@ -130,7 +144,6 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
                 })
         );
     }
-
 
     private void setStatusBarDim(boolean dim) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

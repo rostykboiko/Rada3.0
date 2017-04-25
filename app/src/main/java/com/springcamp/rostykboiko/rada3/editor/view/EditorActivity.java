@@ -430,6 +430,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         survey.setSurveySingleOption(oneOptionSwitch.isChecked());
         survey.setParticipantsList(participants);
         survey.setParticipantsCount(participants.size());
+        System.out.println("SingleOption editor " + survey.isSurveySingleOption());
 
         dataUserRef(database, survey);
 

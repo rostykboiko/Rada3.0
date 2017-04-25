@@ -25,6 +25,9 @@ public interface AnswerContract {
         void deleteCheckedItem(@Nullable int position,
                                @Nullable Survey survey);
 
+        void radioChecked(@Nullable int position,
+                          @Nullable Survey survey);
+
         void onStart();
 
         void onStop();
