@@ -1,6 +1,5 @@
 package com.springcamp.rostykboiko.rada3.editor.view;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -57,9 +56,6 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
     OptionEditorAdapter(@NonNull ArrayList<Option> optionsList,
                         @NonNull OptionEditorAdapter.OptionItemsCallback callback) {
-
-        System.out.println("EditoronOptionChanged OptionEditorAdapter " + optionsList);
-
         this.optionsList = optionsList;
         this.callback = callback;
     }
@@ -75,6 +71,11 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
     @Override
     public void onBindViewHolder(final OptionEditorAdapter.ViewHolder holder, final int position) {
         holder.optionItem.setText(optionsList.get(position).getOptionTitle());
+
+        if (optionsList.size() != 1 && holder.optionItem.getText().toString().equals("")) {
+            holder.optionItem.setFocusable(true);
+            holder.optionItem.requestFocus();
+        }
 
         holder.closeIcon.setOnClickListener(new View.OnClickListener() {
             @Override

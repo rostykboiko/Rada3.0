@@ -340,7 +340,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                     });
                 }
                 if (index >= 3) {
-                    participants_count.setText("+" + (participants.size()-3));
+                    String count = "+" + (participants.size() - 3);
+                    participants_count.setText(count);
                 }
                 index++;
             }
@@ -423,6 +424,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             option.setOptionTitle("");
             option.setOptionKey("option" + (survey.getSurveyOptionList().size() + 1));
             survey.getSurveyOptionList().add(option);
+
             optionsAdapter.notifyDataSetChanged();
         } else {
             Toast.makeText(getApplicationContext(),
