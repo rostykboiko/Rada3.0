@@ -3,8 +3,11 @@ package com.springcamp.rostykboiko.rada3.editor.view;
 import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +25,8 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -134,7 +139,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             System.out.println("dataUserRef: here your list: " + survey.getParticipantsList());
 
             oneOptionSwitch.setChecked(survey.isSurveySingleOption());
-
         } else {
             survey.setSurveyID(generatedId());
         }
@@ -251,6 +255,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 user.setUserSurveys(userSurveys(mCurrentUserRef, user.getAccountID()));
 
                 userList.add(user);
+
+                setParticipantsIcons(userList);
+
             }
 
             @Override
@@ -273,8 +280,72 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
             }
         });
+
+        System.out.println("ProfileIcons initUsersList " + userList);
+
     }
 
+    private void setParticipantsIcons(ArrayList<User> userList) {
+        int index = 0;
+
+        final ImageView participantsIcon1 = (ImageView) findViewById(R.id.participants_icon1);
+        final ImageView participantsIcon2 = (ImageView) findViewById(R.id.participants_icon2);
+        final ImageView participantsIcon3 = (ImageView) findViewById(R.id.participants_icon3);
+        TextView participants_count = (TextView) findViewById(R.id.participants_count);
+
+        participants_count.setText("");
+        participantsIcon1.setVisibility(View.GONE);
+        participantsIcon2.setVisibility(View.GONE);
+        participantsIcon3.setVisibility(View.GONE);
+
+        for (User user : userList) {
+            if (participants.contains(user.getAccountID())) {
+                if (index == 0) {
+                    participantsIcon1.setVisibility(View.VISIBLE);
+                    Glide.with(participantsIcon1.getContext()).load(user.getUserProfileIcon())
+                            .asBitmap().into(new BitmapImageViewTarget(participantsIcon1) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(participantsIcon1.getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            participantsIcon1.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+                }
+                if (index == 1) {
+                    participantsIcon2.setVisibility(View.VISIBLE);
+                    Glide.with(participantsIcon2.getContext()).load(user.getUserProfileIcon())
+                            .asBitmap().into(new BitmapImageViewTarget(participantsIcon2) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(participantsIcon2.getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            participantsIcon2.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+                }
+                if (index == 2) {
+                    participantsIcon3.setVisibility(View.VISIBLE);
+                    Glide.with(participantsIcon3.getContext()).load(user.getUserProfileIcon())
+                            .asBitmap().into(new BitmapImageViewTarget(participantsIcon3) {
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable =
+                                    RoundedBitmapDrawableFactory.create(participantsIcon3.getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            participantsIcon3.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+                }
+                if (index >= 3) {
+                    participants_count.setText("+" + (participants.size()-3));
+                }
+                index++;
+            }
+        }
+    }
 
     private ArrayList<String> userSurveys(DatabaseReference databaseReference, String accountID) {
         final ArrayList<String> arrayList = new ArrayList<>();
@@ -550,6 +621,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         super.onResume();
 
         onSurveyEdit();
+        setParticipantsIcons(userList);
 
         String jsonParticipantsList = getIntent().getStringExtra("ParticipantsList");
         if (jsonParticipantsList != null) {

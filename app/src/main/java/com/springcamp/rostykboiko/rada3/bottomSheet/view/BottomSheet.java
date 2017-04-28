@@ -37,6 +37,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class BottomSheet extends AppCompatActivity {
+    private InputMethodManager inputMethodManager;
+    private BottomSheetBehavior bottomSheet;
+    private ParticipantsSheetAdapter participantsSheetAdapter;
+
     @Nullable
     private ArrayList<User> userList;
 
@@ -53,12 +57,6 @@ public class BottomSheet extends AppCompatActivity {
     void okClick() {
         onBackPressed();
     }
-
-    private InputMethodManager inputMethodManager;
-
-    private BottomSheetBehavior bottomSheet;
-
-    private ParticipantsSheetAdapter participantsSheetAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
