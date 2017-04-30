@@ -68,8 +68,5 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
     // Time Picker
-    compile 'com.weigan:loopView:0.1.2'
-
-
 }
 apply plugin: 'com.google.gms.google-services'

@@ -1,56 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context=".durationPicker.view.DurationDialogActivity">
 
-    <RelativeLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:layout_gravity="center">
+        android:elevation="3dp"
+        card_view:cardCornerRadius="@dimen/card_radius">
 
         <LinearLayout
-            android:id="@+id/timePicker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-
-            <com.weigan.loopview.LoopView
-                android:id="@+id/loopViewHours"
-                android:layout_width="120dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="50dp"
-                app:awv_textsize="20" />
-
-            <com.weigan.loopview.LoopView
-                android:id="@+id/loopViewMin"
-                android:layout_width="120dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="50dp"
-                app:awv_textsize="20" />
-
-            <com.weigan.loopview.LoopView
-                android:id="@+id/loopViewSec"
-                android:layout_width="120dp"
-                android:layout_height="150dp"
-                android:layout_marginTop="50dp"
-                app:awv_textsize="20" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/button_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/timePicker"
-            android:gravity="center"
-            android:textColor="@color/colorPrimaryText"
-            android:text="@string/ok_btn"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
+            android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorAccentSecond">
 
-</android.support.v4.widget.NestedScrollView>
+                <TextView
+                    android:id="@+id/hours"
+                    style="@style/TimePickerTimeText"
+                    android:text="@string/time_hour_00" />
+
+                <TextView
+                    style="@style/TimePickerDescText"
+                    android:text="@string/time_hour_desc" />
+
+                <TextView
+                    android:id="@+id/minutes"
+                    style="@style/TimePickerTimeText"
+                    android:text="@string/time_hour_00" />
+
+                <TextView
+                    style="@style/TimePickerDescText"
+                    android:text="@string/time_minutes_desc" />
+
+                <TextView
+                    android:id="@+id/seconds"
+                    style="@style/TimePickerTimeText"
+                    android:text="@string/time_hour_00" />
+
+                <TextView
+                    style="@style/TimePickerDescText"
+                    android:text="@string/time_seconds_desc" />
+
+                <ImageView
+                    android:id="@+id/deleteBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/deleteBtn"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    android:src="@drawable/ic_material_backspace_white03" />
+            </LinearLayout>
+
+            <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/gridLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/whiteBasic"
+                android:columnCount="3"
+                android:paddingBottom="0dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp">
+
+                <TextView
+                    android:id="@+id/button_1"
+                    style="@style/TimePickerButtons"
+                    android:text="@string/time_picker_1" />
+
+                <TextView
+                    android:id="@+id/button_2"
+                    style="@style/TimePickerButtons"
+                    android:text="@string/time_picker_2" />
+
+                <TextView
+                    android:id="@+id/button_3"
+                    style="@style/TimePickerButtons"
+                    android:text="@string/time_picker_3" />
+
+                <TextView
+                    android:id="@+id/button_4"
+
+                    style="@style/TimePickerButtons"
+                    android:text="@string/time_picker_4" />
+
+                <TextView
+                    android:id="@+id/button_5"
+
+                    style="@style/TimePickerButtons"
+                    android:text="@string/time_picker_5" />
+
+                <TextView
+                    android:id="@+id/button_6"
+                    style="@style/TimePickerButtons"
+                    android:text="@string/time_picker_6" />
+
+                <TextView
+                    android:id="@+id/button_7"
+                    style="@style/TimePickerButtons"
+                    android:text="@string/time_picker_7" />
+
+                <TextView
+                    android:id="@+id/button_8"
+                    style="@style/TimePickerButtons"
+                    android:text="@string/time_picker_8" />
+
+                <TextView
+                    android:id="@+id/button_9"
+                    style="@style/TimePickerButtons"
+                    android:text="@string/time_picker_9" />
+
+                <TextView
+                    android:id="@+id/button_cancel"
+                    android:textColor="@color/colorPrimaryText"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:text="@string/time_picker_button1" />
+
+                <TextView
+                    android:id="@+id/button_0"
+                    style="@style/TimePickerButtons"
+                    android:text="@string/time_picker_0" />
+
+                <TextView
+                    android:id="@+id/button_save"
+                    android:textColor="@color/colorAccentSecond"
+                    android:layout_gravity="center"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="@string/time_picker_button2" />
+            </GridLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

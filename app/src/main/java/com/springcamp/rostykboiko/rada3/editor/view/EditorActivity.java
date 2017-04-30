@@ -1,6 +1,7 @@
 package com.springcamp.rostykboiko.rada3.editor.view;
 
 import android.app.ActivityOptions;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -35,7 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.springcamp.rostykboiko.rada3.bottomSheet.view.BottomSheet;
-import com.springcamp.rostykboiko.rada3.duration.view.DurationDialogActivity;
+import com.springcamp.rostykboiko.rada3.durationPicker.view.DurationDialogActivity;
 import com.springcamp.rostykboiko.rada3.editor.EditorContract;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.editor.presenter.EditorPresenter;
@@ -52,11 +53,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.security.SecureRandom;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -348,38 +351,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         }
     }
 
-    private ArrayList<String> userSurveys(DatabaseReference databaseReference, String accountID) {
-        final ArrayList<String> arrayList = new ArrayList<>();
-        databaseReference.child(accountID).child("Surveys").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                arrayList.add(dataSnapshot.getKey());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        return arrayList;
-    }
-
     private void durationPicker() {
         final String[] mDurationOptions = {
                 "2 хвилини",
@@ -433,6 +404,37 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         }
     }
 
+    private ArrayList<String> userSurveys(DatabaseReference databaseReference, String accountID) {
+        final ArrayList<String> arrayList = new ArrayList<>();
+        databaseReference.child(accountID).child("Surveys").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                arrayList.add(dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        return arrayList;
+    }
     /* View init end */
 
     /**
@@ -631,6 +633,11 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             }.getType();
             participants = new Gson().fromJson(jsonParticipantsList, type);
         }
+
+        if (getIntent().getStringExtra("duration") != null) {
+            survey.setDuration(getIntent().getStringExtra("duration"));
+            durationTime.setText(survey.getDuration());
+        }
     }
 
     @Override
@@ -692,5 +699,4 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
         activity.startActivity(intent);
     }
-
 }

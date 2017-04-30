@@ -8,7 +8,7 @@ public class Survey {
     private ArrayList<Option> surveyOptionList = new ArrayList<>();
     private ArrayList<String> participantsList = new ArrayList<>();
     private boolean surveySingleOption;
-    private int duration;
+    private String duration;
     private int participantsCount;
     private String creatorId;
 
@@ -20,7 +20,7 @@ public class Survey {
                   ArrayList<Option> surveyOptionList,
                   ArrayList<String> participantsList,
                   boolean surveySingleOption,
-                  int duration,
+                  String duration,
                   int participantsCount,
                   String creatorId) {
         this.surveyID = surveyID;
@@ -98,5 +98,13 @@ public class Survey {
     @Override
     public boolean equals(Object obj) {
         return surveyID.equals(((Survey) obj).surveyID);
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }

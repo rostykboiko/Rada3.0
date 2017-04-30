@@ -37,7 +37,7 @@
     <dimen name="card_height">400dp</dimen>
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="card_margin">2dp</dimen>
-    <dimen name="card_album_radius">2dp</dimen>
+    <dimen name="card_radius">2dp</dimen>
     <dimen name="card_row_text_height">28dp</dimen>
     <!-- Item Dimens -->
     <dimen name="row_list">64dp</dimen>
@@ -81,8 +81,15 @@
     <dimen name="checked_icon_top">20dp</dimen>
     <dimen name="checked_icon_start">24dp</dimen>
 
+    <!-- Time Picker -->
 
+    <dimen name="time_picker_textSize">42sp</dimen>
+    <dimen name="desc_picker_textSize">28sp</dimen>
 
-
+    <dimen name="button_picker_paddingTop">20dp</dimen>
+    <dimen name="button_picker_paddingBottom">20dp</dimen>
+    <dimen name="button_picker_paddingStart">36dp</dimen>
+    <dimen name="button_picker_paddingEnd">36dp</dimen>
+    <dimen name="button_picker_textSize">28sp</dimen>
 
 </resources>

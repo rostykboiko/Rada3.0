@@ -47,12 +47,37 @@
     <string name="tv_duration_1h">1 год</string>
     <string name="tv_duration_custom">Custom</string>
     <string name="ok_btn">OK</string>
+    <string name="survey_toast">You don\'t have permission to edit this Survey.
+        You can edit only Surveys you created.</string>
 
     <!--Editor Activity End-->
 
     <!--BottomSheet Activity Start-->
     <string name="bottomSheet_search_hint">Type a name or email</string>
 
+    <!--BottomSheet Activity End-->
+
+    <!--BottomSheet Activity End-->
+    <string name="time_hour_00">00</string>
+    <string name="time_hour_desc">h</string>
+    <string name="time_minutes_00">00</string>
+    <string name="time_minutes_desc">m</string>
+    <string name="time_seconds_00">00</string>
+    <string name="time_seconds_desc">s</string>
+    <string name="deleteBtn">time_picker_deleteBtn</string>
+
+    <string name="time_picker_1">1</string>
+    <string name="time_picker_2">2</string>
+    <string name="time_picker_3">3</string>
+    <string name="time_picker_4">4</string>
+    <string name="time_picker_5">5</string>
+    <string name="time_picker_6">6</string>
+    <string name="time_picker_7">7</string>
+    <string name="time_picker_8">8</string>
+    <string name="time_picker_9">9</string>
+    <string name="time_picker_0">0</string>
+    <string name="time_picker_button1">Cancel</string>
+    <string name="time_picker_button2">Save</string>
     <!--BottomSheet Activity End-->
 
     <!-- Dialog -->
@@ -143,5 +168,6 @@
     <string name="email_fmt">Email: %s</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_delete">Delete</string>
+
     <!-- FireBse Template Start -->
 </resources>

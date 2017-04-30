@@ -1,5 +1,6 @@
 package com.springcamp.rostykboiko.rada3.bottomSheet.view;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -114,23 +115,26 @@ public class BottomSheet extends AppCompatActivity {
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_HIDDEN:
+                        toolbar.setVisibility(View.GONE);
+
                         String jsonSurvey = new Gson().toJson(survey);
+                        ActivityOptions options =
+                                ActivityOptions.makeCustomAnimation(BottomSheet.this, R.anim.fade_in, R.anim.fade_out);
 
                         startActivity(new Intent(BottomSheet.this, EditorActivity.class)
                                 .putExtra("surveyJson", jsonSurvey)
-                                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                                .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT), options.toBundle());
 
-                        toolbar.setVisibility(View.GONE);
                         inputMethodManager.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
 
                         finish();
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
+                        toolbar.setVisibility(View.VISIBLE);
                         searchBar.setFocusable(true);
                         searchBar.setFocusableInTouchMode(true);
                         searchBar.requestFocus();
 
-                        toolbar.setVisibility(View.VISIBLE);
                         inputMethodManager.toggleSoftInput(InputMethodManager.RESULT_SHOWN, 0);
 
                         setStatusBarDim(false);

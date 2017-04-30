@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
@@ -304,7 +305,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initCardView() {
-        cardsAdaptor = new CardsAdaptor(this, new CardsAdaptor.QuestionsCardCallback() {
+        cardsAdaptor = new CardsAdaptor(new CardsAdaptor.QuestionsCardCallback() {
             @Override
             public void onCardDeleted(@NonNull Survey survey) {
                 final String surveyId = survey.getSurveyID();
@@ -346,6 +347,10 @@ public class MainActivity extends AppCompatActivity
 
                     startActivity(new Intent(MainActivity.this, EditorActivity.class)
                             .putExtra("surveyJson", json));
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            R.string.survey_toast, Toast.LENGTH_LONG);
+                    toast.show();
                 }
             }
         });

@@ -63,6 +63,11 @@
         <item name="colorAccent">@color/colorActiveSwitch</item>
     </style>
 
+    <style name="BaseTimerFab">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="AppTheme.TitleText" parent="AppTheme">
         <item name="android:padding">@dimen/margin_normal</item>
         <item name="android:textStyle">bold</item>
@@ -76,6 +81,35 @@
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:layout_marginStart">@dimen/margin_tab</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/monsoon</item>
+    </style>
+
+    <style name="TimePickerTimeText" parent="AppTheme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:layout_marginStart">@dimen/margin_medium</item>
+        <item name="android:textSize">@dimen/time_picker_textSize</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TimePickerDescText" parent="AppTheme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/margin_medium</item>
+        <item name="android:textSize">@dimen/desc_picker_textSize</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+    <style name="TimePickerButtons" parent="AppTheme">
+        <item name="android:paddingTop">@dimen/button_picker_paddingTop</item>
+        <item name="android:paddingBottom">@dimen/button_picker_paddingBottom</item>
+        <item name="android:paddingStart">@dimen/button_picker_paddingStart</item>
+        <item name="android:paddingEnd">@dimen/button_picker_paddingEnd</item>
+        <item name="android:textSize">@dimen/button_picker_textSize</item>
         <item name="android:textColor">@color/monsoon</item>
     </style>
 </resources>

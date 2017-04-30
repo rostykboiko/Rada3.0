@@ -1,4 +1,4 @@
-package com.springcamp.rostykboiko.rada3.duration.presenter;
+package com.springcamp.rostykboiko.rada3.durationPicker.presenter;
 
 /**
  * Created by rostykboiko on 25.04.17.
