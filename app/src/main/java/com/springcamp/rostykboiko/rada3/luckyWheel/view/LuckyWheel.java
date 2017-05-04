@@ -1,0 +1,81 @@
+package com.springcamp.rostykboiko.rada3.luckyWheel.view;
+
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.support.annotation.AttrRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+
+import com.bluehomestudio.luckywheel.WheelItem;
+import com.bluehomestudio.luckywheel.WheelView;
+
+import java.util.List;
+
+public class LuckyWheel extends FrameLayout {
+    private WheelView wheelView;
+    private ImageView arrow;
+
+    public LuckyWheel(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        initComponent();
+        applyAttribute(attrs);
+    }
+
+    public LuckyWheel(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        initComponent();
+        applyAttribute(attrs);
+    }
+
+    private void initComponent() {
+        inflate(getContext(), com.bluehomestudio.luckywheel.R.layout.lucky_wheel_layout, this);
+        wheelView = (WheelView) findViewById(com.bluehomestudio.luckywheel.R.id.wv_main_wheel);
+        arrow = (ImageView) findViewById(com.bluehomestudio.luckywheel.R.id.iv_arrow);
+    }
+
+    /**
+     * Function to add items to wheel items
+     *
+     * @param wheelItems Wheel items
+     */
+    public void addWheelItems(List<WheelItem> wheelItems) {
+        wheelView.addWheelItems(wheelItems);
+    }
+
+    public void applyAttribute(AttributeSet attrs) {
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, com.bluehomestudio.luckywheel.R.styleable.LuckyWheel, 0, 0);
+        try {
+            int backgroudnColor = typedArray.getColor(com.bluehomestudio.luckywheel.R.styleable.LuckyWheel_background_color, Color.GREEN);
+            int arrowImage = typedArray.getResourceId(com.bluehomestudio.luckywheel.R.styleable.LuckyWheel_arrow_image, com.bluehomestudio.luckywheel.R.drawable.arrow);
+
+            wheelView.setWheelBackgoundWheel(backgroudnColor);
+            arrow.setImageResource(arrowImage);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Function to set lucky wheel reach the target listener
+     *
+     * @param onLuckyWheelReachTheTarget Lucky wheel listener
+     */
+    public void setLuckyWheelReachTheTarget(OnLuckyWheelReachTheTarget onLuckyWheelReachTheTarget) {
+    //    wheelView.setWheelListener(onLuckyWheelReachTheTarget);
+    }
+
+    /**
+     * Function to rotate wheel to degree
+     *
+     * @param number Number to rotate
+     */
+    public void rotateWheelTo(int number) {
+        wheelView.rotateWheelToTarget(number);
+    }
+
+}
