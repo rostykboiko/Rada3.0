@@ -34,7 +34,7 @@
     <string name="tv_open_survey">Закрите голосування</string>
     <string name="tv_one_option">Один варіант відповіді</string>
     <string name="tv_duration">Тривалість</string>
-    <string name="tv_duration_time">2хв</string>
+    <string name="tv_duration_time">02:00</string>
     <string name="tv_participants">Учасники</string>
     <string name="tv_participants_title">Виберіть учасника</string>
     <string name="tv_color">Колір</string>

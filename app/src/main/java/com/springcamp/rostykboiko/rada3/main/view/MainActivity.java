@@ -45,6 +45,7 @@ import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerUIUtils;
 import com.springcamp.rostykboiko.rada3.Rada3;
 import com.springcamp.rostykboiko.rada3.answer.view.AnswerDialogActivity;
+import com.springcamp.rostykboiko.rada3.luckyWheel.view.LuckyWheelActyvity;
 import com.springcamp.rostykboiko.rada3.main.presenter.MainPresenter;
 import com.springcamp.rostykboiko.rada3.main.MainContract;
 import com.springcamp.rostykboiko.rada3.R;
@@ -68,7 +69,7 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
     private static final String SURVEY_KEY = "SURVEY_KEY";
-
+    private boolean active;
     private SessionManager session;
     private Option option = new Option();
     private Survey survey = new Survey();
@@ -84,11 +85,7 @@ public class MainActivity extends AppCompatActivity
     @Nullable
     MainContract.Presenter presenter;
 
-    @OnClick(R.id.fab)
-    void okClick() {
-        survey = new Survey();
-        EditorActivity.launchActivity(MainActivity.this, survey);
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,17 +110,20 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         Rada3.activityResumed();
 
-        questionReceiver = new QuestionReceiver(new QuestionReceiver.QuestionReceivedCallback() {
-            @Override
-            public void onQuestionReceived(@NonNull Survey survey) {
-                if (presenter != null) {
-                    presenter.receivedQuestion(survey);
+        if (!active) {
+            questionReceiver = new QuestionReceiver(new QuestionReceiver.QuestionReceivedCallback() {
+                @Override
+                public void onQuestionReceived(@NonNull Survey survey) {
+                    if (presenter != null) {
+                        presenter.receivedQuestion(survey);
+                    }
                 }
-            }
-        });
-        LocalBroadcastManager.getInstance(this).registerReceiver(questionReceiver,
-                new IntentFilter(QuestionReceiver.QUESTION_RECEIVED_FILTER));
+            });
+            LocalBroadcastManager.getInstance(this).registerReceiver(questionReceiver,
+                    new IntentFilter(QuestionReceiver.QUESTION_RECEIVED_FILTER));
+        }
 
+        active = true;
         initFireBase();
         initCardView();
     }
@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
+        active = false;
         Rada3.activityPaused();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(questionReceiver);
     }
@@ -138,6 +139,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        active = false;
         Rada3.activityPaused();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(questionReceiver);
 
@@ -161,32 +163,32 @@ public class MainActivity extends AppCompatActivity
         mCurrentSurvey = FirebaseDatabase.getInstance().getReference("Survey/" + surveyId + "/Answers");
 
         mCurrentSurvey.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        System.out.println("AnswerSync " + dataSnapshot.getKey() + " " + dataSnapshot.getValue());
-                        cardsAdaptor.notifyDataSetChanged();
-                    }
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                System.out.println("AnswerSync " + dataSnapshot.getKey() + " " + dataSnapshot.getValue());
+                cardsAdaptor.notifyDataSetChanged();
+            }
 
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        cardsAdaptor.notifyDataSetChanged();
-                    }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                cardsAdaptor.notifyDataSetChanged();
+            }
 
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                    }
+            }
 
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                    }
+            }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+            }
+        });
         mCurrentSurvey.keepSynced(true);
     }
 
@@ -318,7 +320,7 @@ public class MainActivity extends AppCompatActivity
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.child("Creator").getValue() != null
                                         && dataSnapshot.child("Creator")
-                                                .getValue().equals(GoogleAccountAdapter.getAccountID())) {
+                                        .getValue().equals(GoogleAccountAdapter.getAccountID())) {
                                     FirebaseDatabase.getInstance().getReference()
                                             .child("Survey")
                                             .child(surveyId)
@@ -555,6 +557,17 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @OnClick(R.id.menu_item1)
+    void luckyWheel(){
+        LuckyWheelActyvity.launchActivity(MainActivity.this);
+    }
+
+    @OnClick(R.id.menu_item2)
+    void createNewSurvey() {
+        survey = new Survey();
+        EditorActivity.launchActivity(MainActivity.this, survey);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 //        int id = item.getItemId();
@@ -573,4 +586,5 @@ public class MainActivity extends AppCompatActivity
 //        }
         return super.onOptionsItemSelected(item);
     }
+
 }

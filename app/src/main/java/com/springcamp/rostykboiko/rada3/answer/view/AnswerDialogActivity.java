@@ -22,10 +22,14 @@ import com.google.gson.Gson;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.answer.AnswerContract;
 import com.springcamp.rostykboiko.rada3.answer.presenter.AnswerDialogPresenter;
+import com.springcamp.rostykboiko.rada3.main.view.MainActivity;
 import com.springcamp.rostykboiko.rada3.main.view.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +47,8 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
     @BindView(R.id.title_survey_dialog)
     TextView titleView;
 
+    @BindView(R.id.textViewCounter)
+    TextView counterView;
     @BindView(R.id.touch_outside)
     CoordinatorLayout outsideArea;
 
@@ -55,7 +61,7 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dialog_survey);
+        setContentView(R.layout.activity_dialog_answer);
 
         ButterKnife.bind(this);
 
@@ -66,6 +72,7 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
         messageReceiver();
         initClickListeners();
         setStatusBarDim(true);
+        initTimer();
     }
 
     @OnClick(R.id.button_submit)
@@ -143,6 +150,16 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
         );
     }
 
+    private void initTimer() {
+        Timer mTimer = new Timer();
+        CountDownTimerTask countDownTimerTask = new CountDownTimerTask();
+
+        if (survey.getDuration() != null) {
+            mTimer.schedule(countDownTimerTask, 0, 1000);
+        }
+        System.out.println("Hello, task is should be already done!");
+    }
+
     private void setStatusBarDim(boolean dim) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(dim ? Color.TRANSPARENT :
@@ -173,7 +190,55 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
     }
 
     public static void launchActivity(@NonNull AppCompatActivity activity) {
-        activity.startActivity(new Intent(activity, AnswerDialogActivity.class));
+        activity.startActivity(new Intent(activity, MainActivity.class));
 
     }
+
+    private class CountDownTimerTask extends TimerTask {
+
+        @Override
+        public void run() {
+            final int duration = Integer.parseInt(survey.getDuration());
+            survey.setDuration("" + (duration - 1));
+            if (survey.getDuration().equals("0"))
+                finish();
+
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    counterView.setText(timerFormat(duration));
+                }
+            });
+        }
+
+        private String timerFormat(int duration) {
+            String seconds;
+            String minutes;
+            String timer = "00:00";
+
+            if (duration < 60) {
+                if (duration < 10) {
+                    timer = "00:0" + duration;
+                } else {
+                    timer = "00:" + duration;
+                }
+            }
+
+            if (duration > 60) {
+                minutes = "" + duration / 60;
+                seconds = "" + duration % 60;
+                if (duration / 60 < 10) {
+                    minutes = "0" + duration / 60;
+                }
+                if (duration % 60 < 10) {
+                    seconds = "0" + duration % 60;
+                }
+                timer = minutes + ":" + seconds;
+            }
+
+            return timer;
+        }
+    }
 }
+

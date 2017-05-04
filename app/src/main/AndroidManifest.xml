@@ -73,6 +73,9 @@
         <activity
             android:name=".settings.view.SettingsActivity"
             android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".luckyWheel.view.LuckyWheelActyvity"
+            android:label="@string/title_activity_settings" />
 
         <service android:name=".shared.utlils.firebaseMessaging.FCMMessagingService">
             <intent-filter>

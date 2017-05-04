@@ -67,6 +67,9 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.retrofit2:retrofit:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-    // Time Picker
+    // LuckyWheel
+    compile 'com.github.mmoamenn:LuckyWheel_Android:0.0.1'
+    // Fab
+    compile 'com.github.clans:fab:1.6.4'
 }
 apply plugin: 'com.google.gms.google-services'

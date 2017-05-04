@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -32,13 +33,36 @@
         android:id="@+id/include"
         layout="@layout/content_main" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_material_plus" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        fab:menu_icon="@drawable/ic_material_plus"
+        fab:menu_colorNormal="@color/colorAccent"
+        fab:menu_colorPressed="@color/colorAccent"
+        >
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_material_palette"
+            fab:fab_label="Lucky Wheel"
+            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_item2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_material_palette"
+            fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_label="Create new survey"
+            fab:fab_size="mini" />
+    </com.github.clans.fab.FloatingActionMenu>
 
 
 </android.support.design.widget.CoordinatorLayout>

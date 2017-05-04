@@ -50,14 +50,32 @@
                 android:clipToPadding="false"
                 android:scrollbars="vertical" />
 
-            <Button
-                android:id="@+id/button_submit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:textColor="@color/colorAccentSecond"
-                android:background="@color/accent"
-                android:text="@string/dialog_ok_btn" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/button_submit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:padding="16dp"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
+                    android:text="@string/dialog_ok_btn"
+                    android:textColor="@color/colorAccentSecond"
+                    android:elevation="0dp"
+                    android:layout_alignParentEnd="true" />
+
+                <TextView
+                    android:id="@+id/textViewCounter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </android.support.design.widget.CoordinatorLayout>

@@ -22,16 +22,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccentSecond">
-
-                <TextView
-                    android:id="@+id/hours"
-                    style="@style/TimePickerTimeText"
-                    android:text="@string/time_hour_00" />
-
-                <TextView
-                    style="@style/TimePickerDescText"
-                    android:text="@string/time_hour_desc" />
+                android:background="@color/colorAccentSecond"
+                android:gravity="center_horizontal">
 
                 <TextView
                     android:id="@+id/minutes"

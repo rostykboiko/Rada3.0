@@ -1,6 +1,5 @@
 package com.springcamp.rostykboiko.rada3.durationPicker.view;
 
-import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -19,14 +18,10 @@ import com.springcamp.rostykboiko.rada3.editor.view.EditorActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class DurationDialogActivity extends AppCompatActivity {
-    private String duration = "";
     private int clickCount = 1;
 
-    @BindView(R.id.hours)
-    TextView hours;
     @BindView(R.id.minutes)
     TextView minutes;
     @BindView(R.id.seconds)
@@ -121,34 +116,8 @@ public class DurationDialogActivity extends AppCompatActivity {
             firstNumber = secondsInt % 10;
             seconds.setText("" + firstNumber + buttonNumber);
         }
-        if (clickCount == 5) {
-            minutesInt = Integer.parseInt(minutes.getText().toString());
-            secondsInt = Integer.parseInt(seconds.getText().toString());
 
-            firstNumber = minutesInt / 10;
-            hours.setText("" + 0 + firstNumber);
-            firstNumber = minutesInt % 10;
-            secondNumber = secondsInt / 10;
-            minutes.setText("" + firstNumber + secondNumber);
-            firstNumber = secondsInt % 10;
-            seconds.setText("" + firstNumber + buttonNumber);
-        }
-        if (clickCount == 6) {
-            hoursInt = Integer.parseInt(hours.getText().toString());
-            minutesInt = Integer.parseInt(minutes.getText().toString());
-            secondsInt = Integer.parseInt(seconds.getText().toString());
-
-            firstNumber = hoursInt % 10;
-            secondNumber = minutesInt / 10;
-            hours.setText("" + firstNumber + secondNumber);
-            firstNumber = minutesInt % 10;
-            secondNumber = secondsInt / 10;
-            minutes.setText("" + firstNumber + secondNumber);
-            firstNumber = secondsInt % 10;
-            seconds.setText("" + firstNumber + buttonNumber);
-        }
-
-        if (clickCount < 7) {
+        if (clickCount < 5) {
             clickCount++;
         }
     }
@@ -156,18 +125,13 @@ public class DurationDialogActivity extends AppCompatActivity {
     private void deleteTime() {
         int firstNumber;
         int secondNumber;
-        int hoursInt;
         int minutesInt;
         int secondsInt;
 
-        hoursInt = Integer.parseInt(hours.getText().toString());
         minutesInt = Integer.parseInt(minutes.getText().toString());
         secondsInt = Integer.parseInt(seconds.getText().toString());
 
         firstNumber = 0;
-        secondNumber = hoursInt / 10;
-        hours.setText("" + firstNumber + secondNumber);
-        firstNumber = hoursInt % 10;
         secondNumber = minutesInt / 10;
         minutes.setText("" + firstNumber + secondNumber);
         firstNumber = minutesInt % 10;
@@ -250,15 +214,13 @@ public class DurationDialogActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                duration = hours.getText().toString() + "h"
-                        + minutes.getText().toString() + "m"
-                        + seconds.getText().toString() + "s";
-
                 startActivity(new Intent(DurationDialogActivity.this, EditorActivity.class)
-                        .putExtra("duration", duration)
+                        .putExtra("minutes", minutes.getText().toString())
+                        .putExtra("seconds", seconds.getText().toString())
                         .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
                 finish();
             }
@@ -274,7 +236,6 @@ public class DurationDialogActivity extends AppCompatActivity {
             public boolean onLongClick(View v) {
                 seconds.setText(R.string.time_seconds_00);
                 minutes.setText(R.string.time_minutes_00);
-                hours.setText(R.string.time_hour_00);
                 return true;
             }
         });

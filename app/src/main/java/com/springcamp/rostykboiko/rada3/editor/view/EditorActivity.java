@@ -51,8 +51,11 @@ import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.security.SecureRandom;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -366,20 +369,23 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             public void onClick(DialogInterface dialog, int item) {
                 switch (item) {
                     case 0:
-                        durationTime.setText(R.string.tv_duration_2min);
+                        survey.setDuration("" + 120);
+                        durationTime.setText(timerFormat(120));
                         break;
                     case 1:
-                        durationTime.setText(R.string.tv_duration_10min);
+                        survey.setDuration("" + 600);
+                        durationTime.setText(timerFormat(600));
                         break;
                     case 2:
-                        durationTime.setText(R.string.tv_duration_30min);
+                        survey.setDuration("" + 1800);
+                        durationTime.setText(timerFormat(1800));
                         break;
                     case 3:
-                        durationTime.setText(R.string.tv_duration_1h);
+                        survey.setDuration("" + 3600);
+                        durationTime.setText(timerFormat(3600));
                         break;
                     case 4:
                         startActivity(new Intent(EditorActivity.this, DurationDialogActivity.class));
-                        durationTime.setText(R.string.tv_duration_custom);
                         break;
                 }
             }
@@ -501,6 +507,14 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 .child("One Positive Option")
                 .setValue(oneOptionSwitch.isChecked());
 
+        if (survey != null && survey.getDuration() == null) {
+            survey.setDuration("" + 120);
+        }
+
+        surveyRef.child(survey.getSurveyID())
+                .child("Duration")
+                .setValue(survey.getDuration());
+
         survey.setSurveyID(survey.getSurveyID());
         survey.setSurveyTitle(surveyTitle);
         survey.setSurveyOptionList(survey.getSurveyOptionList());
@@ -564,6 +578,34 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     public String generatedId() {
         return new BigInteger(31, random).toString();
+    }
+
+    private String timerFormat(int duration) {
+        String seconds;
+        String minutes;
+        String timer = "00:00";
+
+        if (duration < 60) {
+            if (duration < 10) {
+                timer = "00:0" + duration;
+            } else {
+                timer = "00:" + duration;
+            }
+        }
+
+        if (duration > 60) {
+            minutes = "" + duration / 60;
+            seconds = "" + duration % 60;
+            if (duration / 60 < 10) {
+                minutes = "0" + duration / 60;
+            }
+            if (duration % 60 < 10) {
+                seconds = "0" + duration % 60;
+            }
+            timer = minutes + ":" + seconds;
+        }
+
+        return timer;
     }
 
     private class OneShotTask implements Runnable {
@@ -634,9 +676,16 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             participants = new Gson().fromJson(jsonParticipantsList, type);
         }
 
-        if (getIntent().getStringExtra("duration") != null) {
-            survey.setDuration(getIntent().getStringExtra("duration"));
-            durationTime.setText(survey.getDuration());
+        if (getIntent().getStringExtra("minutes") != null &&
+                getIntent().getStringExtra("seconds") != null) {
+
+            int minutes = Integer.parseInt(getIntent().getStringExtra("minutes"));
+            int seconds = Integer.parseInt(getIntent().getStringExtra("seconds"));
+
+            String dateEnd = "" + (minutes * 60 + seconds);
+
+            survey.setDuration(dateEnd);
+            durationTime.setText(timerFormat(Integer.parseInt(dateEnd)));
         }
     }
 
@@ -692,10 +741,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     public static void launchActivity(@NonNull AppCompatActivity activity, @NonNull Survey survey) {
         Intent intent = new Intent(activity, EditorActivity.class);
-        Gson gson = new Gson();
-        String json = gson.toJson(survey);
-
-        intent.putExtra(SURVEY_KEY, json);
 
         activity.startActivity(intent);
     }
