@@ -49,11 +49,12 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
 
     @BindView(R.id.textViewCounter)
     TextView counterView;
+
     @BindView(R.id.touch_outside)
     CoordinatorLayout outsideArea;
 
     @BindView(R.id.button_submit)
-    Button okBtn;
+    TextView okBtn;
 
     @Nullable
     AnswerContract.Presenter presenter;

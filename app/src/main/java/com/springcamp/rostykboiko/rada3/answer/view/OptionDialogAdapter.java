@@ -47,6 +47,17 @@ class OptionDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ((AnswerViewHolder) holder).optionItem.setText(optionsList.get(position).getOptionTitle());
         System.out.println("SingleOption adapter " + singleOption);
 
+        ((AnswerViewHolder) holder).optionItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (singleOption){
+                    ((AnswerViewHolder) holder).radioButton.setChecked(optionsList.get(position).isChecked());
+                } else {
+                    ((AnswerViewHolder) holder).checkBox.setChecked(optionsList.get(position).isChecked());
+                }
+            }
+        });
+
         if (singleOption){
             ((AnswerViewHolder) holder).checkBox.setVisibility(View.GONE);
             ((AnswerViewHolder) holder).radioButton.setVisibility(View.VISIBLE);
@@ -57,6 +68,8 @@ class OptionDialogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
         System.out.println("json answer adapter " + optionsList.get(position).getOptionTitle());
     }
+
+
 
     @Override
     public int getItemCount() {

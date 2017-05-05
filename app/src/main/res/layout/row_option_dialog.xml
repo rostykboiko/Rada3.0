@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/margin_normal">
+    android:orientation="vertical">
 
     <CheckBox
         android:id="@+id/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_normal"
         android:clickable="true"
         android:visibility="visible" />
 
@@ -16,15 +17,16 @@
         android:id="@+id/radioBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_normal"
         android:clickable="true"
-        android:visibility="visible"/>
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/optionItemDialog"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/desc_padding"
-        android:paddingTop="@dimen/margin_small"
+        android:padding="@dimen/margin_medium"
         android:text="@string/title_activity_editor"
         android:textSize="@dimen/text_size_standard" />
 
