@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LuckyWheelActyvity extends AppCompatActivity {
-    private OptionEditorAdapter optionsAdapter;
+    private OptionsAdapter optionsAdapter;
     private ArrayList<String> optionsList = new ArrayList<>();
 
     @BindView(R.id.option_recycler_view)
@@ -57,10 +57,14 @@ public class LuckyWheelActyvity extends AppCompatActivity {
 
         lw.rotateWheelTo(1);
 
-        initOptionsListView();
+        System.out.println("LuckyWheel onCreate");
 
+        initOptionsListView();
+        isOptionsListEmpty();
     }
     private void isOptionsListEmpty() {
+        System.out.println("LuckyWheel isOptionsListEmpty");
+
         if (optionsList != null && optionsList.isEmpty()) {
             optionsList.add("");
             optionsAdapter.notifyDataSetChanged();
@@ -68,21 +72,15 @@ public class LuckyWheelActyvity extends AppCompatActivity {
     }
 
     private void initOptionsListView() {
-        optionsAdapter = new OptionEditorAdapter(optionsList, new OptionEditorAdapter.OptionItemsCallback() {
-            @Override
-            public boolean onOneOption() {
-                return false;
-            }
-
+        optionsAdapter = new OptionsAdapter(optionsList, new OptionsAdapter.OptionItemsCallback() {
             @Override
             public void onOptionDeleted(int position) {
                 optionsList.remove(position);
                 optionsAdapter.notifyDataSetChanged();
             }
-
             @Override
             public void onOptionChanged(@NonNull ArrayList<String> options) {
-                optionsList.isEmpty();
+                optionsList = options;
             }
         });
 
@@ -92,8 +90,10 @@ public class LuckyWheelActyvity extends AppCompatActivity {
         optionsListView.setAdapter(optionsAdapter);
     }
 
-    @OnClick(R.id.btn_add_option)
+    @OnClick(R.id.rv_add_option)
     void addOptionRow() {
+        System.out.println("LuckyWheel addOptionRow");
+
         if (optionsAdapter.getItemCount() < 5) {
 
             optionsList.add("");

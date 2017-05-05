@@ -11,11 +11,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.springcamp.rostykboiko.rada3.R;
-import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 
 import java.util.ArrayList;
 
-class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewHolder> {
+class OptionsAdapter extends RecyclerView.Adapter<OptionsAdapter.ViewHolder> {
 
     @NonNull
     private OptionItemsCallback callback;
@@ -26,12 +25,10 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
     class ViewHolder extends RecyclerView.ViewHolder {
         private EditText optionItem;
         private ImageView closeIcon;
-        private ImageView checkIcon;
 
         ViewHolder(View view) {
             super(view);
             closeIcon = (ImageView) view.findViewById(R.id.close_icon);
-            checkIcon = (ImageView) view.findViewById(R.id.checkBox);
             optionItem = (EditText) view.findViewById(R.id.optionItemDialog);
 
             optionItem.addTextChangedListener(new TextWatcher() {
@@ -45,7 +42,7 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    optionsList.add(s.toString());
+                    optionsList.set(getAdapterPosition(), optionItem.getText().toString());
                     callback.onOptionChanged(optionsList);
                 }
             });
@@ -53,22 +50,22 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
 
     }
 
-    OptionEditorAdapter(@NonNull ArrayList<String> optionsList,
-                        @NonNull OptionEditorAdapter.OptionItemsCallback callback) {
+    OptionsAdapter(@NonNull ArrayList<String> optionsList,
+                   @NonNull OptionsAdapter.OptionItemsCallback callback) {
         this.optionsList = optionsList;
         this.callback = callback;
     }
 
     @Override
-    public OptionEditorAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public OptionsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_option_ed, parent, false);
+                .inflate(R.layout.row_option_wheel, parent, false);
 
-        return new OptionEditorAdapter.ViewHolder(itemView);
+        return new OptionsAdapter.ViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final OptionEditorAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final OptionsAdapter.ViewHolder holder, final int position) {
         holder.optionItem.setText(optionsList.get(position));
 
         if (optionsList.size() != 1 && holder.optionItem.getText().toString().equals("")) {
@@ -84,12 +81,6 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
             }
         });
 
-        if (!callback.onOneOption()){
-            holder.checkIcon.setImageResource(R.drawable.ic_material_checkbox_blank);
-        } else {
-            holder.checkIcon.setImageResource(R.drawable.ic_material_radio_blank);
-        }
-
     }
 
     @Override
@@ -98,8 +89,6 @@ class OptionEditorAdapter extends RecyclerView.Adapter<OptionEditorAdapter.ViewH
     }
 
     interface OptionItemsCallback {
-
-        boolean onOneOption();
 
         void onOptionDeleted(int position);
 
