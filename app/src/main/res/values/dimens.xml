@@ -18,7 +18,7 @@
     <dimen name="margin_switch">14dp</dimen>
     <dimen name="margin_large">16dp</dimen>
     <dimen name="margin_tab">72dp</dimen>
-    <dimen name="margin_toolbar">60dp</dimen>
+    <dimen name="margin_toolbar">70dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="icon_top_margin">24dp</dimen>

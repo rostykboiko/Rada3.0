@@ -570,12 +570,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_share:
-                break;
             case R.id.action_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                break;
-            case R.id.action_delete:
                 break;
             case R.id.action_profile:
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));

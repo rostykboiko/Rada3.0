@@ -40,27 +40,28 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        fab:menu_icon="@drawable/ic_material_plus"
         fab:menu_colorNormal="@color/colorAccent"
         fab:menu_colorPressed="@color/colorAccent"
-        >
+        fab:menu_icon="@drawable/ic_material_plus">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_item1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_custom_lucky"
-            fab:fab_label="Lucky Wheel"
             fab:fab_colorNormal="@color/colorAccent"
+            fab:fab_colorPressed="@color/colorAccent"
+            fab:fab_label="@string/menu_item1"
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_item2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_material_palette"
+            android:src="@drawable/ic_material_survey"
             fab:fab_colorNormal="@color/colorAccent"
-            fab:fab_label="Create new survey"
+            fab:fab_colorPressed="@color/colorAccent"
+            fab:fab_label="@string/menu_item2"
             fab:fab_size="mini" />
     </com.github.clans.fab.FloatingActionMenu>
 

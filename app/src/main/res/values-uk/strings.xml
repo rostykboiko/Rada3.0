@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rada3.0</string>
+    <string name="action_delete">Видалити</string>
+    <string name="action_login">Увійти</string>
+    <string name="action_settings">Налаштування</string>
+    <string name="action_share">Поділитись</string>
+    <string name="action_sign_in">Увійти або зарегіструватись</string>
+    <string name="action_sign_in_short">Зарегіструватись</string>
+    <string name="auth_failed">Помилка входу</string>
+    <string name="create_account">Створити аккаунт</string>
+    <string name="desc_language">Українська</string>
+    <string name="desc_theme">Світла</string>
+    <string name="ed_option">Варіант відповіді</string>
+    <string name="time_hour_desc">год</string>
+    <string name="time_minutes_desc">хв</string>
+    <string name="time_picker_button1">Скасувати</string>
+    <string name="time_picker_button2">Зберегти</string>
+    <string name="time_seconds_desc">с</string>
+    <string name="tv_duration_10min">10 хв</string>
+    <string name="tv_duration_hour">год</string>
+    <string name="title_bottomSheet">Вибрати Учасників</string>
+    <string name="title_language">Мова</string>
+    <string name="title_theme">Тема</string>
+    <string name="tv_add_new_option">Додати варіант відповіді</string>
+    <string name="tv_duration">Тривалість</string>
+    <string name="tv_duration_1h">1 год</string>
+    <string name="tv_duration_2min">2 хв</string>
+    <string name="tv_duration_30min">30 хв</string>
+    <string name="tv_duration_custom"></string>
+    <string name="tv_duration_min">хв</string>
+    <string name="tv_one_option">Один варіант відповіді</string>
+    <string name="tv_open_survey">Закрите опитування</string>
+    <string name="tv_participants">Учасники</string>
+    <string name="tv_participants_title">Виберіть учасників</string>
+    <string name="description">Опис</string>
+    <string name="survey_toast">Ви можете редагувати тільки власні опитування.</string>
+    <string name="menu_item1">Lucky Wheel</string>
+    <string name="menu_item2">Створити опитування</string>
+    <string name="desc_info">Інформація про додаток</string>
+</resources>
