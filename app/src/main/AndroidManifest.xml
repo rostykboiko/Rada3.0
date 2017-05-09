@@ -19,9 +19,6 @@
             android:name=".main.view.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
-        <activity android:name=".intro.view.MainIntroActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -74,7 +71,7 @@
             android:name=".settings.view.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".luckyWheel.view.LuckyWheelActyvity"
+            android:name=".luckyWheel.view.LuckyWheelActivity"
             android:label="@string/title_activity_settings" />
 
         <service android:name=".shared.utlils.firebaseMessaging.FCMMessagingService">

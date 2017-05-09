@@ -7,6 +7,7 @@
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_editor">EditorActivity</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_lucky_wheel">Lucky Wheel</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -54,10 +55,13 @@
 
     <!--BottomSheet Activity Start-->
     <string name="bottomSheet_search_hint">Type a name or email</string>
-
     <!--BottomSheet Activity End-->
 
-    <!--BottomSheet Activity End-->
+    <!--LuckyWheel Activity Start-->
+    <string name="spin_btn">Spin</string>
+    <!--LuckyWheel Activity End-->
+
+    <!--DurationPicker Activity Start-->
     <string name="time_hour_00">00</string>
     <string name="time_hour_desc">h</string>
     <string name="time_minutes_00">00</string>
@@ -78,11 +82,10 @@
     <string name="time_picker_0">0</string>
     <string name="time_picker_button1">Cancel</string>
     <string name="time_picker_button2">Save</string>
-    <!--BottomSheet Activity End-->
+    <!--DurationPicker Activity End-->
 
     <!-- Dialog -->
     <string name="dialog_ok_btn">OK</string>
-
 
     <string name="server_key">AAAAd9NLRsU:APA91bFUCs_hI7ndUjAP80N4FMj1hrb9cmt8OJWErz1eSWWpxfXadq7npnQJQRSHAga5qGUUGnLBlktNdGgbH7bR7OHKua4KF-n6y-X0f0U6JMeLnx5wnHqWkhJ-F3vrg6FVnlOEjux9</string>
 

@@ -1,19 +1,15 @@
 package com.springcamp.rostykboiko.rada3.luckyWheel.view;
 
+
 import android.animation.Animator;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
-
-import com.bluehomestudio.luckywheel.*;
 
 import java.util.List;
 
@@ -23,7 +19,7 @@ public class WheelView extends View {
     private RectF range = new RectF();
     private Paint archPaint;
     private int padding, radius, center, mWheelBackground;
-    private List<com.bluehomestudio.luckywheel.WheelItem> mWheelItems;
+    private List<WheelItem> mWheelItems;
     private OnLuckyWheelReachTheTarget mOnLuckyWheelReachTheTarget;
 
     public WheelView(Context context, @Nullable AttributeSet attrs) {
@@ -76,7 +72,7 @@ public class WheelView extends View {
      *
      * @param wheelItems Wheels model item
      */
-    public void addWheelItems(List<com.bluehomestudio.luckywheel.WheelItem> wheelItems) {
+    public void addWheelItems(List<WheelItem> wheelItems) {
         mWheelItems = wheelItems;
         invalidate();
     }
@@ -94,28 +90,7 @@ public class WheelView extends View {
         canvas.drawCircle(center, center, center, backgroundPainter);
     }
 
-    /**
-     * Function to draw image in the center of arc
-     *
-     * @param canvas    Canvas to draw
-     * @param tempAngle Temporary angle
-     * @param bitmap    Bitmap to draw
-     */
-    private void drawImage(Canvas canvas, float tempAngle, Bitmap bitmap) {
-        //get every arc img width and angle
-        int imgWidth = radius / mWheelItems.size();
-        float angle = (float) ((tempAngle + 360 / mWheelItems.size() / 2) * Math.PI / 180);
-        //calculate x and y
-        int x = (int) (center + radius / 2 / 2 * Math.cos(angle));
-        int y = (int) (center + radius / 2 / 2 * Math.sin(angle));
-        //create arc to draw
-        Rect rect = new Rect(x - imgWidth / 2, y - imgWidth / 2, x + imgWidth / 2, y + imgWidth / 2);
-        //rotate main bitmap
-        Matrix matrix = new Matrix();
-        matrix.postRotate(45);
-        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        canvas.drawBitmap(rotatedBitmap, null, rect, null);
-    }
+
 
     /**
      * Function to rotate wheel to target
@@ -167,7 +142,6 @@ public class WheelView extends View {
         for (int i = 0; i < mWheelItems.size(); i++) {
             archPaint.setColor(mWheelItems.get(i).color);
             canvas.drawArc(range, tempAngle, sweepAngle, true, archPaint);
-            drawImage(canvas, tempAngle, mWheelItems.get(i).bitmap);
             tempAngle += sweepAngle;
         }
 

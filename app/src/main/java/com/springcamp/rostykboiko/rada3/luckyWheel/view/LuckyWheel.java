@@ -1,5 +1,6 @@
 package com.springcamp.rostykboiko.rada3.luckyWheel.view;
 
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -10,8 +11,7 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.bluehomestudio.luckywheel.WheelItem;
-import com.bluehomestudio.luckywheel.WheelView;
+import com.springcamp.rostykboiko.rada3.R;
 
 import java.util.List;
 
@@ -32,9 +32,9 @@ public class LuckyWheel extends FrameLayout {
     }
 
     private void initComponent() {
-        inflate(getContext(), com.bluehomestudio.luckywheel.R.layout.lucky_wheel_layout, this);
-        wheelView = (WheelView) findViewById(com.bluehomestudio.luckywheel.R.id.wv_main_wheel);
-        arrow = (ImageView) findViewById(com.bluehomestudio.luckywheel.R.id.iv_arrow);
+        inflate(getContext(), R.layout.lucky_wheel_layout, this);
+        wheelView = (WheelView) findViewById(R.id.wv_main_wheel);
+        arrow = (ImageView) findViewById(R.id.iv_arrow);
     }
 
     /**
@@ -47,12 +47,12 @@ public class LuckyWheel extends FrameLayout {
     }
 
     public void applyAttribute(AttributeSet attrs) {
-        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, com.bluehomestudio.luckywheel.R.styleable.LuckyWheel, 0, 0);
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.LuckyWheel, 0, 0);
         try {
-            int backgroudnColor = typedArray.getColor(com.bluehomestudio.luckywheel.R.styleable.LuckyWheel_background_color, Color.GREEN);
-            int arrowImage = typedArray.getResourceId(com.bluehomestudio.luckywheel.R.styleable.LuckyWheel_arrow_image, com.bluehomestudio.luckywheel.R.drawable.arrow);
+            int backgroundColor = typedArray.getColor(R.styleable.LuckyWheel_background_color, Color.GREEN);
+            int arrowImage = typedArray.getResourceId(R.styleable.LuckyWheel_arrow_image, R.drawable.ic_wheel_arrow);
 
-            wheelView.setWheelBackgoundWheel(backgroudnColor);
+            wheelView.setWheelBackgoundWheel(backgroundColor);
             arrow.setImageResource(arrowImage);
 
         } catch (Exception e) {
@@ -66,7 +66,7 @@ public class LuckyWheel extends FrameLayout {
      * @param onLuckyWheelReachTheTarget Lucky wheel listener
      */
     public void setLuckyWheelReachTheTarget(OnLuckyWheelReachTheTarget onLuckyWheelReachTheTarget) {
-    //    wheelView.setWheelListener(onLuckyWheelReachTheTarget);
+        wheelView.setWheelListener(onLuckyWheelReachTheTarget);
     }
 
     /**

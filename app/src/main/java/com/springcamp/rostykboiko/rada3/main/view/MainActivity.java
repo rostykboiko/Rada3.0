@@ -45,7 +45,7 @@ import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerUIUtils;
 import com.springcamp.rostykboiko.rada3.Rada3;
 import com.springcamp.rostykboiko.rada3.answer.view.AnswerDialogActivity;
-import com.springcamp.rostykboiko.rada3.luckyWheel.view.LuckyWheelActyvity;
+import com.springcamp.rostykboiko.rada3.luckyWheel.view.LuckyWheelActivity;
 import com.springcamp.rostykboiko.rada3.main.presenter.MainPresenter;
 import com.springcamp.rostykboiko.rada3.main.MainContract;
 import com.springcamp.rostykboiko.rada3.R;
@@ -84,8 +84,6 @@ public class MainActivity extends AppCompatActivity
 
     @Nullable
     MainContract.Presenter presenter;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -553,13 +551,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //   getMenuInflater().inflate(R.menu.menu_main, menu);
+           getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @OnClick(R.id.menu_item1)
     void luckyWheel(){
-        LuckyWheelActyvity.launchActivity(MainActivity.this);
+        LuckyWheelActivity.launchActivity(MainActivity.this);
     }
 
     @OnClick(R.id.menu_item2)
@@ -570,20 +568,19 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//        switch (id) {
-//            case R.id.action_share:
-//                break;
-//            case R.id.action_settings:
-//                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-//                break;
-//            case R.id.action_delete:
-//                startActivity(new Intent(MainActivity.this, MainIntroActivity.class));
-//                break;
-//            case R.id.action_profile:
-//                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//                break;
-//        }
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_share:
+                break;
+            case R.id.action_settings:
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                break;
+            case R.id.action_delete:
+                break;
+            case R.id.action_profile:
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 

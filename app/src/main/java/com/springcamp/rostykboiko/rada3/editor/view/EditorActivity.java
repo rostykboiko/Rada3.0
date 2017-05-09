@@ -482,8 +482,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
         String surveyTitle = editTextTitle.getText().toString();
 
-        System.out.println("surveyId editor " + survey.getSurveyID());
-
         /* Title */
         surveyRef.child(survey.getSurveyID())
                 .child("Title")
