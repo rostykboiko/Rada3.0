@@ -356,11 +356,11 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     private void durationPicker() {
         final String[] mDurationOptions = {
-                "2 хвилини",
-                "10 хвилин",
-                "30 хвилин",
-                "1 година",
-                "Налаштування"};
+                getString(R.string.tv_duration_2minutes),
+                getString(R.string.tv_duration_10minutes),
+                getString(R.string.tv_duration_30minutes),
+                getString(R.string.tv_duration_1hour),
+                getString(R.string.tv_duration_custom)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(EditorActivity.this);
 
@@ -557,6 +557,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                                 .child(survey.getSurveyID())
                                 .setValue(survey.getCreatorId());
 
+                        if (user.getDeviceToken() != GoogleAccountAdapter.getDeviceToken())
                         sendMessage(survey, user.getDeviceToken());
                     }
                 }

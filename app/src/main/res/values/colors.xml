@@ -1,14 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- AppTheme light -->
     <color name="colorPrimary">#FAFAFA</color>
     <color name="colorPrimaryDark">#FAFAFA</color>
     <color name="colorPrimaryLight">#BBDEFB</color>
+    <color name="cardColor">#BBDEFB</color>
     <color name="colorAccent">#FAFAFA</color>
-    <color name="colorAccentSecond">#2196f3</color>
+    <color name="colorAccentSecond">#2196F3</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#727272</color>
     <color name="colorDivider">#DCDCDC</color>
     <color name="colorActiveSwitch">#2196f3</color>
+
+    <!-- AppTheme Yellow -->
+    <color name="yellowPrimary">#F8CE46</color>
+    <color name="yellowPrimaryDark">#F8CE46</color>
+    <color name="yellowPrimaryLight">#BBDEFB</color>
+    <color name="cardYellowColor">#BBDEFB</color>
+    <color name="yellowAccent">#f44336</color>
+    <color name="yellowAccentSecond">#2196F3</color>
+    <color name="yellowPrimaryText">#212121</color>
+    <color name="yellowSecondaryText">#727272</color>
+    <color name="yellowDivider">#DCDCDC</color>
+    <color name="yellowActiveSwitch">#2196f3</color>
+
+    <!-- AppTheme Dark -->
+    <color name="darkPrimary">#21242b</color>
+    <color name="darkPrimaryDark">#21242b</color>
+    <color name="darkPrimaryLight">#BBDEFB</color>
+    <color name="cardDarkColor">#BBDEFB</color>
+    <color name="darkBackground">#363a43</color>
+    <color name="darkAccent">#40567d</color>
+    <color name="darkAccentSecond">#40567d</color>
+    <color name="darkPrimaryText">#212121</color>
+    <color name="darkSecondaryText">#727272</color>
+    <color name="darkDivider">#DCDCDC</color>
+    <color name="darkActiveSwitch">#40567d</color>
 
     <color name="black">#000000</color>
     <color name="jet">#222222</color>
@@ -25,58 +52,5 @@
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>
 
-    <!-- Intro-->
-    <!-- Screens background color-->
-    <color name="bg_screen1">#f64c73</color>
-    <color name="bg_screen2">#20d2bb</color>
-    <color name="bg_screen3">#3395ff</color>
-    <color name="bg_screen4">#c873f4</color>
 
-    <!-- dots inactive colors -->
-    <color name="dot_dark_screen1">#d1395c</color>
-    <color name="dot_dark_screen2">#14a895</color>
-    <color name="dot_dark_screen3">#2278d4</color>
-    <color name="dot_dark_screen4">#a854d4</color>
-
-    <!-- dots active colors -->
-    <color name="dot_light_screen1">#f98da5</color>
-    <color name="dot_light_screen2">#8cf9eb</color>
-    <color name="dot_light_screen3">#93c6fd</color>
-    <color name="dot_light_screen4">#e4b5fc</color>
-
-    <array name="array_dot_active">
-        <item>@color/dot_light_screen1</item>
-        <item>@color/dot_light_screen2</item>
-        <item>@color/dot_light_screen3</item>
-        <item>@color/dot_light_screen4</item>
-    </array>
-
-    <array name="array_dot_inactive">
-        <item>@color/dot_dark_screen1</item>
-        <item>@color/dot_dark_screen2</item>
-        <item>@color/dot_dark_screen3</item>
-        <item>@color/dot_dark_screen4</item>
-    </array>
-
-    <array name="demo_colors">
-        <item>@color/md_red_500</item>
-        <item>@color/md_pink_500</item>
-        <item>@color/md_purple_500</item>
-        <item>@color/md_deep_purple_500</item>
-        <item>@color/md_indigo_500</item>
-        <item>@color/md_blue_500</item>
-        <item>@color/md_light_blue_500</item>
-        <item>@color/md_cyan_500</item>
-        <item>@color/md_teal_500</item>
-        <item>@color/md_green_500</item>
-        <item>@color/md_light_green_500</item>
-        <item>@color/md_lime_500</item>
-        <item>@color/md_yellow_500</item>
-        <item>@color/md_amber_500</item>
-        <item>@color/md_orange_500</item>
-        <item>@color/md_deep_orange_500</item>
-        <item>@color/md_brown_500</item>
-        <item>@color/md_grey_500</item>
-        <item>@color/md_blue_grey_500</item>
-    </array>
 </resources>

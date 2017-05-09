@@ -27,7 +27,7 @@
     <string name="tv_duration_1h">1 год</string>
     <string name="tv_duration_2min">2 хв</string>
     <string name="tv_duration_30min">30 хв</string>
-    <string name="tv_duration_custom"></string>
+    <string name="tv_duration_custom">Налаштувати</string>
     <string name="tv_duration_min">хв</string>
     <string name="tv_one_option">Один варіант відповіді</string>
     <string name="tv_open_survey">Закрите опитування</string>
@@ -38,4 +38,13 @@
     <string name="menu_item1">Lucky Wheel</string>
     <string name="menu_item2">Створити опитування</string>
     <string name="desc_info">Інформація про додаток</string>
+    <string name="tv_duration_10minutes">10 хвилин</string>
+    <string name="tv_duration_2minutes">2 хвилини</string>
+    <string name="tv_duration_30minutes">30 хвилин</string>
+    <string name="tv_duration_1hour">1 година</string>
+    <string name="action_logout">Вийти</string>
+    <string name="saveBtn">Зберегти</string>
+    <string name="title_activity_editor">Введіть назву</string>
+    <string name="tv_add_option">Додати варіант</string>
+    <string name="push_content">У вас нове оритування, натисніть сюди щоб прийняти участь</string>
 </resources>

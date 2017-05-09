@@ -1,10 +1,7 @@
 package com.springcamp.rostykboiko.rada3.main.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,13 +11,10 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,20 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.mikepenz.iconics.IconicsDrawable;
-import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SectionDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
-import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
-import com.mikepenz.materialdrawer.util.DrawerImageLoader;
-import com.mikepenz.materialdrawer.util.DrawerUIUtils;
 import com.springcamp.rostykboiko.rada3.Rada3;
 import com.springcamp.rostykboiko.rada3.answer.view.AnswerDialogActivity;
 import com.springcamp.rostykboiko.rada3.luckyWheel.view.LuckyWheelActivity;
@@ -75,7 +55,6 @@ public class MainActivity extends AppCompatActivity
     private Survey survey = new Survey();
     private ArrayList<Survey> surveyList = new ArrayList<>();
     private CardsAdaptor cardsAdaptor;
-    private Drawer mDrawer = null;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -94,13 +73,14 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
+        active = false;
+
         presenter = new MainPresenter(this);
         session = new SessionManager(getApplicationContext());
 
         initUserData();
         initFireBase();
         initCardView();
-        initNavDrawer();
     }
 
     @Override
@@ -109,6 +89,8 @@ public class MainActivity extends AppCompatActivity
         Rada3.activityResumed();
 
         if (!active) {
+            System.out.println("System hi" + active);
+
             questionReceiver = new QuestionReceiver(new QuestionReceiver.QuestionReceivedCallback() {
                 @Override
                 public void onQuestionReceived(@NonNull Survey survey) {
@@ -119,9 +101,10 @@ public class MainActivity extends AppCompatActivity
             });
             LocalBroadcastManager.getInstance(this).registerReceiver(questionReceiver,
                     new IntentFilter(QuestionReceiver.QUESTION_RECEIVED_FILTER));
+
+            active = true;
         }
 
-        active = true;
         initFireBase();
         initCardView();
     }
@@ -364,174 +347,6 @@ public class MainActivity extends AppCompatActivity
     }
     /* List of Cards End */
 
-    /* NavDrawer Start */
-    private AccountHeader initNawDrawerHeader() {
-        //          Image Download
-        if (GoogleAccountAdapter.getProfileIcon() != null) {
-            DrawerImageLoader.init(new AbstractDrawerImageLoader() {
-                @Override
-                public void set(ImageView imageView, Uri uri, Drawable placeholder, String tag) {
-                    Glide.with(imageView.getContext()).load(GoogleAccountAdapter.getProfileIcon()).placeholder(placeholder).into(imageView);
-                }
-
-                @Override
-                public void cancel(ImageView imageView) {
-                    Glide.clear(imageView);
-                }
-
-                @Override
-                public Drawable placeholder(Context ctx, String tag) {
-
-                    if (DrawerImageLoader.Tags.PROFILE.name().equals(tag)) {
-                        return DrawerUIUtils.getPlaceHolder(ctx);
-                    } else if (DrawerImageLoader.Tags.ACCOUNT_HEADER.name().equals(tag)) {
-                        return new IconicsDrawable(ctx).iconText(" ").backgroundColorRes(R.color.colorActiveSwitch).sizeDp(56);
-                    } else if ("customUrlItem".equals(tag)) {
-                        return new IconicsDrawable(ctx).iconText(" ").backgroundColorRes(R.color.colorActiveSwitch).sizeDp(56);
-                    }
-                    return super.placeholder(ctx, tag);
-                }
-            });
-        }
-
-        String iconURL = "";
-        if (GoogleAccountAdapter.getProfileIcon() != null)
-            iconURL = GoogleAccountAdapter.getProfileIcon();
-        return new AccountHeaderBuilder()
-                .withActivity(this)
-                .withCompactStyle(true)
-                .withTextColorRes(R.color.colorPrimaryText)
-                .withHeaderBackground(R.drawable.header)
-                .withSelectionListEnabled(false)
-                .addProfiles(
-                        new ProfileDrawerItem()
-                                .withName(GoogleAccountAdapter.getUserName())
-                                .withEmail(GoogleAccountAdapter.getUserEmail())
-                                .withIcon(iconURL)
-                )
-                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                    @Override
-                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                        return false;
-                    }
-                })
-                .build();
-    }
-
-    private void initNavDrawer() {
-        final String signInOut;
-        if (GoogleAccountAdapter.getUserEmail() != null)
-            signInOut = "Sign Out";
-        else
-            signInOut = "Sign in";
-
-        AccountHeader mHeader = initNawDrawerHeader();
-
-        mDrawer = new DrawerBuilder()
-                .withActivity(this)
-                .withDrawerWidthDp(275)
-                .withAccountHeader(mHeader)
-                .withToolbar(toolbar)
-                .addDrawerItems(
-                        new PrimaryDrawerItem()
-                                .withName("Home")
-                                .withIcon(R.drawable.ic_material_home)
-                                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                                    @Override
-                                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                                        mDrawer.closeDrawer();
-                                        return false;
-                                    }
-                                }),
-                        new PrimaryDrawerItem()
-                                .withName("Add new Event")
-                                .withIcon(R.drawable.ic_material_calendar)
-                                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                                    @Override
-                                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                                        mDrawer.closeDrawer();
-                                        if (presenter != null && survey != null) {
-                                            presenter.showEditor(survey);
-                                        }
-                                        return false;
-                                    }
-                                }),
-                        new SectionDrawerItem()
-                                .withName("Groups"),
-                        new PrimaryDrawerItem()
-                                .withName("Main group")
-                                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                                    @Override
-                                    public boolean onItemClick(
-                                            View view, int position, IDrawerItem drawerItem) {
-                                        mDrawer.closeDrawer();
-                                        // do something with  this peace of sh**
-                                        return false;
-                                    }
-                                }),
-                        new PrimaryDrawerItem()
-                                .withName("Add new group")
-                                .withIcon(R.drawable.ic_material_addgroup)
-                                .withOnDrawerItemClickListener
-                                        (new Drawer.OnDrawerItemClickListener() {
-                                            @Override
-                                            public boolean onItemClick(View view, int position,
-                                                                       IDrawerItem drawerItem) {
-                                                mDrawer.removeItem(position);
-                                                addNewDrawerItem(position);
-                                                return false;
-                                            }
-                                        })
-                )
-                .addStickyDrawerItems(
-                        new SecondaryDrawerItem()
-                                .withName(signInOut)
-                                .withIcon(R.drawable.ic_material_accsircle)
-                                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                                    @Override
-                                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                                        mDrawer.closeDrawer();
-                                        if (GoogleAccountAdapter.getUserEmail() == null)
-                                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                                        else {
-                                            session.logoutUser();
-                                            GoogleAccountAdapter.logOut();
-                                            surveyList.clear();
-                                            cardsAdaptor.notifyDataSetChanged();
-                                            initNavDrawer();
-                                        }
-                                        return false;
-                                    }
-                                }),
-                        new SecondaryDrawerItem()
-                                .withName("Settings")
-                                .withIcon(R.drawable.ic_material_cog)
-                                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                                    @Override
-                                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                                        mDrawer.closeDrawer();
-                                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                                        return false;
-                                    }
-                                })
-                )
-                .build();
-    }
-
-    private void addNewDrawerItem(int position) {
-        mDrawer.getDrawerItem(position);
-        mDrawer.addItem(new PrimaryDrawerItem().withName("newItem")
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        mDrawer.removeItem(position);
-                        return false;
-                    }
-                })
-        );
-    }
-    /* NavDrawer End */
-
     @Override
     public void showProgress() {
     }
@@ -551,12 +366,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-           getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (GoogleAccountAdapter.getUserEmail() == null)
+            menu.findItem(R.id.action_profile).setTitle(R.string.action_login);
+        else
+            menu.findItem(R.id.action_profile).setTitle(R.string.action_logout);
+
         return true;
     }
 
     @OnClick(R.id.menu_item1)
-    void luckyWheel(){
+    void luckyWheel() {
         LuckyWheelActivity.launchActivity(MainActivity.this);
     }
 
@@ -574,7 +394,16 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 break;
             case R.id.action_profile:
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                if (GoogleAccountAdapter.getUserEmail() == null) {
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    item.setTitle(R.string.action_logout);
+                } else {
+                    session.logoutUser();
+                    GoogleAccountAdapter.logOut();
+                    surveyList.clear();
+                    cardsAdaptor.notifyDataSetChanged();
+                    item.setTitle(R.string.action_login);
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

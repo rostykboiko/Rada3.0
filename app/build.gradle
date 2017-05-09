@@ -33,13 +33,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    // Mike Penz
-    compile('com.mikepenz:materialdrawer:5.8.1@aar') {
-        transitive = true
-    }
-    compile 'com.mikepenz:google-material-typeface:2.2.0.1@aar'
-    // Intro
-    compile 'com.heinrichreimersoftware:material-intro:1.6'
+
     // Butter Knife
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'

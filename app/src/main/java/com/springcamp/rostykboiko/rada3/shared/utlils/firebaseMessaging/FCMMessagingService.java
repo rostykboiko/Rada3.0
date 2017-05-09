@@ -59,7 +59,7 @@ public class FCMMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(messageTitle)
-                .setContentText("")
+                .setContentText(getString(R.string.push_content))
                 .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)

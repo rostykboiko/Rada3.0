@@ -2,10 +2,11 @@
     <string name="app_name">Rada3.0</string>
     <string name="action_settings">Settings</string>
     <string name="action_login">Log In</string>
+    <string name="action_logout">Log Out</string>
     <string name="action_share">Share</string>
     <string name="action_delete">Delete</string>
     <string name="title_activity_login" translatable="false">Sign in</string>
-    <string name="title_activity_editor" translatable="false">EditorActivity</string>
+    <string name="title_activity_editor">Enter title</string>
     <string name="title_activity_settings" translatable="false">Settings</string>
     <string name="title_lucky_wheel" translatable="false">Lucky Wheel</string>
 
@@ -32,6 +33,7 @@
     <string name="desc_backBtn" translatable="false">toolbarBackBtn</string>
     <string name="group" translatable="false">Group</string>
     <string name="tv_add_new_option">Add new option</string>
+    <string name="tv_add_option">Add option</string>
     <string name="tv_open_survey">Private survey</string>
     <string name="tv_one_option">Single option</string>
     <string name="tv_duration">Duration</string>
@@ -43,13 +45,20 @@
     <string name="tv_duration_min">min</string>
     <string name="tv_duration_hour">hour</string>
     <string name="tv_duration_2min">2 min</string>
+    <string name="tv_duration_2minutes">2 minutes</string>
     <string name="tv_duration_10min">10 min</string>
+    <string name="tv_duration_10minutes">10 minutes</string>
     <string name="tv_duration_30min">30 min</string>
-    <string name="tv_duration_1h">1 hour</string>
-    <string name="tv_duration_custom" translatable="false">Custom</string>
+    <string name="tv_duration_30minutes">30 minutes</string>
+    <string name="tv_duration_1h">1 h</string>
+    <string name="tv_duration_1hour">1 hour</string>
+    <string name="tv_duration_custom">Custom</string>
     <string name="ok_btn" translatable="false">OK</string>
     <string name="survey_toast">You don\'t have permission to edit this Survey.
         You can edit only Surveys you created.</string>
+
+    <string name="saveBtn">SAVE</string>
+
     <!--Editor Activity End-->
 
     <!-- Settings Start -->
@@ -109,6 +118,7 @@
     <string name="menu_item2">Create new survey</string>
     <string name="menu_item1">Lucky Wheel</string>
 
+    <string name="push_content">You got a survey, press here to to participate</string>
 
     <!-- FireBse Template Start -->
 </resources>

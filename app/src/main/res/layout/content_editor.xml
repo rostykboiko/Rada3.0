@@ -26,8 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:padding="@dimen/margin_large"
-                android:text="SAVE"
+                android:layout_margin="@dimen/margin_large"
+                android:text="@string/saveBtn"
                 android:textSize="@dimen/text_size_standard"
                 android:textStyle="bold" />
 
@@ -38,7 +38,8 @@
                 android:background="@android:color/transparent"
                 android:hint="@string/title_activity_editor"
                 android:inputType="textMultiLine"
-                android:paddingEnd="@dimen/margin_large"
+                android:maxLength="126"
+                android:paddingEnd="88dp"
                 android:paddingStart="@dimen/margin_tab"
                 android:paddingTop="@dimen/margin_medium"
                 android:textSize="24sp"

@@ -74,7 +74,6 @@
                 android:id="@+id/userEmailItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/userNameItem"
                 android:padding="@dimen/margin_small"
                 android:textSize="@dimen/text_size_standard" />
         </LinearLayout>

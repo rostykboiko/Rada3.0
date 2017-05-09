@@ -12,6 +12,7 @@ public class Rada3 extends Application {
         super.onCreate();
         Firebase.setAndroidContext(this);
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
     }
 
     public static boolean isActivityVisible() {
