@@ -68,12 +68,20 @@
     <string name="desc_theme">Light</string>
     <string name="title_info" translatable="false">Info</string>
     <string name="desc_info">Information about app</string>
+
+    <string name="theme_title">Chose a theme</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_yellow">Yellow</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_amoled" translatable="false">AmoLED</string>
+
     <!-- Settings End -->
 
 
     <!--BottomSheet Activity Start-->
     <string name="title_bottomSheet">Select people</string>
-    <string name="bottomSheet_search_hint" translatable="false">Type a name or email</string>
+    <string name="bottomSheet_search_tv">To</string>
+    <string name="bottomSheet_search_hint">Type a name or email</string>
     <!--BottomSheet Activity End-->
 
     <!--LuckyWheel Activity Start-->

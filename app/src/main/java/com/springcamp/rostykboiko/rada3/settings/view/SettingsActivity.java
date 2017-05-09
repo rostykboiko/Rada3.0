@@ -80,12 +80,12 @@ public class SettingsActivity extends AppCompatActivity {
     @OnClick(R.id.theme)
     void durationPicker() {
         final String[] mDurationOptions = {
-                getString(R.string.tv_duration_2minutes),
-                getString(R.string.tv_duration_10minutes),
-                getString(R.string.tv_duration_30minutes)};
+                getString(R.string.theme_light),
+                getString(R.string.theme_yellow),
+                getString(R.string.theme_dark)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
-
+        builder.setTitle(getString(R.string.theme_dark));
         builder.setItems(mDurationOptions, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {

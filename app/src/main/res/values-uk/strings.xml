@@ -47,4 +47,11 @@
     <string name="title_activity_editor">Введіть назву</string>
     <string name="tv_add_option">Додати варіант</string>
     <string name="push_content">У вас нове оритування, натисніть сюди щоб прийняти участь</string>
+    <string name="theme_amoled"></string>
+    <string name="theme_dark">Темна</string>
+    <string name="theme_light">Світла</string>
+    <string name="theme_yellow">Жовта</string>
+    <string name="theme_title">Виберіть тему</string>
+    <string name="bottomSheet_search_hint">"Ведіть ім'я або пошту "</string>
+    <string name="bottomSheet_search_tv">Кому</string>
 </resources>
