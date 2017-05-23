@@ -4,7 +4,6 @@ public class GoogleAccountAdapter {
     private static String userName = null;
     private static String userEmail = null;
     private static String accountID = null;
-    private static String userID = null;
     private static String deviceToken = null;
     private static String userProfileIcon = null;
 
@@ -22,14 +21,6 @@ public class GoogleAccountAdapter {
 
     public static void setUserEmail(String userAuthEmail) {
         userEmail = userAuthEmail;
-    }
-
-    public static String getUserID() {
-        return userID;
-    }
-
-    public static void setUserID(String userAuthID) {
-        userID = userAuthID;
     }
 
     public static void setProfileIcon(String userAuthIcon) {
@@ -59,7 +50,6 @@ public class GoogleAccountAdapter {
     public static void logOut() {
         userName = null;
         userEmail = null;
-        userID = null;
         userProfileIcon = null;
     }
 }

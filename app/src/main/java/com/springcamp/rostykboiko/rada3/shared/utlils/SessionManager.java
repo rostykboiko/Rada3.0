@@ -20,7 +20,6 @@ public class SessionManager {
 
     public static final String KEY_NAME = "name";
     public static final String KEY_EMAIL = "email";
-    public static final String KEY_UID = "uid";
     public static final String KEY_ACCOUNTID = "accountID";
     public static final String KEY_TOKEN = "token";
     public static final String KEY_ICON = "icon";
@@ -36,14 +35,16 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(String name, String email, String accountID, String userID,
-                                   String deviceToken, String userProfileIcon) {
+    public void createLoginSession(String name,
+                                   String email,
+                                   String accountID,
+                                   String deviceToken,
+                                   String userProfileIcon) {
         editor.putBoolean(IS_LOGIN, true);
 
         editor.putString(KEY_NAME, name);
         editor.putString(KEY_EMAIL, email);
         editor.putString(KEY_ACCOUNTID, accountID);
-        editor.putString(KEY_UID, userID);
         editor.putString(KEY_TOKEN, deviceToken);
         editor.putString(KEY_ICON, userProfileIcon);
 
@@ -76,7 +77,6 @@ public class SessionManager {
         user.put(KEY_NAME, pref.getString(KEY_NAME, null));
         user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
         user.put(KEY_ACCOUNTID, pref.getString(KEY_ACCOUNTID, null));
-        user.put(KEY_UID, pref.getString(KEY_UID, null));
         user.put(KEY_TOKEN, pref.getString(KEY_TOKEN, null));
         user.put(KEY_ICON, pref.getString(KEY_ICON, null));
 

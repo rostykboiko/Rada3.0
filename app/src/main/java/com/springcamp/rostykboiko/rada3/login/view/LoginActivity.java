@@ -165,20 +165,12 @@ public class LoginActivity extends AppCompatActivity implements
 
         System.out.println("mAuth.getCurrentUser()" + mAuth.getCurrentUser());
 
-        if (mAuth != null && mAuth.getCurrentUser() != null) {
-
-            userList.child(acct.getId()).child("Uid").setValue(mAuth.getCurrentUser().getUid());
-            session.createLoginSession(
-                    acct.getDisplayName(),
-                    acct.getEmail(),
-                    acct.getId(),
-                    mAuth.getCurrentUser().getUid(),
-                    FirebaseInstanceId.getInstance().getToken(),
-                    acct.getPhotoUrl().toString());
-            System.out.println("Google Sync login " + mAuth.getCurrentUser().getUid());
-
-            GoogleAccountAdapter.setUserID(mAuth.getCurrentUser().getUid());
-        }
+        session.createLoginSession(
+                acct.getDisplayName(),
+                acct.getEmail(),
+                acct.getId(),
+                FirebaseInstanceId.getInstance().getToken(),
+                acct.getPhotoUrl().toString());
     }
 
     @Override

@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         Rada3.activityResumed();
-
         if (!active) {
             System.out.println("System hi" + active);
 
@@ -111,7 +110,7 @@ public class MainActivity extends AppCompatActivity
 
             active = true;
         }
-        System.out.println("hi, daemon");
+
         initFireBase();
         initCardView();
     }
@@ -136,7 +135,6 @@ public class MainActivity extends AppCompatActivity
     private void initUserData() {
         HashMap<String, String> user = session.getUserDetails();
 
-        GoogleAccountAdapter.setUserID(user.get(SessionManager.KEY_UID));
         GoogleAccountAdapter.setUserName(user.get(SessionManager.KEY_NAME));
         GoogleAccountAdapter.setUserEmail(user.get(SessionManager.KEY_EMAIL));
         GoogleAccountAdapter.setAccountID(user.get(SessionManager.KEY_ACCOUNTID));
@@ -182,7 +180,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initFireBase() {
         DatabaseReference mCurrentUserRef;
-        if (GoogleAccountAdapter.getUserID() != null) {
+        if (GoogleAccountAdapter.getAccountID() != null) {
             mCurrentUserRef = FirebaseDatabase.getInstance().getReference()
                     .child("User").child(GoogleAccountAdapter.getAccountID()).child("Surveys");
 

@@ -542,7 +542,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             if (participant != null) {
                 for (User user : userList) {
                     if (user != null && user.getAccountID().contains(participant)) {
-                        System.out.println("dataUserRef: here your token: " + user.getDeviceToken());
 
                         surveyRef
                                 .child(survey.getSurveyID())

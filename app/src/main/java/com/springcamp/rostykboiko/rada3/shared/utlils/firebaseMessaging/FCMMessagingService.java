@@ -60,7 +60,6 @@ public class FCMMessagingService extends FirebaseMessagingService {
                 .setSmallIcon(R.drawable.ic_material_messege)
                 .setContentTitle(messageTitle)
                 .setContentText(getString(R.string.push_content))
-                .setSmallIcon(R.drawable.ic_material_messege)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
