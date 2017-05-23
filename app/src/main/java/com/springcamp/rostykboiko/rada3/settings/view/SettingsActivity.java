@@ -8,7 +8,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -37,24 +39,23 @@ public class SettingsActivity extends AppCompatActivity {
     @BindView(R.id.userEmailItem)
     TextView userEmailTV;
 
+    @BindView(R.id.profile_info)
+    LinearLayout profileInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
 
         SessionManager sessionManager = new SessionManager(this);
         sessionManager.getUserDetails().get("icon");
 
         ButterKnife.bind(this);
 
-        toolbarTitle.setText(R.string.title_activity_settings);
-
         initProfileInfo();
     }
 
-    private void initProfileInfo(){
+    private void initProfileInfo() {
         userNameTV.setText(GoogleAccountAdapter.getUserName());
         userEmailTV.setText(GoogleAccountAdapter.getUserEmail());
 
@@ -69,6 +70,9 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        if (GoogleAccountAdapter.getUserEmail() != null) {
+            profileInfo.setVisibility(View.VISIBLE);
+        }
     }
 
     @OnClick(R.id.backBtn)

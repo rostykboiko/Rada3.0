@@ -2,21 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/row_small"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="@dimen/margin_small"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    app:theme="@style/AppTheme.TextItem">
 
     <EditText
         android:id="@+id/optionItemDialog"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginStart="15dp"
         android:background="@android:color/transparent"
-        android:hint="@string/ed_option"
-        android:inputType="textAutoCorrect"
+        android:hint="1"
+        android:inputType="textLongMessage"
         android:maxLength="30"
         android:paddingTop="@dimen/margin_small"
-        android:textSize="@dimen/text_size_standard" />
+        android:textSize="18sp" />
 
     <ImageView
         android:id="@+id/close_icon"

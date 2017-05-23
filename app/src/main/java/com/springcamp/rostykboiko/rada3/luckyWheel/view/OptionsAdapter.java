@@ -70,6 +70,7 @@ class OptionsAdapter extends RecyclerView.Adapter<OptionsAdapter.ViewHolder> {
 
         if (optionsList.size() != 1 && holder.optionItem.getText().toString().equals("")) {
             holder.optionItem.setFocusable(true);
+            holder.optionItem.setHint(Integer.toString(position + 1));
             holder.optionItem.requestFocus();
         }
 

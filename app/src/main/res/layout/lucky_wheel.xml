@@ -62,12 +62,16 @@
                 android:id="@+id/option_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingStart="32dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="16dp"
                 android:scrollbars="vertical" />
 
             <RelativeLayout
                 android:id="@+id/rv_add_option"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:layout_below="@+id/option_recycler_view"
                 android:visibility="visible">
 

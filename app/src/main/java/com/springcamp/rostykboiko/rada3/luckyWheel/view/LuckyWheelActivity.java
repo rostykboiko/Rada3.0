@@ -3,7 +3,6 @@ package com.springcamp.rostykboiko.rada3.luckyWheel.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +30,7 @@ public class LuckyWheelActivity extends AppCompatActivity {
     private OptionsAdapter optionsAdapter;
     private boolean wheel = false;
     private ArrayList<String> optionsList = new ArrayList<>();
-    private List<WheelItem> wheelItems;
+    private List<WheelItem> wheelItems = new ArrayList<>();
     private Random random = new Random();
     private LuckyWheel lw;
     private InputMethodManager inputMethodManager;
@@ -63,18 +62,17 @@ public class LuckyWheelActivity extends AppCompatActivity {
         setContentView(R.layout.lucky_wheel);
 
         ButterKnife.bind(this);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         initWheelView();
-
-        inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
         initOptionsListView();
         isOptionsListEmpty();
     }
 
     private void initWheelView() {
-        wheelItems = new ArrayList<>();
-
         lw = (LuckyWheel) findViewById(R.id.lwv);
 
         lw.setLuckyWheelReachTheTarget(new OnLuckyWheelReachTheTarget() {
@@ -83,28 +81,27 @@ public class LuckyWheelActivity extends AppCompatActivity {
                 chosenOptionTV.setVisibility(View.VISIBLE);
             }
         });
-
         lw.addWheelItems(wheelItems);
     }
 
     @OnClick(R.id.fab)
     void spinWheel() {
         if (!wheel) {
+            lw = (LuckyWheel) findViewById(R.id.lwv);
+            initWheelView();
+
             recycler_container.setVisibility(View.GONE);
             lw.setVisibility(View.VISIBLE);
             int chosenOption = random.nextInt(optionsList.size());
             lw.rotateWheelTo(chosenOption);
 
-            if (!optionsList.get(chosenOption).equals("")){
-                chosenOptionTV.setText("Chosen option: " + optionsList.get(chosenOption));
+            if (!optionsList.get(chosenOption).equals("")) {
+                chosenOptionTV.setText(getString(R.string.chosen_lucky_wheel) + optionsList.get(chosenOption));
             } else {
-                chosenOptionTV.setText("Chosen option: " + (chosenOption + 1));
-
+                chosenOptionTV.setText(getString(R.string.chosen_lucky_wheel) + (chosenOption + 1));
             }
 
             floatingActionButton.setImageResource(R.drawable.ic_material_refresh);
-
-            inputMethodManager.toggleSoftInput(InputMethodManager.RESULT_UNCHANGED_HIDDEN, 0);
 
             wheel = true;
         } else {
@@ -123,7 +120,6 @@ public class LuckyWheelActivity extends AppCompatActivity {
 
             wheel = false;
         }
-
     }
 
     private void isOptionsListEmpty() {
@@ -141,6 +137,7 @@ public class LuckyWheelActivity extends AppCompatActivity {
             @Override
             public void onOptionDeleted(int position) {
                 optionsList.remove(position);
+                wheelItems.remove(position);
                 optionsAdapter.notifyDataSetChanged();
             }
 

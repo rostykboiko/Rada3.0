@@ -13,8 +13,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,6 +48,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
@@ -58,6 +62,9 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.fab)
+    FloatingActionMenu floatingActionMenu;
 
     public QuestionReceiver questionReceiver;
 
@@ -104,7 +111,7 @@ public class MainActivity extends AppCompatActivity
 
             active = true;
         }
-
+        System.out.println("hi, daemon");
         initFireBase();
         initCardView();
     }
@@ -371,8 +378,15 @@ public class MainActivity extends AppCompatActivity
             menu.findItem(R.id.action_profile).setTitle(R.string.action_login);
         else
             menu.findItem(R.id.action_profile).setTitle(R.string.action_logout);
-
         return true;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (floatingActionMenu.isOpened()) {
+            floatingActionMenu.close(true);
+        }
+        return super.dispatchTouchEvent(event);
     }
 
     @OnClick(R.id.menu_item1)
@@ -396,6 +410,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_profile:
                 if (GoogleAccountAdapter.getUserEmail() == null) {
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    onResume();
                     item.setTitle(R.string.action_logout);
                 } else {
                     session.logoutUser();
@@ -408,5 +423,4 @@ public class MainActivity extends AppCompatActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

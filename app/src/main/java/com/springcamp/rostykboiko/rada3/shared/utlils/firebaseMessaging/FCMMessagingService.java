@@ -57,11 +57,10 @@ public class FCMMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_material_messege)
                 .setContentTitle(messageTitle)
                 .setContentText(getString(R.string.push_content))
-                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
-                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.ic_material_messege)
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 

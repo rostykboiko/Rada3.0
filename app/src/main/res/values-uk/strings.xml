@@ -54,4 +54,9 @@
     <string name="theme_title">Виберіть тему</string>
     <string name="bottomSheet_search_hint">"Ведіть ім'я або пошту "</string>
     <string name="bottomSheet_search_tv">Кому</string>
+    <string name="editor_cancel_dialog">Are you sure you want to discard</string>
+    <string name="negative_button_str">Keep editing</string>
+    <string name="positive_button_str">Discard</string>
+    <string name="title_activity_settings">Налаштування</string>
+    <string name="chosen_lucky_wheel">Вибраний варіант: </string>
 </resources>

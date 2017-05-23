@@ -701,13 +701,13 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         } else {
             AlertDialog.Builder confirmDialog = new AlertDialog.Builder(
                     new ContextThemeWrapper(this, R.style.AlertDialogCustom));
-            confirmDialog.setMessage("Дійсно скасувати");
-            confirmDialog.setPositiveButton("Так", new DialogInterface.OnClickListener() {
+            confirmDialog.setMessage(R.string.editor_cancel_dialog);
+            confirmDialog.setPositiveButton(R.string.positive_button_str, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int arg1) {
                     finish();
                 }
             });
-            confirmDialog.setNegativeButton("Ні, редагувати далі", new DialogInterface.OnClickListener() {
+            confirmDialog.setNegativeButton(R.string.negative_button_str, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int arg1) {
                 }
             });

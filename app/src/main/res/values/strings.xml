@@ -7,7 +7,7 @@
     <string name="action_delete">Delete</string>
     <string name="title_activity_login" translatable="false">Sign in</string>
     <string name="title_activity_editor">Enter title</string>
-    <string name="title_activity_settings" translatable="false">Settings</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="title_lucky_wheel" translatable="false">Lucky Wheel</string>
 
     <!-- Strings related to login -->
@@ -58,6 +58,9 @@
         You can edit only Surveys you created.</string>
 
     <string name="saveBtn">SAVE</string>
+    <string name="editor_cancel_dialog">Дійсно скасувати</string>
+    <string name="positive_button_str">Так</string>
+    <string name="negative_button_str">Ні, редагувати далі</string>
 
     <!--Editor Activity End-->
 
@@ -86,6 +89,7 @@
 
     <!--LuckyWheel Activity Start-->
     <string name="spin_btn" translatable="false">Spin</string>
+    <string name="chosen_lucky_wheel">Chosen option: </string>
     <!--LuckyWheel Activity End-->
 
     <!--DurationPicker Activity Start-->

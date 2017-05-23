@@ -1,6 +1,5 @@
 package com.springcamp.rostykboiko.rada3.luckyWheel.view;
 
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -49,15 +48,16 @@ public class LuckyWheel extends FrameLayout {
     public void applyAttribute(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.LuckyWheel, 0, 0);
         try {
-            int backgroundColor = typedArray.getColor(R.styleable.LuckyWheel_background_color, Color.GREEN);
+            int backgroudnColor = typedArray.getColor(R.styleable.LuckyWheel_background_color, Color.GREEN);
             int arrowImage = typedArray.getResourceId(R.styleable.LuckyWheel_arrow_image, R.drawable.ic_wheel_arrow);
 
-            wheelView.setWheelBackgoundWheel(backgroundColor);
+            wheelView.setWheelBackgoundWheel(backgroudnColor);
             arrow.setImageResource(arrowImage);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+        typedArray.recycle();
     }
 
     /**
@@ -75,7 +75,7 @@ public class LuckyWheel extends FrameLayout {
      * @param number Number to rotate
      */
     public void rotateWheelTo(int number) {
-        wheelView.rotateWheelToTarget(number);
+        wheelView.resetRotationLocationToZeroAngle(number);
     }
 
 }

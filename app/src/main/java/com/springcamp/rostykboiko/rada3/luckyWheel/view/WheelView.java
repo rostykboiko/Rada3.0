@@ -1,10 +1,12 @@
 package com.springcamp.rostykboiko.rada3.luckyWheel.view;
 
-
 import android.animation.Animator;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -90,7 +92,28 @@ public class WheelView extends View {
         canvas.drawCircle(center, center, center, backgroundPainter);
     }
 
-
+    /**
+     * Function to draw image in the center of arc
+     *
+     * @param canvas    Canvas to draw
+     * @param tempAngle Temporary angle
+     * @param bitmap    Bitmap to draw
+     */
+    private void drawImage(Canvas canvas, float tempAngle, Bitmap bitmap) {
+        //get every arc img width and angle
+        int imgWidth = radius / mWheelItems.size();
+        float angle = (float) ((tempAngle + 360 / mWheelItems.size() / 2) * Math.PI / 180);
+        //calculate x and y
+        int x = (int) (center + radius / 2 / 2 * Math.cos(angle));
+        int y = (int) (center + radius / 2 / 2 * Math.sin(angle));
+        //create arc to draw
+        Rect rect = new Rect(x - imgWidth / 2, y - imgWidth / 2, x + imgWidth / 2, y + imgWidth / 2);
+        //rotate main bitmap
+        Matrix matrix = new Matrix();
+        matrix.postRotate(45);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        canvas.drawBitmap(rotatedBitmap, null, rect, null);
+    }
 
     /**
      * Function to rotate wheel to target
@@ -114,6 +137,7 @@ public class WheelView extends View {
                         if (mOnLuckyWheelReachTheTarget != null) {
                             mOnLuckyWheelReachTheTarget.onReachTarget();
                         }
+                        clearAnimation();
                     }
 
                     @Override
@@ -127,6 +151,51 @@ public class WheelView extends View {
                     }
                 })
                 .start();
+    }
+
+    /**
+     * Function to rotate to zero angle
+     *
+     * @param target target to reach
+     */
+    public void resetRotationLocationToZeroAngle(final int target) {
+        animate().setDuration(0)
+                .rotation(0).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                rotateWheelToTarget(target);
+                clearAnimation();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+    }
+
+
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        int width = Math.min(getMeasuredWidth(), getMeasuredHeight());
+        padding = getPaddingLeft() == 0 ? DEFAULT_PADDING : getPaddingLeft();
+        radius = width - padding * 2;
+        center = width / 2;
+        setMeasuredDimension(width, width);
+
     }
 
     @Override
@@ -144,18 +213,6 @@ public class WheelView extends View {
             canvas.drawArc(range, tempAngle, sweepAngle, true, archPaint);
             tempAngle += sweepAngle;
         }
-
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        int width = Math.min(getMeasuredWidth(), getMeasuredHeight());
-        padding = getPaddingLeft() == 0 ? DEFAULT_PADDING : getPaddingLeft();
-        radius = width - padding * 2;
-        center = width / 2;
-        setMeasuredDimension(width, width);
 
     }
 }
