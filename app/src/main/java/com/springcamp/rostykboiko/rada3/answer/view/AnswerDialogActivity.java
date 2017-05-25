@@ -1,5 +1,7 @@
 package com.springcamp.rostykboiko.rada3.answer.view;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -15,9 +17,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
+import com.bumptech.glide.util.Util;
 import com.google.gson.Gson;
 import com.springcamp.rostykboiko.rada3.R;
 import com.springcamp.rostykboiko.rada3.answer.AnswerContract;
@@ -27,7 +29,9 @@ import com.springcamp.rostykboiko.rada3.main.view.RecyclerTouchListener;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
+import com.springcamp.rostykboiko.rada3.shared.utlils.Utils;
 
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -80,6 +84,12 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
     void okClick() {
         if (presenter != null) {
             presenter.submitAnswer();
+
+            NotificationManager notificationManager = (NotificationManager)
+                    getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancelAll();
+
+            MainActivity.launchActivity(this);
         }
         finish();
     }
@@ -155,9 +165,8 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
         Timer mTimer = new Timer();
         CountDownTimerTask countDownTimerTask = new CountDownTimerTask();
 
-        if (survey.getDuration() != null) {
-            mTimer.schedule(countDownTimerTask, 0, 1000);
-        }
+        mTimer.schedule(countDownTimerTask, 0, 1000);
+
         System.out.println("Hello, task is should be already done!");
     }
 
@@ -192,53 +201,40 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
 
     public static void launchActivity(@NonNull AppCompatActivity activity) {
         activity.startActivity(new Intent(activity, MainActivity.class));
-
     }
 
     private class CountDownTimerTask extends TimerTask {
 
         @Override
         public void run() {
-            final int duration = Integer.parseInt(survey.getDuration());
-            survey.setDuration("" + (duration - 1));
-            if (survey.getDuration().equals("0"))
+            if (survey.getDuration().equals(Calendar.getInstance().getTime().toString())) {
                 finish();
+            }
 
             runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
-                    counterView.setText(timerFormat(duration));
+                    Calendar calendar = Calendar.getInstance();
+                    String[] date = survey.getDuration().split(" ");
+                    String[] time = date[3].split(":");
+
+                    int minutes = Integer.parseInt(time[1]);
+                    int seconds = Integer.parseInt(time[2]);
+                    minutes = minutes - calendar.get(Calendar.MINUTE);
+                    seconds = seconds - calendar.get(Calendar.SECOND);
+
+                    if (seconds < 0) {
+                        seconds = 60 + seconds;
+                        minutes -= 1;
+                    }
+                    if (minutes < 0) {
+                        minutes = 60 + minutes;
+                    }
+
+                    counterView.setText(Utils.timePickerConvert(minutes, seconds));
                 }
             });
-        }
-
-        private String timerFormat(int duration) {
-            String seconds;
-            String minutes;
-            String timer = "00:00";
-
-            if (duration < 60) {
-                if (duration < 10) {
-                    timer = "00:0" + duration;
-                } else {
-                    timer = "00:" + duration;
-                }
-            }
-
-            if (duration > 60) {
-                minutes = "" + duration / 60;
-                seconds = "" + duration % 60;
-                if (duration / 60 < 10) {
-                    minutes = "0" + duration / 60;
-                }
-                if (duration % 60 < 10) {
-                    seconds = "0" + duration % 60;
-                }
-                timer = minutes + ":" + seconds;
-            }
-
-            return timer;
         }
     }
 }

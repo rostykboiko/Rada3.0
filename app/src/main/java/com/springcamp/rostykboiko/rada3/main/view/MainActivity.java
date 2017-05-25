@@ -14,9 +14,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -44,11 +44,11 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnTouch;
 
 public class MainActivity extends AppCompatActivity
         implements MainContract.View {
@@ -219,6 +219,8 @@ public class MainActivity extends AppCompatActivity
                 .getInstance()
                 .getReference("Survey/");
 
+
+
         keepAnswersSynced(surveyId);
         mCurrentSurvey.keepSynced(true);
         mCurrentSurvey.addChildEventListener(
@@ -226,6 +228,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         if (dataSnapshot != null && dataSnapshot.getKey().equals(surveyId)) {
+
                             surveyList = new ArrayList<>();
                             survey.setSurveyID(dataSnapshot.getKey());
                             String surveyTitle = dataSnapshot.child("Title").getValue(String.class);
@@ -233,6 +236,17 @@ public class MainActivity extends AppCompatActivity
 
                             for (DataSnapshot optionSnapshot : dataSnapshot.child("Options").getChildren()) {
                                 option.setOptionTitle(optionSnapshot.getValue().toString());
+                                option.setOptionKey(optionSnapshot.getKey());
+
+                                for (DataSnapshot answers : dataSnapshot
+                                        .child("Answers")
+                                        .child(optionSnapshot.getKey())
+                                        .getChildren()) {
+                                        option.getParticipantsList().add(answers.getValue(String.class));
+                                    }
+
+                                System.out.println("participantsList " + option.getParticipantsList());
+
                                 option.setAnswerCounter(dataSnapshot
                                         .child("Answers")
                                         .child(optionSnapshot.getKey())
@@ -254,6 +268,14 @@ public class MainActivity extends AppCompatActivity
 
                             survey.setCreatorId(dataSnapshot
                                     .child("Creator")
+                                    .getValue(String.class));
+
+                            survey.setDuration(dataSnapshot
+                                    .child("Duration")
+                                    .getValue(String.class));
+
+                            survey.setDurationValue(dataSnapshot
+                                    .child("DurationValue")
                                     .getValue(String.class));
 
                             for (DataSnapshot partSnapshot : dataSnapshot.child("Participants").getChildren()) {
@@ -420,5 +442,11 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public static void launchActivity(@NonNull AppCompatActivity activity) {
+        Intent intent = new Intent(activity, MainActivity.class);
+
+        activity.startActivity(intent);
     }
 }

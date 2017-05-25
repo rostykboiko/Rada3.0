@@ -1,7 +1,6 @@
 package com.springcamp.rostykboiko.rada3.editor.view;
 
 import android.app.ActivityOptions;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -44,6 +43,7 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Option;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.Survey;
 import com.springcamp.rostykboiko.rada3.shared.utlils.FireBaseDB.User;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
+import com.springcamp.rostykboiko.rada3.shared.utlils.Utils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -51,18 +51,14 @@ import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.security.SecureRandom;
 import java.util.Calendar;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -74,6 +70,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     private ArrayList<String> participants = new ArrayList<>();
     private ArrayList<User> userList = new ArrayList<>();
     private OptionEditorAdapter optionsAdapter;
+    private Calendar calendar;
     private SecureRandom random = new SecureRandom();
 
     @Nullable
@@ -120,6 +117,8 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
         ButterKnife.bind(this);
 
+        calendar = Calendar.getInstance();
+
         onSurveyEdit();
         getOptionsList();
         initClickListeners();
@@ -140,12 +139,13 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
             survey = gson.fromJson(json, Survey.class);
             editTextTitle.setText(survey.getSurveyTitle());
+            durationTime.setText(survey.getDurationValue());
 
             participants = survey.getParticipantsList();
             System.out.println("dataUserRef: here your list: " + survey.getParticipantsList());
 
             oneOptionSwitch.setChecked(survey.isSurveySingleOption());
-        } else {
+        } if (getIntent().getExtras() != null && survey.getSurveyID() == null){
             survey.setSurveyID(generatedId());
         }
     }
@@ -369,20 +369,16 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             public void onClick(DialogInterface dialog, int item) {
                 switch (item) {
                     case 0:
-                        survey.setDuration("" + 120);
-                        durationTime.setText(timerFormat(120));
+                        durationTime.setText("2:00");
                         break;
                     case 1:
-                        survey.setDuration("" + 600);
-                        durationTime.setText(timerFormat(600));
+                        durationTime.setText("10:00");
                         break;
                     case 2:
-                        survey.setDuration("" + 1800);
-                        durationTime.setText(timerFormat(1800));
+                        durationTime.setText("30:00");
                         break;
                     case 3:
-                        survey.setDuration("" + 3600);
-                        durationTime.setText(timerFormat(3600));
+                        durationTime.setText("60:00");
                         break;
                     case 4:
                         startActivity(new Intent(EditorActivity.this, DurationDialogActivity.class));
@@ -477,8 +473,10 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     private void dataSurveyReference(FirebaseDatabase database) {
         DatabaseReference surveyRef = database.getReference("Survey");
 
-        if (surveyRef.child(survey.getSurveyID()).getKey() != null)
+        if (surveyRef.child(survey.getSurveyID()).getKey() != null) {
             surveyRef.child(survey.getSurveyID()).removeValue();
+            System.out.println("surveyKey " + surveyRef.child(survey.getSurveyID()).getKey());
+        }
 
         String surveyTitle = editTextTitle.getText().toString();
 
@@ -501,17 +499,25 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             }
         }
 
+        /* Radio/checkBox */
         surveyRef.child(survey.getSurveyID())
                 .child("One Positive Option")
                 .setValue(oneOptionSwitch.isChecked());
 
-        if (survey != null && survey.getDuration() == null) {
-            survey.setDuration("" + 120);
+        /* Duration */
+        if (survey != null) {
+            survey.setDuration(Utils.setSurveyEnd(durationTime.getText().toString()));
+            survey.setDurationValue(durationTime.getText().toString());
         }
-
         surveyRef.child(survey.getSurveyID())
                 .child("Duration")
                 .setValue(survey.getDuration());
+
+        surveyRef.child(survey.getSurveyID())
+                .child("DurationValue")
+                .setValue(survey.getDurationValue());
+
+        System.out.println("survey.getDuration() " + survey.getDuration());
 
         survey.setSurveyID(survey.getSurveyID());
         survey.setSurveyTitle(surveyTitle);
@@ -523,7 +529,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         System.out.println("SingleOption editor " + survey.isSurveySingleOption());
 
         dataUserRef(database, survey);
-
     }
 
     private void dataUserRef(FirebaseDatabase database, Survey survey) {
@@ -557,7 +562,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                                 .setValue(survey.getCreatorId());
 
                         if (user.getDeviceToken() != GoogleAccountAdapter.getDeviceToken())
-                        sendMessage(survey, user.getDeviceToken());
+                            sendMessage(survey, user.getDeviceToken());
                     }
                 }
             }
@@ -576,34 +581,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
     public String generatedId() {
         return new BigInteger(31, random).toString();
-    }
-
-    private String timerFormat(int duration) {
-        String seconds;
-        String minutes;
-        String timer = "00:00";
-
-        if (duration < 60) {
-            if (duration < 10) {
-                timer = "00:0" + duration;
-            } else {
-                timer = "00:" + duration;
-            }
-        }
-
-        if (duration > 60) {
-            minutes = "" + duration / 60;
-            seconds = "" + duration % 60;
-            if (duration / 60 < 10) {
-                minutes = "0" + duration / 60;
-            }
-            if (duration % 60 < 10) {
-                seconds = "0" + duration % 60;
-            }
-            timer = minutes + ":" + seconds;
-        }
-
-        return timer;
     }
 
     private class OneShotTask implements Runnable {
@@ -657,16 +634,17 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 e.printStackTrace();
             }
         }
+
     }
 
     /* Sync with Firebase Start */
     @Override
     protected void onResume() {
         super.onResume();
-
         onSurveyEdit();
         setParticipantsIcons(userList);
 
+        System.out.println("surveyKey " + survey.getSurveyID());
         String jsonParticipantsList = getIntent().getStringExtra("ParticipantsList");
         if (jsonParticipantsList != null) {
             Type type = new TypeToken<ArrayList<User>>() {
@@ -680,10 +658,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             int minutes = Integer.parseInt(getIntent().getStringExtra("minutes"));
             int seconds = Integer.parseInt(getIntent().getStringExtra("seconds"));
 
-            String dateEnd = "" + (minutes * 60 + seconds);
-
-            survey.setDuration(dateEnd);
-            durationTime.setText(timerFormat(Integer.parseInt(dateEnd)));
+            durationTime.setText(Utils.timePickerConvert(minutes, seconds));
         }
     }
 

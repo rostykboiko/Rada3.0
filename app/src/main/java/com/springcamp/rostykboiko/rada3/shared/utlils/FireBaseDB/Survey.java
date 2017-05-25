@@ -9,6 +9,7 @@ public class Survey {
     private ArrayList<String> participantsList = new ArrayList<>();
     private boolean surveySingleOption;
     private String duration;
+    private String durationValue;
     private int participantsCount;
     private String creatorId;
 
@@ -106,5 +107,13 @@ public class Survey {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public String getDurationValue() {
+        return durationValue;
+    }
+
+    public void setDurationValue(String durationValue) {
+        this.durationValue = durationValue;
     }
 }

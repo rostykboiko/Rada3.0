@@ -82,7 +82,6 @@ public class DurationDialogActivity extends AppCompatActivity {
     private void setTime(int buttonNumber) {
         int firstNumber;
         int secondNumber;
-        int hoursInt;
         int minutesInt;
         int secondsInt;
 
@@ -115,6 +114,10 @@ public class DurationDialogActivity extends AppCompatActivity {
             minutes.setText("" + firstNumber + secondNumber);
             firstNumber = secondsInt % 10;
             seconds.setText("" + firstNumber + buttonNumber);
+        }
+        if (Integer.parseInt(minutes.getText().toString()) > 60) {
+            minutes.setText("60");
+            seconds.setText("00");
         }
 
         if (clickCount < 5) {

@@ -49,7 +49,7 @@ public class AnswerDialogPresenter implements AnswerContract.Presenter {
                     mCurrentSurvey
                             .child("option" + index)
                             .child(user.get(SessionManager.KEY_ACCOUNTID))
-                            .setValue(user.get(SessionManager.KEY_ACCOUNTID));
+                            .setValue(user.get(SessionManager.KEY_ICON));
                     }
                     index++;
                 }

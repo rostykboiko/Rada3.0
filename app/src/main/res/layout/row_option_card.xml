@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_normal"
         android:layout_marginTop="@dimen/checkBoxTop"
-        android:src="@drawable/ic_material_checkbox_blank"/>
+        android:src="@drawable/ic_material_checkbox_blank" />
 
     <TextView
         android:id="@+id/optionItemDialog"
@@ -34,17 +34,53 @@
         android:paddingBottom="0dp"
         android:paddingEnd="@dimen/margin_medium"
         android:paddingStart="@dimen/margin_medium"
-        android:theme="@style/AppTheme.ProgressBar"/>
+        android:theme="@style/AppTheme.ProgressBar" />
 
-    <TextView
-        android:id="@+id/percentTv"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/progressBar"
+        android:layout_marginEnd="@dimen/margin_medium"
         android:layout_alignParentEnd="true"
-        android:padding="@dimen/margin_small"
-        android:paddingStart="@dimen/margin_medium"
-        android:paddingEnd="@dimen/margin_medium"
-        android:text="0"
-        android:layout_alignTop="@+id/optionItemDialog"
-        android:layout_above="@+id/progressBar" />
+        android:layout_alignTop="@+id/optionItemDialog">
+
+        <ImageView
+            android:id="@+id/participants_icon3"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="2dp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/participants_icon2"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="2dp"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/participants_icon1"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="0dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/percentTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:padding="@dimen/margin_small"
+            android:layout_gravity="center_vertical"
+            android:paddingEnd="@dimen/margin_medium"
+            android:paddingStart="@dimen/margin_medium"
+            android:visibility="gone"
+            android:text="" />
+
+    </LinearLayout>
+
 </RelativeLayout>
