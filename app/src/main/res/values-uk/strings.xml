@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Rada3.0</string>
+    <string name="app_name">Hydra</string>
     <string name="action_delete">Видалити</string>
     <string name="action_login">Увійти</string>
     <string name="action_settings">Налаштування</string>
@@ -59,4 +59,7 @@
     <string name="positive_button_str">Discard</string>
     <string name="title_activity_settings">Налаштування</string>
     <string name="chosen_lucky_wheel">Вибраний варіант: </string>
+    <string name="close">Закрити</string>
+    <string name="release_date">Травень 2017</string>
+    <string name="app_description">Hydra - додаток для прийняття швидких рішень разом з друзями або співробітниками.</string>
 </resources>

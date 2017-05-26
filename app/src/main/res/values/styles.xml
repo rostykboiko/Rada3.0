@@ -2,19 +2,7 @@
     <style name="AppThemeLight" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:textColor">@color/jet</item>
-    </style>
-
-    <style name="AppThemeYellow" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/yellowPrimary</item>
-        <item name="colorPrimaryDark">@color/yellowPrimaryDark</item>
         <item name="colorAccent">@color/yellowAccent</item>
-        <item name="elevation">4dp</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="windowActionBar">false</item>

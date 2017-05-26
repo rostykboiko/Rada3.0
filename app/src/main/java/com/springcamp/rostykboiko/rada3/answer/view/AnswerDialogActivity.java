@@ -88,8 +88,6 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
             NotificationManager notificationManager = (NotificationManager)
                     getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancelAll();
-
-            MainActivity.launchActivity(this);
         }
         finish();
     }

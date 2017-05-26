@@ -24,7 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".bottomSheet.view.BottomSheet"
             android:theme="@style/AppTheme.Translucent">
@@ -43,7 +42,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".durationPicker.view.DurationDialogActivity"
             android:theme="@style/AppTheme.Translucent">
@@ -53,10 +51,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".login.view.LoginActivity"
-            android:theme="@style/AppTheme.Translucent" >
+            android:theme="@style/AppTheme.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -83,6 +80,15 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <activity android:name=".settings.view.infoDialogAnctivity"
+            android:theme="@style/AppTheme.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

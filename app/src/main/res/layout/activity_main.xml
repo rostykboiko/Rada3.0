@@ -42,13 +42,13 @@
         android:layout_marginEnd="8dp"
         fab:menu_colorNormal="@color/colorAccent"
         fab:menu_colorPressed="@color/colorAccent"
-        fab:menu_icon="@drawable/ic_material_plus">
+        fab:menu_icon="@drawable/ic_material_plus_white">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_item1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_custom_lucky"
+            android:src="@drawable/ic_custom_lucky_white"
             fab:fab_colorNormal="@color/colorAccent"
             fab:fab_colorPressed="@color/colorAccent"
             fab:fab_label="@string/menu_item1"
@@ -58,7 +58,7 @@
             android:id="@+id/menu_item2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_material_survey"
+            android:src="@drawable/ic_material_survey_white"
             fab:fab_colorNormal="@color/colorAccent"
             fab:fab_colorPressed="@color/colorAccent"
             fab:fab_label="@string/menu_item2"

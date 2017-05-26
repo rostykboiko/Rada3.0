@@ -35,21 +35,6 @@ public class Utils {
      * Set the theme of the activity, according to the configuration.
      */
 
-    public static void onActivityCreateSetTheme(Activity activity) {
-        switch (sTheme) {
-            default:
-            case THEME_DEFAULT:
-                activity.setTheme(R.style.AppThemeLight);
-                break;
-            case THEME_YELLOW:
-                activity.setTheme(R.style.AppThemeYellow);
-                break;
-            case THEME_BLUE:
-                //      activity.setTheme(R.style.Thirdheme);
-                break;
-        }
-    }
-
     public static int durationStringToSec(String durationString) {
         int duration;
         String[] time;

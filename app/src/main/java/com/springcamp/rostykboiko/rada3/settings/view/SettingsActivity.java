@@ -1,13 +1,11 @@
 package com.springcamp.rostykboiko.rada3.settings.view;
 
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,10 +14,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.springcamp.rostykboiko.rada3.R;
-import com.springcamp.rostykboiko.rada3.Rada3;
 import com.springcamp.rostykboiko.rada3.shared.utlils.GoogleAccountAdapter;
 import com.springcamp.rostykboiko.rada3.shared.utlils.SessionManager;
-import com.springcamp.rostykboiko.rada3.shared.utlils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,10 +43,10 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        ButterKnife.bind(this);
+
         SessionManager sessionManager = new SessionManager(this);
         sessionManager.getUserDetails().get("icon");
-
-        ButterKnife.bind(this);
 
         initProfileInfo();
     }
@@ -81,34 +77,9 @@ public class SettingsActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    @OnClick(R.id.theme)
+    @OnClick(R.id.info)
     void durationPicker() {
-        final String[] mDurationOptions = {
-                getString(R.string.theme_light),
-                getString(R.string.theme_yellow),
-                getString(R.string.theme_dark)};
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
-        builder.setTitle(getString(R.string.theme_dark));
-        builder.setItems(mDurationOptions, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                switch (item) {
-                    case 0:
-                        Utils.changeToTheme(SettingsActivity.this, Utils.THEME_DEFAULT);
-                        break;
-                    case 1:
-                        Utils.changeToTheme(SettingsActivity.this, Utils.THEME_YELLOW);
-                        break;
-                    case 2:
-
-                        break;
-                }
-            }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        startActivity(new Intent(SettingsActivity.this, infoDialogAnctivity.class));
     }
 
 }

@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity
     private Survey survey = new Survey();
     private ArrayList<Survey> surveyList = new ArrayList<>();
     private CardsAdaptor cardsAdaptor;
-    private Handler mHandler;
+    private RecyclerView cardRecyclerView;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -370,7 +370,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        RecyclerView cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
+        cardRecyclerView = (RecyclerView) findViewById(R.id.card_recycler);
 
         RecyclerView.LayoutManager mCardManager = new LinearLayoutManager(getApplicationContext());
         cardRecyclerView.setLayoutManager(mCardManager);
@@ -401,8 +401,9 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.menu_main, menu);
         if (GoogleAccountAdapter.getUserEmail() == null)
             menu.findItem(R.id.action_profile).setTitle(R.string.action_login);
-        else
+        else{
             menu.findItem(R.id.action_profile).setTitle(R.string.action_logout);
+        }
         return true;
     }
 
@@ -440,8 +441,6 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     session.logoutUser();
                     GoogleAccountAdapter.logOut();
-                    surveyList.clear();
-                    cardsAdaptor.notifyDataSetChanged();
                     item.setTitle(R.string.action_login);
                 }
                 break;

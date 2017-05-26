@@ -107,8 +107,6 @@ public class AnswerDialogPresenter implements AnswerContract.Presenter {
                 new AnswerDialogUseCase.AnswerCallBack(){
                     @Override
                     public void success() {
-                        System.out.println("sloooowwww " + position);
-
                         for (Option option : view.getSurvey().getSurveyOptionList()){
                             option.setChecked(false);
                         }

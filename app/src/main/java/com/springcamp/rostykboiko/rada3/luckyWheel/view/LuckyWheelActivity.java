@@ -33,15 +33,14 @@ public class LuckyWheelActivity extends AppCompatActivity {
     private List<WheelItem> wheelItems = new ArrayList<>();
     private Random random = new Random();
     private LuckyWheel lw;
-    private InputMethodManager inputMethodManager;
 
     private final int[] colorsList = {
             0xFFf44336,
             0xFF2196f3,
             0xFF4caf50,
-            0xFFffc107,
+            0xFF9b59b6,
             0xff009688,
-            0xFF9b59b6
+            0xFFFF9800
     };
 
     @BindView(R.id.chosenOption)

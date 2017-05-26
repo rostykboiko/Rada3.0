@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rada3.0</string>
+    <string name="app_name">Hydra</string>
     <string name="action_settings">Settings</string>
     <string name="action_login">Log In</string>
     <string name="action_logout">Log Out</string>
@@ -78,6 +78,12 @@
     <string name="theme_dark">Dark</string>
     <string name="theme_amoled" translatable="false">AmoLED</string>
 
+    <string name="push_content">You got a survey, press here to participate</string>
+    <string name="close">Close</string>
+    <string name="release_date">May 2017</string>
+    <string name="hydra" translatable="false">Hydra</string>
+    <string name="app_description">Hydra app it\'s and survey app that should help you take decisions with your friends or teammates, and take them fast.</string>
+
     <!-- Settings End -->
 
 
@@ -130,7 +136,6 @@
     <string name="menu_item2">Create new survey</string>
     <string name="menu_item1">Lucky Wheel</string>
 
-    <string name="push_content">You got a survey, press here to to participate</string>
 
     <!-- FireBse Template Start -->
 </resources>

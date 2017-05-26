@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AppTheme light -->
-    <color name="colorPrimary">#FAFAFA</color>
-    <color name="colorPrimaryDark">#FAFAFA</color>
+    <color name="colorPrimary">#F8CE46</color>
+    <color name="colorPrimaryDark">#F8CE46</color>
     <color name="colorPrimaryLight">#BBDEFB</color>
     <color name="cardColor">#BBDEFB</color>
-    <color name="colorAccent">#FAFAFA</color>
+    <color name="colorAccent">#f44336</color>
     <color name="colorAccentSecond">#2196F3</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#727272</color>
