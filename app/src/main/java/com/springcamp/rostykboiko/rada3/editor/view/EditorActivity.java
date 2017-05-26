@@ -127,6 +127,35 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         isOptionsListEmpty();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        onSurveyEdit();
+        setParticipantsIcons(userList);
+
+        if (survey.getDurationValue() == null) {
+            durationTime.setText("02:00");
+            survey.setDurationValue(durationTime.getText().toString());
+        }
+        if (getIntent().getStringExtra("minutes") != null &&
+                getIntent().getStringExtra("seconds") != null) {
+
+            int minutes = Integer.parseInt(getIntent().getStringExtra("minutes"));
+            int seconds = Integer.parseInt(getIntent().getStringExtra("seconds"));
+
+            durationTime.setText(Utils.timePickerConvert(minutes, seconds));
+            survey.setDurationValue(durationTime.getText().toString());
+        }
+
+        String jsonParticipantsList = getIntent().getStringExtra("ParticipantsList");
+        if (jsonParticipantsList != null) {
+            Type type = new TypeToken<ArrayList<User>>() {
+            }.getType();
+            participants = new Gson().fromJson(jsonParticipantsList, type);
+            durationTime.setText(survey.getDurationValue());
+        }
+    }
+
     /**
      * View init start
      */
@@ -142,7 +171,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             durationTime.setText(survey.getDurationValue());
 
             participants = survey.getParticipantsList();
-            System.out.println("dataUserRef: here your list: " + survey.getParticipantsList());
 
             oneOptionSwitch.setChecked(survey.isSurveySingleOption());
         } if (getIntent().getExtras() != null && survey.getSurveyID() == null){
@@ -286,9 +314,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
             }
         });
-
-        System.out.println("ProfileIcons initUsersList " + userList);
-
     }
 
     private void setParticipantsIcons(ArrayList<User> userList) {
@@ -369,7 +394,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
             public void onClick(DialogInterface dialog, int item) {
                 switch (item) {
                     case 0:
-                        durationTime.setText("2:00");
+                        durationTime.setText("02:00");
                         break;
                     case 1:
                         durationTime.setText("10:00");
@@ -384,6 +409,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                         startActivity(new Intent(EditorActivity.this, DurationDialogActivity.class));
                         break;
                 }
+                survey.setDurationValue(durationTime.getText().toString());
             }
         });
 
@@ -475,7 +501,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
 
         if (surveyRef.child(survey.getSurveyID()).getKey() != null) {
             surveyRef.child(survey.getSurveyID()).removeValue();
-            System.out.println("surveyKey " + surveyRef.child(survey.getSurveyID()).getKey());
         }
 
         String surveyTitle = editTextTitle.getText().toString();
@@ -508,6 +533,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         if (survey != null) {
             survey.setDuration(Utils.setSurveyEnd(durationTime.getText().toString()));
             survey.setDurationValue(durationTime.getText().toString());
+
         }
         surveyRef.child(survey.getSurveyID())
                 .child("Duration")
@@ -517,8 +543,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 .child("DurationValue")
                 .setValue(survey.getDurationValue());
 
-        System.out.println("survey.getDuration() " + survey.getDuration());
-
         survey.setSurveyID(survey.getSurveyID());
         survey.setSurveyTitle(surveyTitle);
         survey.setSurveyOptionList(survey.getSurveyOptionList());
@@ -526,7 +550,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
         survey.setSurveySingleOption(oneOptionSwitch.isChecked());
         survey.setParticipantsList(participants);
         survey.setParticipantsCount(participants.size());
-        System.out.println("SingleOption editor " + survey.isSurveySingleOption());
 
         dataUserRef(database, survey);
     }
@@ -638,29 +661,6 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
     }
 
     /* Sync with Firebase Start */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        onSurveyEdit();
-        setParticipantsIcons(userList);
-
-        System.out.println("surveyKey " + survey.getSurveyID());
-        String jsonParticipantsList = getIntent().getStringExtra("ParticipantsList");
-        if (jsonParticipantsList != null) {
-            Type type = new TypeToken<ArrayList<User>>() {
-            }.getType();
-            participants = new Gson().fromJson(jsonParticipantsList, type);
-        }
-
-        if (getIntent().getStringExtra("minutes") != null &&
-                getIntent().getStringExtra("seconds") != null) {
-
-            int minutes = Integer.parseInt(getIntent().getStringExtra("minutes"));
-            int seconds = Integer.parseInt(getIntent().getStringExtra("seconds"));
-
-            durationTime.setText(Utils.timePickerConvert(minutes, seconds));
-        }
-    }
 
     @Override
     protected void onNewIntent(Intent intent) {

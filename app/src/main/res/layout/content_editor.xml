@@ -187,8 +187,7 @@
                         android:layout_alignParentEnd="true"
                         android:padding="@dimen/margin_large"
                         android:paddingEnd="@dimen/item_duration_time"
-                        android:paddingStart="@dimen/item_duration_time"
-                        android:text="@string/tv_duration_time" />
+                        android:paddingStart="@dimen/item_duration_time" />
                 </RelativeLayout>
 
                 <RelativeLayout
