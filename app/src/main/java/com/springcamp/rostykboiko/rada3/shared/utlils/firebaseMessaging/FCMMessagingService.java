@@ -82,7 +82,6 @@ public class FCMMessagingService extends FirebaseMessagingService {
     private void notificationTimer(Survey survey){
         Timer mTimer = new Timer();
         CloseNotificationTask mTask = new CloseNotificationTask();
-        System.out.println("Duration push " + Utils.durationStringToSec(survey.getDurationValue()) * 1000);
 
         mTimer.schedule(mTask, Utils.durationStringToSec(survey.getDurationValue()) * 1000);
     }

@@ -3,6 +3,7 @@ package com.springcamp.rostykboiko.rada3.main.view;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
@@ -14,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionMenu;
@@ -44,7 +44,8 @@ import com.springcamp.rostykboiko.rada3.shared.utlils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity
     private Survey survey = new Survey();
     private ArrayList<Survey> surveyList = new ArrayList<>();
     private CardsAdaptor cardsAdaptor;
+    private Handler mHandler;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -90,13 +92,16 @@ public class MainActivity extends AppCompatActivity
         initCardView();
     }
 
+    private void refresh() {
+        initFireBase();
+        initCardView();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         Rada3.activityResumed();
         if (!active) {
-            System.out.println("System hi" + active);
-
             questionReceiver = new QuestionReceiver(new QuestionReceiver.QuestionReceivedCallback() {
                 @Override
                 public void onQuestionReceived(@NonNull Survey survey) {
@@ -158,6 +163,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 cardsAdaptor.notifyDataSetChanged();
+                refresh();
             }
 
             @Override
@@ -176,6 +182,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
         mCurrentSurvey.keepSynced(true);
+
     }
 
     private void initFireBase() {
@@ -220,7 +227,6 @@ public class MainActivity extends AppCompatActivity
                 .getReference("Survey/");
 
 
-
         keepAnswersSynced(surveyId);
         mCurrentSurvey.keepSynced(true);
         mCurrentSurvey.addChildEventListener(
@@ -242,8 +248,8 @@ public class MainActivity extends AppCompatActivity
                                         .child("Answers")
                                         .child(optionSnapshot.getKey())
                                         .getChildren()) {
-                                        option.getParticipantsList().add(answers.getValue(String.class));
-                                    }
+                                    option.getParticipantsList().add(answers.getValue(String.class));
+                                }
 
                                 System.out.println("participantsList " + option.getParticipantsList());
 
@@ -347,7 +353,6 @@ public class MainActivity extends AppCompatActivity
                         .child("Surveys")
                         .child(surveyId)
                         .removeValue();
-
             }
 
             @Override

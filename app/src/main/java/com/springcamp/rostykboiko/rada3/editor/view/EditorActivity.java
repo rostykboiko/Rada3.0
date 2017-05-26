@@ -571,8 +571,7 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                 for (User user : userList) {
                     if (user != null && user.getAccountID().contains(participant)) {
 
-                        surveyRef
-                                .child(survey.getSurveyID())
+                        surveyRef.child(survey.getSurveyID())
                                 .child("Participants")
                                 .child(participant)
                                 .setValue(user.getDeviceToken());
@@ -584,8 +583,9 @@ public class EditorActivity extends AppCompatActivity implements EditorContract.
                                 .child(survey.getSurveyID())
                                 .setValue(survey.getCreatorId());
 
-                        if (user.getDeviceToken() != GoogleAccountAdapter.getDeviceToken())
+                        if (!user.getDeviceToken().equals(GoogleAccountAdapter.getDeviceToken())) {
                             sendMessage(survey, user.getDeviceToken());
+                        }
                     }
                 }
             }

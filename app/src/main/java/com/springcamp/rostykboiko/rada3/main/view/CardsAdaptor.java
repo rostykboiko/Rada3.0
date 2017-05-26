@@ -21,7 +21,6 @@ class CardsAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     CardsAdaptor(@NonNull QuestionsCardCallback callback) {
         this.callback = callback;
-
     }
 
     @Override
@@ -51,7 +50,6 @@ class CardsAdaptor extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         CardViewHolder viewHolder = (CardViewHolder) holder;
         viewHolder.setSurveyName(survey.getSurveyTitle());
         viewHolder.setSurvey(survey);
-
     }
 
     @Override

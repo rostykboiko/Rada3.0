@@ -70,5 +70,4 @@ class CardViewHolder extends RecyclerView.ViewHolder {
         popup.setOnMenuItemClickListener(new MenuItemClickListener(position, callback));
         popup.show();
     }
-
 }

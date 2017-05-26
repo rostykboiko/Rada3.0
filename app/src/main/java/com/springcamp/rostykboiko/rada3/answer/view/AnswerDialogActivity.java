@@ -100,8 +100,6 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
             String json = getIntent().getExtras().getString(SURVEY_KEY);
             survey = new Gson().fromJson(json, Survey.class);
 
-            System.out.println("SingleOption messageReceiver " + survey.isSurveySingleOption());
-
             titleView.setText(survey.getSurveyTitle());
 
             initRecyclerView();
@@ -166,8 +164,6 @@ public class AnswerDialogActivity extends AppCompatActivity implements AnswerCon
         CountDownTimerTask countDownTimerTask = new CountDownTimerTask();
 
         mTimer.schedule(countDownTimerTask, 0, 1000);
-
-        System.out.println("Hello, task is should be already done!");
     }
 
     private void setStatusBarDim(boolean dim) {
