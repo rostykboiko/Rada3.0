@@ -80,14 +80,11 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
         Option option = optionsList.get(position);
         double answersNumber = Utils.longToInt(option.getAnswerCounter());
 
-        //  System.out.println("participantsList " + option.getParticipantsList().get(position));
-
         setParticipantsIcons(holder, position);
 
         int result = (int) (answersNumber / participantsCount * 100);
 
         holder.optionItem.setText(option.getOptionTitle());
-        holder.answerCount.setText(String.valueOf((int) answersNumber));
         holder.progressBar.setProgress(result);
         if (onePositiveOption) {
             holder.radioBtn.setImageResource(R.drawable.ic_material_radio_blank);
@@ -107,8 +104,6 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
         holder.participantsIcon2.setVisibility(View.GONE);
         holder.participantsIcon3.setVisibility(View.GONE);
 
-        System.out.println("participantsList size " + optionsList.get(position).getParticipantsList());
-
         if (optionsList != null && optionsList.get(position) != null && optionsList.get(position).getParticipantsList().size() != 0) {
             holder.participantsIcon1.setVisibility(View.VISIBLE);
             Glide.with(holder.participantsIcon1.getContext()).load(
@@ -124,7 +119,7 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
             });
         }
 
-        if (optionsList != null && optionsList.get(position) != null && optionsList.get(position).getParticipantsList().size() == 2) {
+        if (optionsList != null && optionsList.get(position) != null && optionsList.get(position).getParticipantsList().size() >= 2) {
             holder.participantsIcon2.setVisibility(View.VISIBLE);
             Glide.with(holder.participantsIcon2.getContext()).load(
                     optionsList.get(position).getParticipantsList().get(1))
@@ -139,7 +134,7 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
             });
         }
 
-        if (optionsList != null && optionsList.get(position) != null && optionsList.get(position).getParticipantsList().size() == 3) {
+        if (optionsList != null && optionsList.get(position) != null && optionsList.get(position).getParticipantsList().size() >= 3) {
             holder.participantsIcon3.setVisibility(View.VISIBLE);
             Glide.with(holder.participantsIcon3.getContext()).load(
                     optionsList.get(position).getParticipantsList().get(2))
@@ -154,8 +149,10 @@ class OptionCardAdapter extends RecyclerView.Adapter<OptionCardAdapter.ViewHolde
             });
         }
         if (optionsList.get(position).getParticipantsList().size() > 3) {
-            String count = "+" + (optionsList.get(position).getParticipantsList().size() - 3);
-            holder.answerCount.setText(count);
+            int count = optionsList.get(position).getParticipantsList().size() - 3;
+            System.out.println("Participants size" + count);
+            holder.answerCount.setText("+" + count);
+            holder.answerCount.setVisibility(View.VISIBLE);
         }
 
 
